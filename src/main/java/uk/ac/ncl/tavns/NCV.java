@@ -46,7 +46,7 @@ public class NCV extends ApplicationFrame implements ActionListener {
             chartPanel[i].setPreferredSize(new java.awt.Dimension(500, 270));
         }
         setContentPane(content);
-        Thread t1 = new Thread(new MakeData(series[0]));
+        Thread t1 = new Thread(new MakeData(series));
         t1.start();
     }
 
@@ -65,7 +65,7 @@ public class NCV extends ApplicationFrame implements ActionListener {
         axis.setAutoRange(true);
         axis.setFixedAutoRange(60000.0);  // 60 seconds
         axis = plot.getRangeAxis();
-        axis.setRange(0.0, 200.0);
+        axis.setRange(-2.0, 2.0);
         return result;
     }
 

@@ -13,10 +13,10 @@ import java.nio.IntBuffer;
 public class MakeData implements Runnable {
     static double lastValue = 100.0;
     static final double factor = 0.90 + 0.2 * Math.random();
-    private static TimeSeries series;
+    private static TimeSeries[] series;
     private static NiDaq daq = new NiDaq();
 
-    public MakeData(TimeSeries series) {
+    public MakeData(TimeSeries[] series) {
         MakeData.series = series;
     }
 
@@ -65,12 +65,12 @@ public class MakeData implements Runnable {
             try {
                 double[] data = readAnalogueIn(8);
                 if (data != null) {
-                    for (int i = 0; i < data.length; i++) {
+                    for (int i = 0; i < 2; i++) {
                         System.out.println("AI" + i + " = " + (data[i] < 0.01 ? "" : data[i]));
+                        series[i].add(new Millisecond(), data[i]);
                     }
-                    Thread.sleep(1000);
                 }
-            } catch (NiDaqException | InterruptedException e) {
+            } catch (NiDaqException e) {
                 throw new RuntimeException(e);
             }
         }
