@@ -1,4 +1,4 @@
-package uk.ac.ncl.tavns;
+package tavns;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -16,11 +16,19 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * NiDAQ Channel Viewer
+ */
 public class NCV extends ApplicationFrame implements ActionListener {
 
-    private static final int channels = 2;
+    private static final int channels = 3;
     private static TimeSeries[] series = new TimeSeries[channels];
+    private static int numSampsPerChan = 8;
     private static String[] legend = new String[channels];
+    private static double rangeMinimum = 0;
+    private static double rangeMaximum = 100;
+    private JTextField tf_rangeMinimum = new JTextField(String.valueOf(rangeMinimum));
+    private JTextField tf_rangeMaximum = new JTextField(String.valueOf(rangeMaximum));
 
     /**
      * Constructs a new application frame.
@@ -46,7 +54,9 @@ public class NCV extends ApplicationFrame implements ActionListener {
             chartPanel[i].setPreferredSize(new java.awt.Dimension(500, 270));
         }
         setContentPane(content);
-        Thread t1 = new Thread(new MakeData(series));
+//        add(tf_rangeMinimum);
+//        add(tf_rangeMaximum);
+        Thread t1 = new Thread(new MakeData(series, numSampsPerChan));
         t1.start();
     }
 
@@ -65,7 +75,7 @@ public class NCV extends ApplicationFrame implements ActionListener {
         axis.setAutoRange(true);
         axis.setFixedAutoRange(60000.0);  // 60 seconds
         axis = plot.getRangeAxis();
-        axis.setRange(-2.0, 2.0);
+        axis.setRange(rangeMinimum, rangeMaximum);
         return result;
     }
 
