@@ -1,4 +1,4 @@
-package tavns;
+package uk.ac.ncl.tavns.controller;
 
 import com.sun.jna.Pointer;
 import kirkwood.nidaq.access.NiDaq;
@@ -17,6 +17,7 @@ public class MakeData implements Runnable {
     private static TimeSeries[] channels;
     private static NiDaq daq = new NiDaq();
     private static int numSampsPerChan = 8;
+    private static boolean runMe = true;
 
     public MakeData(TimeSeries[] channels, int numSampsPerChan) {
         MakeData.channels = channels;
@@ -27,13 +28,14 @@ public class MakeData implements Runnable {
         Pointer aiTask = null;
         try {
             aiTask = daq.createTask("AITask");
-            daq.createAIVoltageChannel(aiTask, "Dev1/ai0:1", "",
+            String physicalChannel = "Dev1/ai0:" + (channels.length - 1);
+            daq.createAIVoltageChannel(aiTask, physicalChannel, "",
                     Nicaiu.DAQmx_Val_Cfg_Default, -10.0, 10.0, Nicaiu.DAQmx_Val_Volts,
                     null);
             daq.cfgSampClkTiming(aiTask, "", 100.0, Nicaiu.DAQmx_Val_Rising, Nicaiu.DAQmx_Val_FiniteSamps,
                     8);
             daq.startTask(aiTask);
-            int read =0;
+            int read = 0;
             double[] buffer = new double[inputBufferSize];
 
             DoubleBuffer inputBuffer = DoubleBuffer.wrap(buffer);
@@ -64,25 +66,33 @@ public class MakeData implements Runnable {
                 int inputBufferSize = channels.length * numSampsPerChan;
                 double[] data = readAnalogueIn(inputBufferSize);
                 if (data != null) {
-//                    for (int i = 0; i < 2; i++) {
-//                        System.out.println("AI" + i + " = " + (data[i] < 0.01 ? "" : data[i]));
-//                        series[i].add(new Millisecond(), data[i]);
-//                    }
                     for (int i = 0; i < channels.length; i++) {
                         int start = i * numSampsPerChan;
                         int end = start + numSampsPerChan;
-                        System.out.println("Start: " + start + ", End: " + end);
-                        channels[i].add(new Millisecond(), mean(Arrays.copyOfRange(data, start, end)));
+                        if (runMe)
+                            channels[i].add(new Millisecond(), mean(Arrays.copyOfRange(data, start, end)));
+                        else
+                            channels[i].add(new Millisecond(), null);
                     }
                 }
             } catch (NiDaqException e) {
-                System.out.println("ERROR:\n" + e.getMessage());
+                // System.out.println("ERROR:\n" + e.getMessage());
+                // ToDo
             }
+
         }
     }
 
     private double mean(double[] data) {
         return Arrays.stream(data).average().orElse(Double.NaN);
 
+    }
+
+    public static boolean isRunMe() {
+        return runMe;
+    }
+
+    public static void setRunMe(boolean runMe) {
+        MakeData.runMe = runMe;
     }
 }
