@@ -10,10 +10,6 @@ import java.awt.event.ActionListener;
 
 public class ControlsPanel extends JPanel implements ActionListener {
 
-    private static double rangeMinimum = 0;
-    private static double rangeMaximum = 100;
-    private JTextField tf_rangeMinimum = new JTextField(String.valueOf(rangeMinimum));
-    private JTextField tf_rangeMaximum = new JTextField(String.valueOf(rangeMaximum));
     private JButton startTrace = new JButton("Stop");
     private MakeData makeData;
 
@@ -25,27 +21,8 @@ public class ControlsPanel extends JPanel implements ActionListener {
         setLayout(new FlowLayout());
         startTrace.setBackground(Color.ORANGE);
         add(startTrace);
-        add(new Label("Minimum"));
-        add(tf_rangeMinimum);
-        add(new Label("Maximum"));
-        add(tf_rangeMaximum);
+
         startTrace.addActionListener(this);
-    }
-
-    public static double getRangeMinimum() {
-        return rangeMinimum;
-    }
-
-    public static void setRangeMinimum(double rangeMinimum) {
-        ControlsPanel.rangeMinimum = rangeMinimum;
-    }
-
-    public static double getRangeMaximum() {
-        return rangeMaximum;
-    }
-
-    public static void setRangeMaximum(double rangeMaximum) {
-        ControlsPanel.rangeMaximum = rangeMaximum;
     }
 
     @Override

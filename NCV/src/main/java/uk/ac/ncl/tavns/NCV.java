@@ -10,6 +10,7 @@ import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.ui.RefineryUtilities;
+import uk.ac.ncl.tavns.view.ConfigurationPanel;
 import uk.ac.ncl.tavns.view.ControlsPanel;
 import uk.ac.ncl.tavns.controller.MakeData;
 
@@ -27,6 +28,7 @@ public class NCV extends JFrame {
     private static String[] legend = new String[channels];
     private static MakeData makeDataThread;
     private static ControlsPanel controlsPanel = new ControlsPanel(makeDataThread);
+    private static ConfigurationPanel configurationPanel = new ConfigurationPanel();
 
     /**
      * Constructs a new application frame.
@@ -56,7 +58,7 @@ public class NCV extends JFrame {
             chartPanel[i].setPreferredSize(new java.awt.Dimension(1000, 270));
         }
         tabbedPane.add("Input Traces", content);
-        tabbedPane.add("Configuration", new JPanel()); // add dummy panel for the moment
+        tabbedPane.add("Configuration", configurationPanel); // add dummy panel for the moment
         setContentPane(tabbedPane);
         makeDataThread = new MakeData(series, numSampsPerChan);
         Thread t1 = new Thread(makeDataThread);
@@ -78,7 +80,7 @@ public class NCV extends JFrame {
         axis.setAutoRange(true);
         axis.setFixedAutoRange(60000.0);  // 60 seconds
         axis = plot.getRangeAxis();
-        axis.setRange(controlsPanel.getRangeMinimum(), controlsPanel.getRangeMaximum());
+        axis.setRange(configurationPanel.getRangeMinimum(), configurationPanel.getRangeMaximum());
         return result;
     }
 
