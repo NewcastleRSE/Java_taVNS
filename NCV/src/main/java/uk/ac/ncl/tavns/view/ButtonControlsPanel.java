@@ -8,6 +8,11 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * @author Jannetta S. Steyn
+ * Panel containing buttons to control graphs
+ * MigLayout documentation: https://www.miglayout.com/mavensite/docs/QuickStart.pdf
+ */
 public class ButtonControlsPanel extends JPanel implements ActionListener {
 
     private JButton startTrace = new JButton("Stop");
@@ -39,6 +44,11 @@ public class ButtonControlsPanel extends JPanel implements ActionListener {
         } else if (e.getActionCommand().equals("Start")) {
             startTrace.setText("Stop");
             startTrace.setBackground(Color.ORANGE);
-            makeData.setIsRunning(
+            makeData.setIsRunning(true);
+        } else if (e.getActionCommand().equals("Reset")) {
+            // clear graphs
+            // reset timeseries
+            // start and restart thread
+        }
     }
 }

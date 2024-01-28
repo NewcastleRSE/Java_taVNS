@@ -21,14 +21,14 @@ public class ChartsPanel extends JPanel {
         super();
         controlsPanel = new ButtonControlsPanel(makeDataThread);
         TimeSeriesCollection[] dataset = new TimeSeriesCollection[channels];
-        TimeSeries[] series = makeDataThread.getTimeSeries();
+        TimeSeries[] timeSeries = makeDataThread.getTimeSeries();
         JFreeChart[] chart = new JFreeChart[channels];
         ChartPanel[] chartPanel = new ChartPanel[channels];
         MigLayout migLayout = new MigLayout("fillx", "[]rel[]", "[]10[]");
         setLayout(migLayout);
         add(controlsPanel, "wrap");
         for (int i = 0; i < channels; i++) {
-            dataset[i] = new TimeSeriesCollection(series[i]);
+            dataset[i] = new TimeSeriesCollection(timeSeries[i]);
             chart[i] = createChart(dataset[i], "Analogue Input " + i);
             chart[i].removeLegend();
             chartPanel[i] = new ChartPanel(chart[i]);
