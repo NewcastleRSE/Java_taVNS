@@ -14,33 +14,38 @@ import java.util.Arrays;
 public class MakeData implements Runnable {
     static double lastValue = 100.0;
     static final double factor = 0.90 + 0.2 * Math.random();
-    private static TimeSeries[] channels;
     private static NiDaq daq = new NiDaq();
-    private static int numSampsPerChan = 8;
-    private static boolean runMe = true;
+    private final int numSampsPerChan;
+    private boolean isRunning = true;
+    private TimeSeries[] timeSeries;
 
-    public MakeData(TimeSeries[] channels, int numSampsPerChan) {
-        MakeData.channels = channels;
-        MakeData.numSampsPerChan = numSampsPerChan;
+    public MakeData(int numberOfChannels, int numSampsPerChan) {
+        System.out.println("Init time series");
+        this.timeSeries = new TimeSeries[numberOfChannels];
+        for (int i = 0; i < numberOfChannels; i++) {
+            timeSeries[i] = new TimeSeries("Legend: " + i);
+        }
+        System.out.println("Time series: " + timeSeries.length);
+        this.numSampsPerChan = numSampsPerChan;
     }
 
-    public static double[] readAnalogueIn(int inputBufferSize) throws NiDaqException {
+    public double[] readAnalogueIn(int inputBufferSize) throws NiDaqException {
         Pointer aiTask = null;
         try {
             aiTask = daq.createTask("AITask");
-            String physicalChannel = "Dev1/ai0:" + (channels.length - 1);
+            String physicalChannel = "Dev1/ai0:" + (timeSeries.length - 1);
             daq.createAIVoltageChannel(aiTask, physicalChannel, "",
                     Nicaiu.DAQmx_Val_Cfg_Default, -10.0, 10.0, Nicaiu.DAQmx_Val_Volts,
                     null);
             daq.cfgSampClkTiming(aiTask, "", 100.0, Nicaiu.DAQmx_Val_Rising, Nicaiu.DAQmx_Val_FiniteSamps,
-                    8);
+                    numSampsPerChan);
             daq.startTask(aiTask);
             int read = 0;
             double[] buffer = new double[inputBufferSize];
 
             DoubleBuffer inputBuffer = DoubleBuffer.wrap(buffer);
             IntBuffer samplesPerChannelRead = IntBuffer.wrap(new int[]{read});
-            daq.readAnalogF64(aiTask, -1, 100.0, Nicaiu.DAQmx_Val_GroupByChannel, inputBuffer,
+            daq.readAnalogF64(aiTask, numSampsPerChan, 100.0, Nicaiu.DAQmx_Val_GroupByChannel, inputBuffer,
                     inputBufferSize, samplesPerChannelRead);
 
             daq.stopTask(aiTask);
@@ -61,18 +66,19 @@ public class MakeData implements Runnable {
     @Override
     public void run() {
         final Millisecond now = new Millisecond();
+        System.out.println("Samples per channel: " + numSampsPerChan);
         while (true) {
             try {
-                int inputBufferSize = channels.length * numSampsPerChan;
+                int inputBufferSize = timeSeries.length * numSampsPerChan;
                 double[] data = readAnalogueIn(inputBufferSize);
                 if (data != null) {
-                    for (int i = 0; i < channels.length; i++) {
+                    for (int i = 0; i < timeSeries.length; i++) {
                         int start = i * numSampsPerChan;
                         int end = start + numSampsPerChan;
-                        if (runMe)
-                            channels[i].add(new Millisecond(), mean(Arrays.copyOfRange(data, start, end)));
+                        if (isRunning)
+                            timeSeries[i].add(new Millisecond(), mean(Arrays.copyOfRange(data, start, end)));
                         else
-                            channels[i].add(new Millisecond(), null);
+                            timeSeries[i].add(new Millisecond(), null);
                     }
                 }
             } catch (NiDaqException e) {
@@ -88,11 +94,19 @@ public class MakeData implements Runnable {
 
     }
 
-    public static boolean isRunMe() {
-        return runMe;
+    public synchronized boolean isIsRunning() {
+        return isRunning;
     }
 
-    public static void setRunMe(boolean runMe) {
-        MakeData.runMe = runMe;
+    public void setIsRunning(boolean isRunning) {
+        this.isRunning = isRunning;
+    }
+
+    public TimeSeries[] getTimeSeries() {
+        return timeSeries;
+    }
+
+    public void setTimeSeries(TimeSeries[] timeSeries) {
+        this.timeSeries = timeSeries;
     }
 }

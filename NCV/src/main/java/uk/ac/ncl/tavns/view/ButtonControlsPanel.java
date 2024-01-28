@@ -8,19 +8,23 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class ControlsPanel extends JPanel implements ActionListener {
+public class ButtonControlsPanel extends JPanel implements ActionListener {
 
     private JButton startTrace = new JButton("Stop");
-    private MakeData makeData;
+    private JButton save = new JButton("Save");
+    private JButton reset = new JButton("Reset");
+    MakeData makeData;
 
-    public ControlsPanel(MakeData makeData) {
+    public ButtonControlsPanel(MakeData makeData) {
         this.makeData = makeData;
         setPreferredSize(new Dimension(1000,30));
-        Border blackline = BorderFactory.createLineBorder(Color.black);
-        setBorder(blackline);
+        Border lineBorder = BorderFactory.createLineBorder(Color.black);
+        setBorder(lineBorder);
         setLayout(new FlowLayout());
         startTrace.setBackground(Color.ORANGE);
         add(startTrace);
+        add(save);
+        add(reset);
 
         startTrace.addActionListener(this);
     }
@@ -31,11 +35,11 @@ public class ControlsPanel extends JPanel implements ActionListener {
         if (e.getActionCommand().equals("Stop")) {
             startTrace.setText("Start");
             startTrace.setBackground(new Color(1,106,180));
-            MakeData.setRunMe(false);
+            makeData.setIsRunning(false);
         } else if (e.getActionCommand().equals("Start")) {
             startTrace.setText("Stop");
             startTrace.setBackground(Color.ORANGE);
-            MakeData.setRunMe(true);
+            makeData.setIsRunning(true);
         }
     }
 }
