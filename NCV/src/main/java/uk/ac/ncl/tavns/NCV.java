@@ -2,33 +2,38 @@ package uk.ac.ncl.tavns;
 
 import org.jfree.ui.RefineryUtilities;
 import uk.ac.ncl.tavns.controller.MakeData;
+import uk.ac.ncl.tavns.controller.Utilities;
 import uk.ac.ncl.tavns.view.ChartsPanel;
 import uk.ac.ncl.tavns.view.ConfigurationPanel;
 
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Properties;
 
 /**
  * NiDAQ Channel Viewer
  */
 public class NCV extends JFrame {
 
-    private static int numberOfChannels = 3;
-    private final int numSampsPerChan = 8;
+    private static int numberOfChannels;
+    private final int numSampsPerChan;
 
-    private MakeData makeDataThread = new MakeData(numberOfChannels, numSampsPerChan);
+    private MakeData makeDataThread;
 
     /**
      * Constructs a new application frame.
      *
      * @param title the frame title.
-     * @param channels the number of analogue input channels to read
      */
-    public NCV(String title, int channels) {
+    public NCV(String title) {
         super(title);
+        Properties properties = Utilities.loadProperties();
+        numberOfChannels = Integer.parseInt(properties.getProperty("number_of_ai_channels"));
+        numSampsPerChan = Integer.parseInt(properties.getProperty("samples_per_channel"));
+        makeDataThread = new MakeData(numberOfChannels, numSampsPerChan);
         final JTabbedPane tabbedPane = new JTabbedPane();
-        final ChartsPanel chartsPanel = new ChartsPanel(channels, makeDataThread);
+        final ChartsPanel chartsPanel = new ChartsPanel(numberOfChannels, makeDataThread);
 
         tabbedPane.add("Input Traces", chartsPanel);
         tabbedPane.add("Configuration", new ConfigurationPanel()); // add dummy panel for the moment
@@ -62,7 +67,7 @@ public class NCV extends JFrame {
      * @param args
      */
     public static void main(String[] args) {
-        final NCV ncv = new NCV("NIDAQ Channel Visualiser", numberOfChannels);
+        final NCV ncv = new NCV("NIDAQ Channel Visualiser");
         ncv.pack();
         RefineryUtilities.centerFrameOnScreen(ncv);
         ncv.setVisible(true);

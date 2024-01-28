@@ -25,7 +25,6 @@ public class MakeData implements Runnable {
         for (int i = 0; i < numberOfChannels; i++) {
             timeSeries[i] = new TimeSeries("Legend: " + i);
         }
-        System.out.println("Time series: " + timeSeries.length);
         this.numSampsPerChan = numSampsPerChan;
     }
 

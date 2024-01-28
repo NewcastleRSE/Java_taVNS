@@ -1,6 +1,7 @@
 package uk.ac.ncl.tavns.view;
 
 import net.miginfocom.swing.MigLayout;
+import uk.ac.ncl.tavns.controller.Utilities;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,13 +12,19 @@ import java.util.Properties;
 import static uk.ac.ncl.tavns.controller.Utilities.savePropertyFile;
 
 public class ConfigurationPanel extends JPanel implements ActionListener {
-    private static JTextField tf_rangeMinimum = new JTextField("0", 5);
-    private static JTextField tf_rangeMaximum = new JTextField("100", 5);
-    private static JTextField tf_samplesPerChannel = new JTextField("4", 5);
+    private static JTextField tf_aiChannels = new JTextField(5);
+    private static JTextField tf_rangeMinimum = new JTextField(5);
+    private static JTextField tf_rangeMaximum = new JTextField( 5);
+    private static JTextField tf_samplesPerChannel = new JTextField( 5);
     private JButton save = new JButton("Save");
 
     public ConfigurationPanel() {
         super();
+        Properties properties = Utilities.loadProperties();
+        tf_aiChannels.setText(properties.getProperty("number_of_ai_channels"));
+        tf_rangeMaximum.setText(properties.getProperty("plot_range_maximum"));
+        tf_rangeMinimum.setText(properties.getProperty("plot_range_minimum"));
+        tf_samplesPerChannel.setText(properties.getProperty("samples_per_channel"));
         MigLayout migLayout = new MigLayout("fillx", "[]rel[]rel[]rel[]rel[]", "[]10[]");
         setLayout(migLayout);
         add(new Label("Initial Plot Ranges: "));
@@ -27,6 +34,8 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
         add(tf_rangeMaximum, "wrap");
         add(new Label("Samples per channel: "));
         add(tf_samplesPerChannel, "wrap");
+        add(new Label("Number of AI channels: "));
+        add(tf_aiChannels, "wrap");
         add(save);
 
         save.addActionListener(this);
@@ -41,6 +50,7 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
             properties.setProperty("plot_range_minimum", tf_rangeMinimum.getText());
             properties.setProperty("plot_range_maximum", tf_rangeMaximum.getText());
             properties.setProperty("samples_per_channel", tf_samplesPerChannel.getText());
+            properties.setProperty("number_of_ai_channels", tf_aiChannels.getText());
             savePropertyFile(properties);
         }
     }

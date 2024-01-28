@@ -30,6 +30,7 @@ public class ChartsPanel extends JPanel {
         for (int i = 0; i < channels; i++) {
             dataset[i] = new TimeSeriesCollection(series[i]);
             chart[i] = createChart(dataset[i], "Analogue Input " + i);
+            chart[i].removeLegend();
             chartPanel[i] = new ChartPanel(chart[i]);
             add(chartPanel[i], "wrap");
             chartPanel[i].setPreferredSize(new java.awt.Dimension(1000, 270));

@@ -39,7 +39,6 @@ public class ButtonControlsPanel extends JPanel implements ActionListener {
         } else if (e.getActionCommand().equals("Start")) {
             startTrace.setText("Stop");
             startTrace.setBackground(Color.ORANGE);
-            makeData.setIsRunning(true);
-        }
+            makeData.setIsRunning(
     }
 }

@@ -17,7 +17,37 @@ public class Utilities {
         File f = new File(propertiesFile);
         // If the file doesn't exist, create it
         try {
+//            Files.createDirectories(Paths.get(configDirectory));
+//            if (!(f.exists())) {
+//                OutputStream out = new FileOutputStream(f);
+//                out.close();
+//            }
+//            InputStream is = new FileInputStream(f);
+//            properties.load(is);
+//            if (properties.isEmpty()) {
+//                defaultProperties(properties);
+//            }
+            FileOutputStream out = new FileOutputStream(propertiesFile);
+            properties.store(out, "");
+//            is.close();
+            out.close();
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+    }
+
+    /**
+     * Load properties from system.properties file
+     */
+    public static Properties loadProperties() {
+        Properties properties = new Properties();
+        String configDirectory = System.getProperty("user.home").concat("/.Java_taVNS/");
+        String propertiesFile = configDirectory.concat("/system.properties");
+        try {
+            File f = new File(propertiesFile);
+            // If the file doesn't exist, create it
             Files.createDirectories(Paths.get(configDirectory));
+
             if (!(f.exists())) {
                 OutputStream out = new FileOutputStream(f);
                 out.close();
@@ -25,17 +55,24 @@ public class Utilities {
             InputStream is = new FileInputStream(f);
             properties.load(is);
             if (properties.isEmpty()) {
-                properties.setProperty("plot_range_minimum", "0");
-                properties.setProperty("plot_range_maximum", "1");
-                properties.setProperty("samples_per_channel", "1");
+                defaultProperties(properties);
+                FileOutputStream out = new FileOutputStream(propertiesFile);
+                properties.store(out, "");
+                out.close();
             }
-            System.out.println("Save properties to " + propertiesFile);
-            FileOutputStream out = new FileOutputStream(propertiesFile);
-            properties.store(out, "");
             is.close();
-            out.close();
-        } catch (IOException e1) {
-            e1.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        return properties;
     }
+
+    private static void defaultProperties(Properties properties) {
+        System.out.println("Create properties file");
+        properties.setProperty("plot_range_minimum", "0");
+        properties.setProperty("plot_range_maximum", "1");
+        properties.setProperty("samples_per_channel", "1");
+        properties.setProperty("number_of_ai_channels", "3");
+    }
+
 }
