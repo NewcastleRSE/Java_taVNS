@@ -11,28 +11,37 @@ import java.nio.DoubleBuffer;
 import java.nio.IntBuffer;
 import java.util.Arrays;
 
-public class MakeData implements Runnable {
+public class AnalogueInput implements Runnable {
     static double lastValue = 100.0;
     static final double factor = 0.90 + 0.2 * Math.random();
     private static NiDaq daq = new NiDaq();
     private final int numSampsPerChan;
     private boolean isRunning = true;
     private TimeSeries[] timeSeries;
+    private String device;
 
-    public MakeData(int numberOfChannels, int numSampsPerChan) {
+    public AnalogueInput(int numberOfChannels, int numSampsPerChan, String device) {
         System.out.println("Init time series");
+        try {
+            writeDigitalOut(new byte[]{1, 1, 1, 1});
+        } catch (NiDaqException e) {
+            throw new RuntimeException(e);
+        }
         this.timeSeries = new TimeSeries[numberOfChannels];
+        this.device = device;
         for (int i = 0; i < numberOfChannels; i++) {
             timeSeries[i] = new TimeSeries("Legend: " + i);
         }
         this.numSampsPerChan = numSampsPerChan;
+
     }
 
-    public double[] readAnalogueIn(int inputBufferSize) throws NiDaqException {
+    public double[] readAnalogueIn(int inputBufferSize, String device) throws NiDaqException {
         Pointer aiTask = null;
         try {
             aiTask = daq.createTask("AITask");
-            String physicalChannel = "Dev1/ai0:" + (timeSeries.length - 1);
+
+            String physicalChannel = device + "/ai0:" + (timeSeries.length - 1);
             daq.createAIVoltageChannel(aiTask, physicalChannel, "",
                     Nicaiu.DAQmx_Val_Cfg_Default, -10.0, 10.0, Nicaiu.DAQmx_Val_Volts,
                     null);
@@ -62,6 +71,20 @@ public class MakeData implements Runnable {
         }
     }
 
+    /**
+     * Write the specified data to the digital out lines.
+     * @param data
+     * @throws NiDaqException
+     */
+    public void writeDigitalOut(byte[] data) throws NiDaqException {
+        Pointer doTask = daq.createTask("Task");
+        daq.createDOChan(doTask, "Dev1/port0/line0", "", Nicaiu.DAQmx_Val_ChanForAllLines);
+        daq.startTask(doTask);
+        daq.writeDigitalLines(doTask, 1, 1, 10, Nicaiu.DAQmx_Val_GroupByChannel, data);
+        daq.stopTask(doTask);
+        daq.clearTask(doTask);
+    }
+
     @Override
     public void run() {
         final Millisecond now = new Millisecond();
@@ -69,7 +92,7 @@ public class MakeData implements Runnable {
         while (true) {
             try {
                 int inputBufferSize = timeSeries.length * numSampsPerChan;
-                double[] data = readAnalogueIn(inputBufferSize);
+                double[] data = readAnalogueIn(inputBufferSize, device);
                 if (data != null) {
                     for (int i = 0; i < timeSeries.length; i++) {
                         int start = i * numSampsPerChan;

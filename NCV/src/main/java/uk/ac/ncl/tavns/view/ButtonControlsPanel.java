@@ -1,6 +1,7 @@
 package uk.ac.ncl.tavns.view;
 
-import uk.ac.ncl.tavns.controller.MakeData;
+import org.jfree.data.time.TimeSeries;
+import uk.ac.ncl.tavns.controller.AnalogueInput;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -18,10 +19,10 @@ public class ButtonControlsPanel extends JPanel implements ActionListener {
     private JButton startTrace = new JButton("Stop");
     private JButton save = new JButton("Save");
     private JButton reset = new JButton("Reset");
-    MakeData makeData;
+    AnalogueInput analogueInput;
 
-    public ButtonControlsPanel(MakeData makeData) {
-        this.makeData = makeData;
+    public ButtonControlsPanel(AnalogueInput analogueInput) {
+        this.analogueInput = analogueInput;
         setPreferredSize(new Dimension(1000,30));
         Border lineBorder = BorderFactory.createLineBorder(Color.black);
         setBorder(lineBorder);
@@ -32,6 +33,8 @@ public class ButtonControlsPanel extends JPanel implements ActionListener {
         add(reset);
 
         startTrace.addActionListener(this);
+        save.addActionListener(this);
+        reset.addActionListener(this);
     }
 
     @Override
@@ -40,15 +43,34 @@ public class ButtonControlsPanel extends JPanel implements ActionListener {
         if (e.getActionCommand().equals("Stop")) {
             startTrace.setText("Start");
             startTrace.setBackground(new Color(1,106,180));
-            makeData.setIsRunning(false);
+            analogueInput.setIsRunning(false);
         } else if (e.getActionCommand().equals("Start")) {
             startTrace.setText("Stop");
             startTrace.setBackground(Color.ORANGE);
-            makeData.setIsRunning(true);
+            analogueInput.setIsRunning(true);
         } else if (e.getActionCommand().equals("Reset")) {
             // clear graphs
             // reset timeseries
-            // start and restart thread
+            int number_of_series = analogueInput.getTimeSeries().length;
+            TimeSeries[] timeSeries = analogueInput.getTimeSeries();
+            analogueInput.setIsRunning(false);
+            for (int n = 0; n < number_of_series; n++) {
+                timeSeries[n].delete(0, timeSeries[n].getItemCount() - 1);
+            }
+            analogueInput.setIsRunning(true);
+        } else if (e.getActionCommand().equals("Save")) {
+            TimeSeries[] timeSeries = analogueInput.getTimeSeries();
+            analogueInput.setIsRunning(false);
+            int number_of_series = analogueInput.getTimeSeries().length;
+            for (int n = 0; n < number_of_series; n++) {
+                int itemCount = timeSeries[n].getItemCount();
+                for (int i = 0; i < itemCount; i++) {
+                    System.out.print(timeSeries[n].getTimePeriod(i) + "\t");
+                    System.out.print(timeSeries[n].getDataItem(i).getValue() + ", ");
+                }
+                System.out.println();
+            }
+            analogueInput.setIsRunning(true);
         }
     }
 }

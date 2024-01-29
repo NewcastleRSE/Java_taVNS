@@ -1,7 +1,7 @@
 package uk.ac.ncl.tavns;
 
 import org.jfree.ui.RefineryUtilities;
-import uk.ac.ncl.tavns.controller.MakeData;
+import uk.ac.ncl.tavns.controller.AnalogueInput;
 import uk.ac.ncl.tavns.controller.Utilities;
 import uk.ac.ncl.tavns.view.ChartsPanel;
 import uk.ac.ncl.tavns.view.ConfigurationPanel;
@@ -16,10 +16,11 @@ import java.util.Properties;
  */
 public class NCV extends JFrame {
 
-    private static int numberOfChannels;
-    private final int numSampsPerChan;
+    private int numberOfChannels;
+    private int numSampsPerChan;
+    private String device;
 
-    private MakeData makeDataThread;
+    private AnalogueInput analogueInput;
 
     /**
      * Constructs a new application frame.
@@ -31,9 +32,10 @@ public class NCV extends JFrame {
         Properties properties = Utilities.loadProperties();
         numberOfChannels = Integer.parseInt(properties.getProperty("number_of_ai_channels"));
         numSampsPerChan = Integer.parseInt(properties.getProperty("samples_per_channel"));
-        makeDataThread = new MakeData(numberOfChannels, numSampsPerChan);
+        device = properties.getProperty("device");
+        analogueInput = new AnalogueInput(numberOfChannels, numSampsPerChan, device);
         final JTabbedPane tabbedPane = new JTabbedPane();
-        final ChartsPanel chartsPanel = new ChartsPanel(numberOfChannels, makeDataThread);
+        final ChartsPanel chartsPanel = new ChartsPanel(numberOfChannels, analogueInput);
 
         tabbedPane.add("Input Traces", chartsPanel);
         tabbedPane.add("Configuration", new ConfigurationPanel()); // add dummy panel for the moment
@@ -59,7 +61,7 @@ public class NCV extends JFrame {
      * @param running boolean value to run/stop thread
      */
     public synchronized void setRunning(boolean running) {
-        makeDataThread.setIsRunning(running);
+        analogueInput.setIsRunning(running);
     }
 
     /**

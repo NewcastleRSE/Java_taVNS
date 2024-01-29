@@ -73,6 +73,7 @@ public class Utilities {
         properties.setProperty("plot_range_maximum", "1");
         properties.setProperty("samples_per_channel", "1");
         properties.setProperty("number_of_ai_channels", "3");
+        properties.setProperty("device", "Dev1");
     }
 
 }

@@ -16,6 +16,7 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
     private static JTextField tf_rangeMinimum = new JTextField(5);
     private static JTextField tf_rangeMaximum = new JTextField( 5);
     private static JTextField tf_samplesPerChannel = new JTextField( 5);
+    private static JTextField tf_device = new JTextField(5);
     private JButton save = new JButton("Save");
 
     public ConfigurationPanel() {
@@ -25,16 +26,19 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
         tf_rangeMaximum.setText(properties.getProperty("plot_range_maximum"));
         tf_rangeMinimum.setText(properties.getProperty("plot_range_minimum"));
         tf_samplesPerChannel.setText(properties.getProperty("samples_per_channel"));
-        MigLayout migLayout = new MigLayout("fillx", "[]rel[]rel[]rel[]rel[]", "[]10[]");
+        tf_device.setText(properties.getProperty("device"));
+        MigLayout migLayout = new MigLayout("wrap 5");
         setLayout(migLayout);
         add(new Label("Initial Plot Ranges: "));
         add(new Label("Minimum"));
         add(tf_rangeMinimum);
         add(new Label("Maximum"));
         add(tf_rangeMaximum, "wrap");
+        add(new Label("Device: "));
+        add(tf_device, "wrap");
         add(new Label("Samples per channel: "));
         add(tf_samplesPerChannel, "wrap");
-        add(new Label("Number of AI channels: "));
+        add(new Label("Number of Analogue Input channels: "));
         add(tf_aiChannels, "wrap");
         add(save);
 
@@ -51,6 +55,7 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
             properties.setProperty("plot_range_maximum", tf_rangeMaximum.getText());
             properties.setProperty("samples_per_channel", tf_samplesPerChannel.getText());
             properties.setProperty("number_of_ai_channels", tf_aiChannels.getText());
+            properties.setProperty("device", tf_device.getText());
             savePropertyFile(properties);
         }
     }
