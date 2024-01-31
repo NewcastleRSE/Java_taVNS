@@ -2,6 +2,7 @@ package uk.ac.ncl.tavns;
 
 import org.jfree.ui.RefineryUtilities;
 import uk.ac.ncl.tavns.controller.AnalogueInput;
+import uk.ac.ncl.tavns.controller.DigitalOutput;
 import uk.ac.ncl.tavns.controller.Utilities;
 import uk.ac.ncl.tavns.view.ChartsPanel;
 import uk.ac.ncl.tavns.view.ConfigurationPanel;
@@ -21,6 +22,7 @@ public class NCV extends JFrame {
     private String device;
 
     private AnalogueInput analogueInput;
+    private DigitalOutput digitalOutput;
 
     /**
      * Constructs a new application frame.
@@ -33,6 +35,7 @@ public class NCV extends JFrame {
         numberOfChannels = Integer.parseInt(properties.getProperty("number_of_ai_channels"));
         numSampsPerChan = Integer.parseInt(properties.getProperty("samples_per_channel"));
         device = properties.getProperty("device");
+        digitalOutput = new DigitalOutput();
         analogueInput = new AnalogueInput(numberOfChannels, numSampsPerChan, device);
         final JTabbedPane tabbedPane = new JTabbedPane();
         final ChartsPanel chartsPanel = new ChartsPanel(numberOfChannels, analogueInput);
