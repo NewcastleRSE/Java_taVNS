@@ -11,3 +11,4 @@ A program to visualise the inputs from a NIDAQ USB9226
 ## Links
 - https://zetcode.com/java/jfreechart/
 - http://www.java2s.com/Code/Java/Chart/JFreeChartDynamicDataDemo.htm
+- https://github.com/davekirkwood/JNI-for-NI-Drivers
