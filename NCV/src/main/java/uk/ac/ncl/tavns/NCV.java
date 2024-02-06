@@ -56,13 +56,18 @@ public class NCV extends JFrame {
     /**
      * Close the DAQ by setting the running flag to false.
      */
-    private synchronized void closeDaq()  {
+    private synchronized void closeDaq() {
+        var yesOrNo = JOptionPane.showConfirmDialog(null, "Save data before quitting?", "Quit NCV?", JOptionPane.YES_NO_OPTION);
         setRunning(false);
+        if (yesOrNo == JOptionPane.YES_NO_OPTION)
+                Utilities.saveData(analogueInput.getTimeSeries());
         System.out.println("DAQ closed");
+
     }
 
     /**
      * Synchronised method for setting running
+     *
      * @param running boolean value to run/stop thread
      */
     public synchronized void setRunning(boolean running) {
@@ -71,6 +76,7 @@ public class NCV extends JFrame {
 
     /**
      * Start application
+     *
      * @param args
      */
     public static void main(String[] args) {

@@ -2,6 +2,7 @@ package uk.ac.ncl.tavns.view;
 
 import org.jfree.data.time.TimeSeries;
 import uk.ac.ncl.tavns.controller.AnalogueInput;
+import uk.ac.ncl.tavns.controller.Utilities;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -23,7 +24,7 @@ public class ButtonControlsPanel extends JPanel implements ActionListener {
 
     public ButtonControlsPanel(AnalogueInput analogueInput) {
         this.analogueInput = analogueInput;
-        setPreferredSize(new Dimension(1000,30));
+        setPreferredSize(new Dimension(1000, 30));
         Border lineBorder = BorderFactory.createLineBorder(Color.black);
         setBorder(lineBorder);
         setLayout(new FlowLayout());
@@ -42,7 +43,7 @@ public class ButtonControlsPanel extends JPanel implements ActionListener {
         System.out.println(e.getActionCommand());
         if (e.getActionCommand().equals("Stop")) {
             startTrace.setText("Start");
-            startTrace.setBackground(new Color(1,106,180));
+            startTrace.setBackground(new Color(1, 106, 180));
             analogueInput.setIsRunning(false);
         } else if (e.getActionCommand().equals("Start")) {
             startTrace.setText("Stop");
@@ -61,15 +62,7 @@ public class ButtonControlsPanel extends JPanel implements ActionListener {
         } else if (e.getActionCommand().equals("Save")) {
             TimeSeries[] timeSeries = analogueInput.getTimeSeries();
             analogueInput.setIsRunning(false);
-            int number_of_series = analogueInput.getTimeSeries().length;
-            for (int n = 0; n < number_of_series; n++) {
-                int itemCount = timeSeries[n].getItemCount();
-                for (int i = 0; i < itemCount; i++) {
-                    System.out.print(timeSeries[n].getTimePeriod(i) + "\t");
-                    System.out.print(timeSeries[n].getDataItem(i).getValue() + ", ");
-                }
-                System.out.println();
-            }
+            Utilities.saveData(timeSeries);
             analogueInput.setIsRunning(true);
         }
     }

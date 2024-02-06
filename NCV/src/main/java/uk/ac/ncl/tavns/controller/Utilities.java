@@ -1,8 +1,12 @@
 package uk.ac.ncl.tavns.controller;
 
+import org.jfree.data.time.TimeSeries;
+
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Properties;
 
 public class Utilities {
@@ -66,4 +70,31 @@ public class Utilities {
         properties.setProperty("output_device", "Dev1");
     }
 
+    public static void saveData(TimeSeries[] timeSeries) {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd_HHmmss");
+        LocalDateTime now = LocalDateTime.now();
+        File filename = new File(dtf.format(now) + ".csv");
+        try {
+            FileWriter fileWriter = new FileWriter(filename);
+            int number_of_series = timeSeries.length;
+            int itemCount = timeSeries[0].getItemCount();
+            for (int i = 0; i < itemCount; i++) {
+                String comma = (i == (itemCount-1)?"":",");
+                fileWriter.write(timeSeries[0].getTimePeriod(i) + comma);
+            }
+            for (int n = 0; n < number_of_series; n++) {
+
+                fileWriter.write("\n");
+                for (int i = 0; i < itemCount; i++) {
+                    String comma = (i == (itemCount - 1)?"":",");
+                    fileWriter.write(timeSeries[n].getDataItem(i).getValue() + comma);
+                }
+                fileWriter.write("\n");
+            }
+            fileWriter.close();
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+
+    }
 }
