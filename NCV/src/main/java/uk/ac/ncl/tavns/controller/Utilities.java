@@ -17,19 +17,8 @@ public class Utilities {
         File f = new File(propertiesFile);
         // If the file doesn't exist, create it
         try {
-//            Files.createDirectories(Paths.get(configDirectory));
-//            if (!(f.exists())) {
-//                OutputStream out = new FileOutputStream(f);
-//                out.close();
-//            }
-//            InputStream is = new FileInputStream(f);
-//            properties.load(is);
-//            if (properties.isEmpty()) {
-//                defaultProperties(properties);
-//            }
             FileOutputStream out = new FileOutputStream(propertiesFile);
             properties.store(out, "");
-//            is.close();
             out.close();
         } catch (IOException e1) {
             e1.printStackTrace();
@@ -73,7 +62,8 @@ public class Utilities {
         properties.setProperty("plot_range_maximum", "1");
         properties.setProperty("samples_per_channel", "1");
         properties.setProperty("number_of_ai_channels", "3");
-        properties.setProperty("device", "Dev1");
+        properties.setProperty("input_device", "Dev1");
+        properties.setProperty("output_device", "Dev1");
     }
 
 }

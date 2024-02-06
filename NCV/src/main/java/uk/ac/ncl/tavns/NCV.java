@@ -19,7 +19,8 @@ public class NCV extends JFrame {
 
     private int numberOfChannels;
     private int numSampsPerChan;
-    private String device;
+    private String inputDevice;
+    private String outputDevice;
 
     private AnalogueInput analogueInput;
     private DigitalOutput digitalOutput;
@@ -34,9 +35,10 @@ public class NCV extends JFrame {
         Properties properties = Utilities.loadProperties();
         numberOfChannels = Integer.parseInt(properties.getProperty("number_of_ai_channels"));
         numSampsPerChan = Integer.parseInt(properties.getProperty("samples_per_channel"));
-        device = properties.getProperty("device");
-        digitalOutput = new DigitalOutput();
-        analogueInput = new AnalogueInput(numberOfChannels, numSampsPerChan, device);
+        inputDevice = properties.getProperty("input_device");
+        outputDevice = properties.getProperty("output_device");
+        digitalOutput = new DigitalOutput(outputDevice);
+        analogueInput = new AnalogueInput(numberOfChannels, numSampsPerChan, inputDevice);
         final JTabbedPane tabbedPane = new JTabbedPane();
         final ChartsPanel chartsPanel = new ChartsPanel(numberOfChannels, analogueInput);
 

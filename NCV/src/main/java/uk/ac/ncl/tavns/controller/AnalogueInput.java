@@ -18,12 +18,12 @@ public class AnalogueInput implements Runnable {
     private final int numSampsPerChan;
     private boolean isRunning = true;
     private TimeSeries[] timeSeries;
-    private String device;
+    private String inputDevice;
 
-    public AnalogueInput(int numberOfChannels, int numSampsPerChan, String device) {
+    public AnalogueInput(int numberOfChannels, int numSampsPerChan, String inputDevice) {
 
         this.timeSeries = new TimeSeries[numberOfChannels];
-        this.device = device;
+        this.inputDevice = inputDevice;
         for (int i = 0; i < numberOfChannels; i++) {
             timeSeries[i] = new TimeSeries("Legend: " + i);
         }
@@ -31,12 +31,12 @@ public class AnalogueInput implements Runnable {
 
     }
 
-    public double[] readAnalogueIn(int inputBufferSize, String device) throws NiDaqException {
+    public double[] readAnalogueIn(int inputBufferSize, String inputDevice) throws NiDaqException {
         Pointer aiTask = null;
         try {
             aiTask = daq.createTask("AITask");
 
-            String physicalChannel = device + "/ai0:" + (timeSeries.length - 1);
+            String physicalChannel = inputDevice + "/ai0:" + (timeSeries.length - 1);
             daq.createAIVoltageChannel(aiTask, physicalChannel, "",
                     Nicaiu.DAQmx_Val_Cfg_Default, -10.0, 10.0, Nicaiu.DAQmx_Val_Volts,
                     null);
@@ -72,8 +72,8 @@ public class AnalogueInput implements Runnable {
         System.out.println("Samples per channel: " + numSampsPerChan);
         while (true) {
             try {
-                int inputBufferSize = timeSeries.length * numSampsPerChan;
-                double[] data = readAnalogueIn(inputBufferSize, device);
+                int inputBufferSize = timeSeries.length * numSampsPerChan *2;
+                double[] data = readAnalogueIn(inputBufferSize, inputDevice);
                 if (data != null) {
                     for (int i = 0; i < timeSeries.length; i++) {
                         int start = i * numSampsPerChan;
@@ -85,7 +85,8 @@ public class AnalogueInput implements Runnable {
                     }
                 }
             } catch (NiDaqException e) {
-                // System.out.println("ERROR:\n" + e.getMessage());
+                System.out.println("NidaqException:");
+                e.printStackTrace();
                 // ToDo
             }
 
