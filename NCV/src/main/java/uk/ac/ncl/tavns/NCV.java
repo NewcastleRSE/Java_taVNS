@@ -26,7 +26,7 @@ public class NCV extends JFrame {
     private DigitalOutput digitalOutput;
 
     /**
-     * Constructs a new application frame.
+     * Create the main window GUI. This should actually move to a separate class in the view package"
      *
      * @param title the frame title.
      */
@@ -77,7 +77,7 @@ public class NCV extends JFrame {
     /**
      * Start application
      *
-     * @param args
+     * @param args - not used at the moment
      */
     public static void main(String[] args) {
         final NCV ncv = new NCV("NIDAQ Channel Visualiser");
