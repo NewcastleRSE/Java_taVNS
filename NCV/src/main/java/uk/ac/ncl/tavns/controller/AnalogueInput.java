@@ -12,8 +12,7 @@ import java.nio.IntBuffer;
 import java.util.Arrays;
 
 public class AnalogueInput implements Runnable {
-    static double lastValue = 100.0;
-    static final double factor = 0.90 + 0.2 * Math.random();
+
     private static NiDaq daq = new NiDaq();
     private final int numSampsPerChan;
     private boolean isRunning = true;
