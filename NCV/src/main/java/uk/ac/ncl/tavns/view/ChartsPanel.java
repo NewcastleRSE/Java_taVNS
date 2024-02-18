@@ -10,6 +10,7 @@ import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.XYDataset;
 import uk.ac.ncl.tavns.controller.AnalogueInput;
+import uk.ac.ncl.tavns.controller.DigitalOutput;
 
 import javax.swing.*;
 
@@ -17,9 +18,9 @@ public class ChartsPanel extends JPanel {
 
     private static ButtonControlsPanel controlsPanel;
 
-    public ChartsPanel(int channels, AnalogueInput analogueInput) {
+    public ChartsPanel(int channels, AnalogueInput analogueInput, DigitalOutput digitalOutput) {
         super();
-        controlsPanel = new ButtonControlsPanel(analogueInput);
+        controlsPanel = new ButtonControlsPanel(analogueInput, digitalOutput);
         TimeSeriesCollection[] dataset = new TimeSeriesCollection[channels];
         TimeSeries[] timeSeries = analogueInput.getTimeSeries();
         JFreeChart[] chart = new JFreeChart[channels];
