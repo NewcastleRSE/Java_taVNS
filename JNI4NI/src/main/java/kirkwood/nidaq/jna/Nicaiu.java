@@ -23,9 +23,6 @@
 package kirkwood.nidaq.jna;
 //import com.ochafik.lang.jnaerator.runtime.LibraryExtractor;
 //import com.ochafik.lang.jnaerator.runtime.MangledFunctionMapper;
-import java.nio.ByteBuffer;
-import java.nio.DoubleBuffer;
-import java.nio.IntBuffer;
 
 import com.sun.jna.Native;
 import com.sun.jna.NativeLong;
@@ -34,6 +31,10 @@ import com.sun.jna.ptr.IntByReference;
 import com.sun.jna.ptr.NativeLongByReference;
 import com.sun.jna.ptr.PointerByReference;
 import com.sun.jna.win32.StdCallLibrary;
+
+import java.nio.ByteBuffer;
+import java.nio.DoubleBuffer;
+import java.nio.IntBuffer;
 
 /**
  * JNA Wrapper for library <b>test</b><br>
@@ -115,8 +116,9 @@ public interface Nicaiu extends StdCallLibrary {
 	 * Original signature : <code>int32 DAQmxReadAnalogF64(TaskHandle, int32, float64, bool32, float64[], uInt32, int32*, bool32*)</code><br>
 	 * <i>native declaration : line 2601</i>
 	 */
-	int DAQmxReadAnalogF64(Pointer taskHandle, int numSampsPerChan, double timeout, NativeLong fillMode, DoubleBuffer readArray, NativeLong arraySizeInSamps, IntBuffer sampsPerChanRead, NativeLongByReference reserved);
-	
+	int DAQmxReadAnalogF64(Pointer taskHandle, int numSampsPerChan, double timeout, NativeLong fillMode,
+						   DoubleBuffer readArray, NativeLong arraySizeInSamps, IntBuffer sampsPerChanRead,
+						   NativeLongByReference reserved);
 	/**
 	 * Original signature : <code>int32 DAQmxStopTask(TaskHandle)</code><br>
 	 * <i>native declaration : line 2415</i>
@@ -159,8 +161,48 @@ public interface Nicaiu extends StdCallLibrary {
 	 * Original signature : <code>int32 DAQmxReadDigitalLines(TaskHandle, int32, float64, bool32, uInt8[], uInt32, int32*, int32*, bool32*)</code><br>
 	 * <i>native declaration : line 2616</i>
 	 */
-	int DAQmxReadDigitalLines(Pointer taskHandle, int numSampsPerChan, double timeout, NativeLong fillMode, ByteBuffer readArray, NativeLong arraySizeInBytes, IntBuffer sampsPerChanRead, IntBuffer numBytesPerSamp, NativeLongByReference reserved);
+	int DAQmxReadDigitalLines(Pointer taskHandle, int numSampsPerChan, double timeout, NativeLong fillMode,
+							  ByteBuffer readArray, NativeLong arraySizeInBytes, IntBuffer sampsPerChanRead,
+							  IntBuffer numBytesPerSamp, NativeLongByReference reserved);
 
-	
+
+	/**
+	 * Writes multiple floating-point samples to a task that contains one or more analog output channels.
+	 * Original signature: <code>int32 DAQmxWriteAnalogF64 (TaskHandle taskHandle, int32 numSampsPerChan,
+	 * bool32 autoStart, float64 timeout, bool32 dataLayout, float64 writeArray[], int32 *sampsPerChanWritten,
+	 * bool32 *reserved);</code>
+	 *
+	 * @param taskHandle
+	 * @param numSampsPerChan
+	 * @param autoStart
+	 * @param timeout
+	 * @param dataLayout
+	 * @param writeArray
+	 * @param sampsPerChanWritten
+	 * @param reserved
+	 * @return
+	 */
+	int DAQmxWriteAnalogF64 (Pointer taskHandle, int numSampsPerChan, NativeLong autoStart, double timeout,
+							 NativeLong dataLayout, Pointer writeArray, IntByReference sampsPerChanWritten, NativeLong reserved);
+
+
+	/**
+	 * Creates channel(s) to generate voltage and adds the channel(s) to the task you specify with taskHandle.
+	 * Original signature: <code>int32 DAQmxCreateAOVoltageChan (TaskHandle taskHandle, const char physicalChannel[], const char nameToAssignToChannel[], float64 minVal, float64 maxVal, int32 units, const char customScaleName[]);</code>
+	 *
+	 * @param taskHandle
+	 * @param physicalChannel
+	 * @param nameToAssignToChannel
+	 * @param minVal
+	 * @param maxVal
+	 * @param units
+	 * @param customScaleName
+	 * @return
+	 */
+	int DAQmxCreateAOVoltageChan (Pointer taskHandle, byte physicalChannel[], byte nameToAssignToChannel[],
+								  double minVal, double maxVal, int units, byte customScaleName[]);
+
+
 
 }
+
