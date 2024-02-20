@@ -39,7 +39,7 @@ public class NCV extends JFrame {
         outputDevice = properties.getProperty("output_device");
         analogueInput = new AnalogueInput(numberOfChannels, numSampsPerChan, inputDevice);
         final JTabbedPane tabbedPane = new JTabbedPane();
-        final ChartsPanel chartsPanel = new ChartsPanel(numberOfChannels, analogueInput, digitalOutput);
+        final ChartsPanel chartsPanel = new ChartsPanel(numberOfChannels, analogueInput, outputDevice);
 
         tabbedPane.add("Input Traces", chartsPanel);
         tabbedPane.add("Configuration", new ConfigurationPanel()); // add dummy panel for the moment

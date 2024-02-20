@@ -21,12 +21,14 @@ public class ButtonControlsPanel extends JPanel implements ActionListener {
     private final JButton startTrace = new JButton("Stop");
 
     private final AnalogueInput analogueInput;
+    private final String digitalOutputDevice;
     private byte outputState = 0;
     private JTextField txt_stimValue = new JTextField("2.5");
     // to here
 
-    public ButtonControlsPanel(AnalogueInput analogueInput, DigitalOutput digitalOutput) {
+    public ButtonControlsPanel(AnalogueInput analogueInput, String digitalOutputDevice) {
         this.analogueInput = analogueInput;
+        this.digitalOutputDevice = digitalOutputDevice;
         setPreferredSize(new Dimension(1000, 30));
         Border lineBorder = BorderFactory.createLineBorder(Color.black);
         setBorder(lineBorder);
@@ -87,10 +89,10 @@ public class ButtonControlsPanel extends JPanel implements ActionListener {
             analogueInput.setIsRunning(true);
         } else if (e.getActionCommand().equals("Dig Out")) {
             byte[] data = {outputState, outputState};
-            DigitalOutput digitalOutput = new DigitalOutput("Dev1", data, "/port0/line0");
+            DigitalOutput digitalOutput = new DigitalOutput(digitalOutputDevice, data, "/port0/line0");
             digitalOutput.start();
         } else if (e.getActionCommand().equals("Test Ramp Stim")) {
-            AnalogueRamp analogueRamp = new AnalogueRamp("Dev1", "ao1",
+            AnalogueRamp analogueRamp = new AnalogueRamp(digitalOutputDevice, "ao1",
                     "AOTask", 10, 200);
             analogueRamp.start();
         } else if (e.getActionCommand().equals("Analogue Stim")) {
@@ -98,7 +100,7 @@ public class ButtonControlsPanel extends JPanel implements ActionListener {
             double stimValue = (sval.equals("") || sval==null)?0:Double.parseDouble(txt_stimValue.getText());
             AnalogueWrite analogueWrite = null;
             try {
-                analogueWrite = new AnalogueWrite("Dev1", "ao1",
+                analogueWrite = new AnalogueWrite(digitalOutputDevice, "ao1",
                         "AOTask", stimValue);
                 analogueWrite.start();
             } catch (NiDaqException ex) {
