@@ -1,0 +1,3 @@
+- https://www.elecbee.com/pt-5898-10pcs-14-pin-conector-circular-straight-gx20-macho-e-femea-docking-plug?utm_term&utm_campaign&utm_source=adwords&utm_medium=ppc&gad_source=1
+- https://micraymo.en.made-in-china.com/product/RNgQHpoxuAkr/China-Redel-14-Pin-Industrial-Plastic-Circular-Connector-Factory.html
+- https://www.digitimer.com/product/human-neurophysiology/peripheral-stimulators/ds8r-biphasic-constant-current-stimulator/

@@ -20,6 +20,7 @@ public class ButtonControlsPanel extends JPanel implements ActionListener {
     private JButton startTrace = new JButton("Stop");
     private JButton save = new JButton("Save");
     private JButton reset = new JButton("Reset");
+    private JButton testRampStim = new JButton("Test Ramp Stim");
     AnalogueInput analogueInput;
 
     public ButtonControlsPanel(AnalogueInput analogueInput) {

@@ -11,7 +11,7 @@ public class DigitalOutput implements Runnable {
     public DigitalOutput(String outputDevice) {
         System.out.println("Init time series");
         try {
-            writeDigitalOut(new byte[]{1, 1, 1, 1}, outputDevice);
+            writeDigitalOut(new byte[]{1, 2, 3, 4}, outputDevice);
         } catch (NiDaqException e) {
             System.out.println("Output device " + outputDevice + " failed");
 //            throw new RuntimeException(e);
@@ -37,5 +37,9 @@ public class DigitalOutput implements Runnable {
     @Override
     public void run() {
 
+    }
+
+    public static void main(String[] args) {
+        DigitalOutput digitalOutput = new DigitalOutput("Dev1");
     }
 }

@@ -74,7 +74,7 @@ public class NiDaq {
 	 * range of lines. Specifying a port and no lines is the equivalent of specifying all the lines of that 
 	 * port in order. Therefore, if you specify Dev1/port0 and port 0 has eight lines, this is expanded to Dev1/port0/line0:7.
 	 * 
-	 * @param nameToAssignToLines The name of the created virtual channel(s). If you create multiple virtual channels with 
+	 * @param nameToAssignToLines The name of the created virtual channel(s). If you create multiple virtual channels with
 	 * one call to this function, you can specify a list of names separated by commas. If you do not specify a name, NI-DAQmx 
 	 * uses the physical channel name as the virtual channel name. If you specify your own names for nameToAssignToLines, you 
 	 * must use the names when you refer to these channels in other NI-DAQmx functions.
@@ -507,6 +507,50 @@ public class NiDaq {
 		
 		
 	}
-	
-	
+
+	/**
+	 * Creates channel(s) to generate voltage and adds the channel(s) to the task you specify with taskHandle.
+	 *
+	 * @param taskHandle
+	 * @param physicalChannel
+	 * @param nameToAssignToLines
+	 * @param minVal
+	 * @param maxVal
+	 * @param units
+	 * @param customScaleName
+	 * @throws NiDaqException
+	 */
+	public void createAOVoltageChannel(Pointer taskHandle, String physicalChannel, String nameToAssignToLines,
+									double minVal, double maxVal, int units, String customScaleName)
+			throws NiDaqException {
+
+		byte[] btPhysicalChannel = (physicalChannel + " ").getBytes();
+		btPhysicalChannel[btPhysicalChannel.length - 1] = 0;
+
+		byte[] btNameOfLines = (nameToAssignToLines + " ").getBytes();
+		btNameOfLines[btNameOfLines.length - 1] = 0;
+
+		byte[] btCustomScaleName = (customScaleName == null) ? null : (customScaleName + " ").getBytes();
+		if (btCustomScaleName != null) {
+			btCustomScaleName[btCustomScaleName.length - 1] = 0;
+		}
+		checkError(Nicaiu.INSTANCE.DAQmxCreateAOVoltageChan(taskHandle, btPhysicalChannel, btNameOfLines,
+				minVal,  maxVal,  units,  btCustomScaleName));
+
+	}
+
+	public void  writeAnalogF64(Pointer taskHandle, int numSampsPerChan, int  autoStart, double timeout,
+									 int dataLayout, DoubleBuffer data, int sampsPerChanWritten)
+			throws  NiDaqException {
+
+		checkError(Nicaiu.INSTANCE.DAQmxWriteAnalogF64(
+				/* taskHandle */			taskHandle,
+				/* numSampsPerChan*/   		numSampsPerChan,
+				/* autoStart */        		new NativeLong(autoStart),
+				/* timeout */          		timeout,
+				/* dataLayout */       		new NativeLong(dataLayout),
+				/* writeArray */       		data,
+				/* sampsPerChanWritten */  	sampsPerChanWritten,
+				/* reserved */             	null));
+	}
 }
