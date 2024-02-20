@@ -89,7 +89,7 @@ public class ButtonControlsPanel extends JPanel implements ActionListener {
             analogueInput.setIsRunning(true);
         } else if (e.getActionCommand().equals("Dig Out")) {
             byte[] data = {outputState, outputState};
-            DigitalOutput digitalOutput = new DigitalOutput(digitalOutputDevice, data, "/port0/line0");
+            DigitalWrite digitalOutput = new DigitalWrite(digitalOutputDevice, data, "/port0/line0");
             digitalOutput.start();
         } else if (e.getActionCommand().equals("Test Ramp Stim")) {
             AnalogueRamp analogueRamp = new AnalogueRamp(digitalOutputDevice, "ao1",

@@ -2,7 +2,6 @@ package uk.ac.ncl.tavns;
 
 import org.jfree.ui.RefineryUtilities;
 import uk.ac.ncl.tavns.controller.AnalogueInput;
-import uk.ac.ncl.tavns.controller.DigitalOutput;
 import uk.ac.ncl.tavns.controller.Utilities;
 import uk.ac.ncl.tavns.view.ChartsPanel;
 import uk.ac.ncl.tavns.view.ConfigurationPanel;
@@ -17,14 +16,7 @@ import java.util.Properties;
  */
 public class NCV extends JFrame {
 
-    private int numberOfChannels;
-    private int numSampsPerChan;
-    private String inputDevice;
-    private String outputDevice;
-
-    private AnalogueInput analogueInput;
-    private DigitalOutput digitalOutput;
-
+    private final AnalogueInput analogueInput;
     /**
      * Create the main window GUI. This should actually move to a separate class in the view package"
      *
@@ -33,10 +25,10 @@ public class NCV extends JFrame {
     public NCV(String title) {
         super(title);
         Properties properties = Utilities.loadProperties();
-        numberOfChannels = Integer.parseInt(properties.getProperty("number_of_ai_channels"));
-        numSampsPerChan = Integer.parseInt(properties.getProperty("samples_per_channel"));
-        inputDevice = properties.getProperty("input_device");
-        outputDevice = properties.getProperty("output_device");
+        int numberOfChannels = Integer.parseInt(properties.getProperty("number_of_ai_channels"));
+        int numSampsPerChan = Integer.parseInt(properties.getProperty("samples_per_channel"));
+        String inputDevice = properties.getProperty("input_device");
+        String outputDevice = properties.getProperty("output_device");
         analogueInput = new AnalogueInput(numberOfChannels, numSampsPerChan, inputDevice);
         final JTabbedPane tabbedPane = new JTabbedPane();
         final ChartsPanel chartsPanel = new ChartsPanel(numberOfChannels, analogueInput, outputDevice);
