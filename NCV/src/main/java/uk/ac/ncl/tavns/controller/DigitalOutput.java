@@ -5,35 +5,43 @@ import kirkwood.nidaq.access.NiDaq;
 import kirkwood.nidaq.access.NiDaqException;
 import kirkwood.nidaq.jna.Nicaiu;
 
-public class DigitalOutput  {
+public class DigitalOutput extends Thread  {
     private static NiDaq daq = new NiDaq();
-    private static String outputDevice;
+    private static Pointer doTask;
+    private byte[] data;
 
-    public DigitalOutput(String outputDevice) {
-        System.out.println("Init time series");
+    /**
+     *
+     * @param outputDevice
+     * @param data
+     * @param port
+     * @throws NiDaqException
+     */
+    public DigitalOutput(String outputDevice, byte[] data, String port) {
         try {
-            writeDigitalOut(new byte[]{1, 2, 3, 4}, outputDevice);
+            this.data = data;
+            doTask = daq.createTask("DOTask");
+            daq.createDOChan(doTask, outputDevice + port, "", Nicaiu.DAQmx_Val_ChanForAllLines);
         } catch (NiDaqException e) {
-            System.out.println("Output device " + outputDevice + " failed");
-//            throw new RuntimeException(e);
+            throw new RuntimeException(e);
         }
-    //    System.out.println("Initialise Digital Output");
-      //  this.outputDevice = outputDevice;
     }
 
 
     /**
      * Write the specified data to the digital out lines.
-     * @param data
      * @throws NiDaqException
      */
-    public static void writeDigitalOut(byte[] data, String port) throws NiDaqException {
-        Pointer doTask = daq.createTask("DOTask");
-        daq.createDOChan(doTask, outputDevice + port, "", Nicaiu.DAQmx_Val_ChanForAllLines);
-        daq.startTask(doTask);
-        daq.writeDigitalLines(doTask, 1, 1, 10, Nicaiu.DAQmx_Val_GroupByChannel, data);
-        daq.stopTask(doTask);
-        daq.clearTask(doTask);
+    public void run() {
+        try {
+            daq.startTask(doTask);
+            daq.writeDigitalLines(doTask, 1, 1, 10, Nicaiu.DAQmx_Val_GroupByChannel, data);
+            daq.stopTask(doTask);
+            daq.clearTask(doTask);
+        } catch (NiDaqException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
 }
