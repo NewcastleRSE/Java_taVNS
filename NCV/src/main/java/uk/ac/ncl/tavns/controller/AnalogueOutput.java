@@ -16,7 +16,7 @@ public class AnalogueOutput {
         int maxVal = 5;
         int sleep = 500;
         int stims = 20;
-        String physicalChannel = inputDevice + "/ao0";
+        String physicalChannel = inputDevice + "/ao1";
         System.out.println(physicalChannel);
         daq.resetDevice(inputDevice);
         daq.createAOVoltageChannel(doTask, physicalChannel, "", minVal, maxVal,
@@ -24,7 +24,7 @@ public class AnalogueOutput {
         for (int i = 0; i < stims; i++) {
             System.out.println("Pulse " + i);
             daq.startTask(doTask);
-            double[] fbb = {0.1D, 0D};
+            double[] fbb = {5D, 5D};
             DoubleBuffer data = DoubleBuffer.wrap(fbb);
             System.out.println(data.get(0));
             daq.writeAnalogF64(doTask, 1, 1, 10, Nicaiu.DAQmx_Val_GroupByChannel,
@@ -44,7 +44,7 @@ public class AnalogueOutput {
     }
 
     public static void main(String[] args) throws NiDaqException, InterruptedException {
-        AnalogueOutput analogueOutput = new AnalogueOutput("Dev2");
+        AnalogueOutput analogueOutput = new AnalogueOutput("Dev1");
     }
 
 }

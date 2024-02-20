@@ -63,10 +63,10 @@ public interface Nicaiu extends StdCallLibrary {
      */
     int DAQmxCreateDOChan(Pointer taskHandle, byte lines[], byte nameToAssignToLines[], int lineGrouping);
 
-    /**
-     * Original signature : <code>int32 DAQmxCreateTask(const char[], TaskHandle*)</code><br>
-     * <i>native declaration : line 2410</i>
-     */
+    	/**
+	 * Original signature : <code>int32 DAQmxCreateTask(const char[], TaskHandle*)</code><br>
+	 * <i>native declaration : line 2410</i>
+	 */
 
     int DAQmxCreateDIChan(Pointer taskHandle, byte lines[], byte nameToAssignToLines[], int lineGrouping);
 
@@ -176,7 +176,8 @@ public interface Nicaiu extends StdCallLibrary {
      * @param customScaleName
      * @return
      */
-    int DAQmxCreateAOVoltageChan(Pointer taskHandle, byte[] physicalChannel, byte[] nameToAssignToLines, double minVal, double maxVal, int units, byte[] customScaleName);
+    int DAQmxCreateAOVoltageChan(Pointer taskHandle, byte[] physicalChannel, byte[] nameToAssignToLines, double minVal,
+                                 double maxVal, int units, byte[] customScaleName);
 
     /**
      * Writes multiple floating-point samples to a task that contains one or more analog output channels.
@@ -186,7 +187,10 @@ public interface Nicaiu extends StdCallLibrary {
      * automatically configures the buffer when you configure sample timing. If you attempt to write one sample for a
      * buffered write without configuring the buffer, you will receive an error.
      *
-     * Original signature: <code>nt32 DAQmxWriteAnalogF64 (TaskHandle taskHandle, int32 numSampsPerChan, bool32 autoStart, float64 timeout, bool32 dataLayout, float64 writeArray[], int32 *sampsPerChanWritten, bool32 *reserved);</code>
+     * Original signature: <code>nt32 DAQmxWriteAnalogF64 (TaskHandle taskHandle, int32 numSampsPerChan,
+     * bool32 autoStart, float64 timeout, bool32 dataLayout, float64 writeArray[], int32 *sampsPerChanWritten,
+     * bool32 *reserved);</code>
+     *
      * @param taskHandle
      * @param numSampsPerChan
      * @param autoStart
@@ -196,6 +200,7 @@ public interface Nicaiu extends StdCallLibrary {
      * @return
      */
     int DAQmxWriteAnalogF64(Pointer taskHandle, int numSampsPerChan, NativeLong autoStart, double timeout,
-                            NativeLong dataLayout, DoubleBuffer writeArray, int sampsPerChanWritten,
+                            NativeLong dataLayout, DoubleBuffer writeArray, IntByReference sampsPerChanWritten,
                             NativeLongByReference reserved);
 }
+
