@@ -10,12 +10,15 @@ import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.XYDataset;
 import uk.ac.ncl.tavns.controller.AnalogueInput;
+import uk.ac.ncl.tavns.controller.Utilities;
 
 import javax.swing.*;
+import java.util.Properties;
 
 public class ChartsPanel extends JPanel {
 
     private static ButtonControlsPanel controlsPanel;
+    Properties properties = Utilities.loadProperties();
 
     public ChartsPanel(int channels, AnalogueInput analogueInput, String digitalOutputDevice) {
         super();
@@ -33,7 +36,8 @@ public class ChartsPanel extends JPanel {
             chart[i].removeLegend();
             chartPanel[i] = new ChartPanel(chart[i]);
             add(chartPanel[i], "wrap");
-            chartPanel[i].setPreferredSize(new java.awt.Dimension(1000, 270));
+            chartPanel[i].setPreferredSize(new java.awt.Dimension(Integer.parseInt(properties.getProperty("chart_width")),
+                    Integer.parseInt(properties.getProperty("chart_height"))));
         }
         Thread t1 = new Thread(analogueInput);
         t1.start();

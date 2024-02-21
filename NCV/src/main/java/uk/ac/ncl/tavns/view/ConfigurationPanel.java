@@ -18,6 +18,8 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
     private static JTextField tf_samplesPerChannel = new JTextField( 5);
     private static JTextField tf_inputDevice = new JTextField(5);
     private static JTextField tf_outputDevice = new JTextField(5);
+    private static JTextField tf_chartWidth = new JTextField("1000",5);
+    private static JTextField tf_chartHeight = new JTextField("270",5);
     private JButton save = new JButton("Save");
 
     public ConfigurationPanel() {
@@ -31,11 +33,20 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
         tf_outputDevice.setText(properties.getProperty("output_device"));
         MigLayout migLayout = new MigLayout("wrap 5");
         setLayout(migLayout);
-        add(new Label("Initial Plot Ranges: "));
-        add(new Label("Minimum"));
+        add(new JLabel("Initial Plot Ranges: "));
+        add(new JLabel("Minimum"));
         add(tf_rangeMinimum);
-        add(new Label("Maximum"));
+        add(new JLabel("Maximum"));
         add(tf_rangeMaximum, "wrap");
+
+        add(new JLabel(""));
+        add(new JLabel("Chart width: "));
+        add(tf_chartWidth);
+        add(new JLabel( "Chart height"));
+        add(tf_chartHeight, "wrap");
+
+        JSeparator jSeparator = new JSeparator(SwingConstants.HORIZONTAL);
+        this.add(jSeparator, "growx, span 6, wrap");
         add(new Label("Input Device: "));
         add(tf_inputDevice);
         add(new Label("Output Device: "));
@@ -57,6 +68,8 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
             Properties properties = new Properties();
             properties.setProperty("plot_range_minimum", tf_rangeMinimum.getText());
             properties.setProperty("plot_range_maximum", tf_rangeMaximum.getText());
+            properties.setProperty("chart_width", tf_chartWidth.getText());
+            properties.setProperty("chart_height", tf_chartHeight.getText());
             properties.setProperty("samples_per_channel", tf_samplesPerChannel.getText());
             properties.setProperty("number_of_ai_channels", tf_aiChannels.getText());
             properties.setProperty("input_device", tf_inputDevice.getText());

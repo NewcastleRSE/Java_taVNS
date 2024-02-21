@@ -68,6 +68,8 @@ public class Utilities {
         properties.setProperty("number_of_ai_channels", "3");
         properties.setProperty("input_device", "Dev1");
         properties.setProperty("output_device", "Dev1");
+        properties.setProperty("chart_width", "1000");
+        properties.setProperty("chart_height", "720");
     }
 
     public static void saveData(TimeSeries[] timeSeries) {

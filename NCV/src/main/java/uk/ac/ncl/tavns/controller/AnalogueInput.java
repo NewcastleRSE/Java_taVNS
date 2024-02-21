@@ -78,9 +78,9 @@ public class AnalogueInput implements Runnable {
                         int start = i * numSampsPerChan;
                         int end = start + numSampsPerChan;
                         if (isRunning)
-                            timeSeries[i].add(new Millisecond(), mean(Arrays.copyOfRange(data, start, end)));
+                            timeSeries[i].addOrUpdate(new Millisecond(), mean(Arrays.copyOfRange(data, start, end)));
                         else
-                            timeSeries[i].add(new Millisecond(), null);
+                            timeSeries[i].addOrUpdate(new Millisecond(), null);
                     }
                 }
             } catch (NiDaqException e) {

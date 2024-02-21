@@ -7,7 +7,7 @@ import kirkwood.nidaq.jna.Nicaiu;
 
 import java.nio.DoubleBuffer;
 
-public class AnalogueRamp extends Thread {
+public class AnalogueRamp implements Runnable {
     private static NiDaq daq = new NiDaq();
     int minVal = 0;
     int maxVal = 5;
@@ -33,6 +33,7 @@ public class AnalogueRamp extends Thread {
         }
     }
 
+    @Override
     public void run() {
         System.out.println("Run thread");
         try {

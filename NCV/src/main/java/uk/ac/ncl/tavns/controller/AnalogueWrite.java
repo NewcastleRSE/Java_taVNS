@@ -7,7 +7,7 @@ import kirkwood.nidaq.jna.Nicaiu;
 
 import java.nio.DoubleBuffer;
 
-public class AnalogueWrite extends Thread {
+public class AnalogueWrite implements Runnable {
     private static NiDaq daq = new NiDaq();
     int minVal = 0;
     int maxVal = 5;

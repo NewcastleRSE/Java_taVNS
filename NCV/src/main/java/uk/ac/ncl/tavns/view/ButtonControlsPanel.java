@@ -67,10 +67,12 @@ public class ButtonControlsPanel extends JPanel implements ActionListener {
         if (e.getActionCommand().equals("Stop")) {
             startTrace.setText("Start");
             startTrace.setBackground(new Color(1, 106, 180));
+            startTrace.setForeground(Color.WHITE);
             analogueInput.setIsRunning(false);
         } else if (e.getActionCommand().equals("Start")) {
             startTrace.setText("Stop");
             startTrace.setBackground(Color.ORANGE);
+            startTrace.setForeground(Color.BLACK);
             analogueInput.setIsRunning(true);
         } else if (e.getActionCommand().equals("Reset")) {
             // clear graphs
@@ -78,6 +80,8 @@ public class ButtonControlsPanel extends JPanel implements ActionListener {
             int number_of_series = analogueInput.getTimeSeries().length;
             TimeSeries[] timeSeries = analogueInput.getTimeSeries();
             analogueInput.setIsRunning(false);
+            System.out.println("Timeseries length: " + timeSeries.length);
+            if (timeSeries[0].getItemCount() > 0)
             for (int n = 0; n < number_of_series; n++) {
                 timeSeries[n].delete(0, timeSeries[n].getItemCount() - 1);
             }
@@ -92,17 +96,17 @@ public class ButtonControlsPanel extends JPanel implements ActionListener {
             DigitalWrite digitalOutput = new DigitalWrite(digitalOutputDevice, data, "/port0/line0");
             digitalOutput.start();
         } else if (e.getActionCommand().equals("Test Ramp Stim")) {
-            AnalogueRamp analogueRamp = new AnalogueRamp(digitalOutputDevice, "ao1",
-                    "AOTask", 10, 200);
-            analogueRamp.start();
+            Thread thread = new Thread(new AnalogueRamp(digitalOutputDevice, "ao1",
+                    "AOTask", 10, 200));
+            thread.start();
         } else if (e.getActionCommand().equals("Analogue Stim")) {
             String sval = txt_stimValue.getText();
             double stimValue = (sval.equals("") || sval==null)?0:Double.parseDouble(txt_stimValue.getText());
-            AnalogueWrite analogueWrite = null;
+//            AnalogueWrite analogueWrite = null;
             try {
-                analogueWrite = new AnalogueWrite(digitalOutputDevice, "ao1",
-                        "AOTask", stimValue);
-                analogueWrite.start();
+                Thread thread = new Thread( new AnalogueWrite(digitalOutputDevice, "ao1",
+                        "AOTask", stimValue));
+                thread.start();
             } catch (NiDaqException ex) {
                 if (ex.toString().equals("DAQmxErrorInvalidAODataWrite")) {
 
