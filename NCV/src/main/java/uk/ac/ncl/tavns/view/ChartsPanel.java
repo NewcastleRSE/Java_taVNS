@@ -20,9 +20,10 @@ public class ChartsPanel extends JPanel {
     private static ButtonControlsPanel buttonControlsPanel;
     Properties properties = Utilities.loadProperties();
 
-    public ChartsPanel(int channels, AnalogueInput analogueInput, String digitalOutputDevice) {
+    public ChartsPanel(PanelCollection panelCollection, int channels, AnalogueInput analogueInput, String digitalOutputDevice) {
         super();
-        buttonControlsPanel = new ButtonControlsPanel(analogueInput, digitalOutputDevice);
+        panelCollection.setButtonControlsPanel(new ButtonControlsPanel(analogueInput, digitalOutputDevice));
+        buttonControlsPanel = panelCollection.getButtonControlsPanel();
         TimeSeriesCollection[] dataset = new TimeSeriesCollection[channels];
         TimeSeries[] timeSeries = analogueInput.getTimeSeries();
         JFreeChart[] chart = new JFreeChart[channels];

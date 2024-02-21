@@ -3,8 +3,10 @@ package uk.ac.ncl.tavns;
 import org.jfree.ui.RefineryUtilities;
 import uk.ac.ncl.tavns.controller.AnalogueInput;
 import uk.ac.ncl.tavns.controller.Utilities;
+import uk.ac.ncl.tavns.view.ButtonControlsPanel;
 import uk.ac.ncl.tavns.view.ChartsPanel;
 import uk.ac.ncl.tavns.view.ConfigurationPanel;
+import uk.ac.ncl.tavns.view.PanelCollection;
 
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
@@ -17,6 +19,12 @@ import java.util.Properties;
 public class NCV extends JFrame {
 
     private final AnalogueInput analogueInput;
+    ChartsPanel chartsPanel;
+    ButtonControlsPanel buttonControlsPanel;
+    ConfigurationPanel configurationPanel = new ConfigurationPanel();
+    PanelCollection panelCollection = new PanelCollection(buttonControlsPanel, chartsPanel, configurationPanel);
+
+
     /**
      * Create the main window GUI. This should actually move to a separate class in the view package"
      *
@@ -31,15 +39,15 @@ public class NCV extends JFrame {
         String outputDevice = properties.getProperty("output_device");
         analogueInput = new AnalogueInput(numberOfChannels, numSampsPerChan, inputDevice);
         final JTabbedPane tabbedPane = new JTabbedPane();
-        final ChartsPanel chartsPanel = new ChartsPanel(numberOfChannels, analogueInput, outputDevice);
+        panelCollection.setChartsPanel(chartsPanel);
+        chartsPanel = new ChartsPanel(panelCollection, numberOfChannels, analogueInput, outputDevice);
 
         tabbedPane.add("Input Traces", chartsPanel);
-        tabbedPane.add("Configuration", new ConfigurationPanel()); // add dummy panel for the moment
+        tabbedPane.add("Configuration", configurationPanel); // add dummy panel for the moment
         setContentPane(tabbedPane);
         this.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent arg0) {
                 closeDaq();
-                System.exit(0);
             }
         });
     }
@@ -50,8 +58,11 @@ public class NCV extends JFrame {
     private synchronized void closeDaq() {
         var yesOrNo = JOptionPane.showConfirmDialog(null, "Save data before quitting?", "Quit NCV?", JOptionPane.YES_NO_OPTION);
         setRunning(false);
-        if (yesOrNo == JOptionPane.YES_NO_OPTION)
-                Utilities.saveData(analogueInput.getTimeSeries());
+        System.out.println("DAQ closed");
+        if (yesOrNo == JOptionPane.YES_NO_OPTION) { // if YES (0) then save and exit
+            Utilities.saveData(analogueInput.getTimeSeries());
+        }
+        System.exit(0);
         System.out.println("DAQ closed");
 
     }

@@ -31,6 +31,8 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
         tf_samplesPerChannel.setText(properties.getProperty("samples_per_channel"));
         tf_inputDevice.setText(properties.getProperty("input_device"));
         tf_outputDevice.setText(properties.getProperty("output_device"));
+        tf_chartHeight.setText(properties.getProperty("chart_height"));
+        tf_chartWidth.setText(properties.getProperty("chart_width"));
         MigLayout migLayout = new MigLayout("wrap 5");
         setLayout(migLayout);
         add(new JLabel("Initial Plot Ranges: "));
