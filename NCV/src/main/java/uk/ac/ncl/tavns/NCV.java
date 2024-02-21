@@ -21,7 +21,7 @@ public class NCV extends JFrame {
     private final AnalogueInput analogueInput;
     ChartsPanel chartsPanel;
     ButtonControlsPanel buttonControlsPanel;
-    ConfigurationPanel configurationPanel = new ConfigurationPanel();
+    ConfigurationPanel configurationPanel;
     PanelCollection panelCollection = new PanelCollection(buttonControlsPanel, chartsPanel, configurationPanel);
 
 
@@ -41,9 +41,9 @@ public class NCV extends JFrame {
         final JTabbedPane tabbedPane = new JTabbedPane();
         panelCollection.setChartsPanel(chartsPanel);
         chartsPanel = new ChartsPanel(panelCollection, numberOfChannels, analogueInput, outputDevice);
-
+         configurationPanel = new ConfigurationPanel(panelCollection);
         tabbedPane.add("Input Traces", chartsPanel);
-        tabbedPane.add("Configuration", configurationPanel); // add dummy panel for the moment
+        tabbedPane.add("Configuration", configurationPanel);
         setContentPane(tabbedPane);
         this.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent arg0) {

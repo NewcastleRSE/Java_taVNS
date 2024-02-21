@@ -2,9 +2,9 @@ package uk.ac.ncl.tavns.view;
 
 public class PanelCollection {
 
-    ButtonControlsPanel buttonControlsPanel;
-    ChartsPanel chartsPanel;
-    ConfigurationPanel configurationPanel;
+    private ButtonControlsPanel buttonControlsPanel;
+    private ChartsPanel chartsPanel;
+    private ConfigurationPanel configurationPanel;
 
     public PanelCollection(ButtonControlsPanel buttonControlsPanel, ChartsPanel chartsPanel, ConfigurationPanel configurationPanel) {
         this.buttonControlsPanel = buttonControlsPanel;

@@ -22,7 +22,7 @@ public class ChartsPanel extends JPanel {
 
     public ChartsPanel(PanelCollection panelCollection, int channels, AnalogueInput analogueInput, String digitalOutputDevice) {
         super();
-        panelCollection.setButtonControlsPanel(new ButtonControlsPanel(analogueInput, digitalOutputDevice));
+        panelCollection.setButtonControlsPanel(new ButtonControlsPanel(panelCollection, analogueInput, digitalOutputDevice));
         buttonControlsPanel = panelCollection.getButtonControlsPanel();
         TimeSeriesCollection[] dataset = new TimeSeriesCollection[channels];
         TimeSeries[] timeSeries = analogueInput.getTimeSeries();

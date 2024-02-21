@@ -21,9 +21,11 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
     private static JTextField tf_chartWidth = new JTextField("1000",5);
     private static JTextField tf_chartHeight = new JTextField("270",5);
     private JButton save = new JButton("Save");
+    PanelCollection panelCollection;
 
-    public ConfigurationPanel() {
+    public ConfigurationPanel(PanelCollection panelCollection) {
         super();
+        this.panelCollection = panelCollection;
         Properties properties = Utilities.loadProperties();
         tf_aiChannels.setText(properties.getProperty("number_of_ai_channels"));
         tf_rangeMaximum.setText(properties.getProperty("plot_range_maximum"));
@@ -77,6 +79,7 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
             properties.setProperty("input_device", tf_inputDevice.getText());
             properties.setProperty("output_device", tf_outputDevice.getText());
             savePropertyFile(properties);
+
         }
     }
 

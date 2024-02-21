@@ -26,7 +26,7 @@ public class ButtonControlsPanel extends JPanel implements ActionListener {
     private JTextField txt_stimValue = new JTextField("2.5");
     // to here
 
-    public ButtonControlsPanel(AnalogueInput analogueInput, String digitalOutputDevice) {
+    public ButtonControlsPanel(PanelCollection panelCollection, AnalogueInput analogueInput, String digitalOutputDevice) {
         this.analogueInput = analogueInput;
         this.digitalOutputDevice = digitalOutputDevice;
         setPreferredSize(new Dimension(1000, 30));
