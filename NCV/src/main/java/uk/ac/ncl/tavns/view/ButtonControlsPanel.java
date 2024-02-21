@@ -85,6 +85,7 @@ public class ButtonControlsPanel extends JPanel implements ActionListener {
             for (int n = 0; n < number_of_series; n++) {
                 timeSeries[n].delete(0, timeSeries[n].getItemCount() - 1);
             }
+
             analogueInput.setIsRunning(true);
         } else if (e.getActionCommand().equals("Save")) {
             TimeSeries[] timeSeries = analogueInput.getTimeSeries();

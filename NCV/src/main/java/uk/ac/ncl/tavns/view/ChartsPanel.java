@@ -17,19 +17,19 @@ import java.util.Properties;
 
 public class ChartsPanel extends JPanel {
 
-    private static ButtonControlsPanel controlsPanel;
+    private static ButtonControlsPanel buttonControlsPanel;
     Properties properties = Utilities.loadProperties();
 
     public ChartsPanel(int channels, AnalogueInput analogueInput, String digitalOutputDevice) {
         super();
-        controlsPanel = new ButtonControlsPanel(analogueInput, digitalOutputDevice);
+        buttonControlsPanel = new ButtonControlsPanel(analogueInput, digitalOutputDevice);
         TimeSeriesCollection[] dataset = new TimeSeriesCollection[channels];
         TimeSeries[] timeSeries = analogueInput.getTimeSeries();
         JFreeChart[] chart = new JFreeChart[channels];
         ChartPanel[] chartPanel = new ChartPanel[channels];
         MigLayout migLayout = new MigLayout("fillx", "[]rel[]", "[]10[]");
         setLayout(migLayout);
-        add(controlsPanel, "wrap");
+        add(buttonControlsPanel, "wrap");
         for (int i = 0; i < channels; i++) {
             dataset[i] = new TimeSeriesCollection(timeSeries[i]);
             chart[i] = createChart(dataset[i], "Analogue Input " + i);
