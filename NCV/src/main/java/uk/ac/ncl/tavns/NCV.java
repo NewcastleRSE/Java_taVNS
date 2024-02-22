@@ -3,10 +3,7 @@ package uk.ac.ncl.tavns;
 import org.jfree.ui.RefineryUtilities;
 import uk.ac.ncl.tavns.controller.AnalogueInput;
 import uk.ac.ncl.tavns.controller.Utilities;
-import uk.ac.ncl.tavns.view.ButtonControlsPanel;
-import uk.ac.ncl.tavns.view.ChartsPanel;
-import uk.ac.ncl.tavns.view.ConfigurationPanel;
-import uk.ac.ncl.tavns.view.PanelCollection;
+import uk.ac.ncl.tavns.view.*;
 
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
@@ -22,7 +19,8 @@ public class NCV extends JFrame {
     ChartsPanel chartsPanel;
     ButtonControlsPanel buttonControlsPanel;
     ConfigurationPanel configurationPanel;
-    PanelCollection panelCollection = new PanelCollection(buttonControlsPanel, chartsPanel, configurationPanel);
+    StimulationConfigurationPanel stimulationConfiguration = new StimulationConfigurationPanel();
+    PanelCollection panelCollection = new PanelCollection(buttonControlsPanel, chartsPanel, configurationPanel, stimulationConfiguration);
 
 
     /**

@@ -39,6 +39,8 @@ public class ChartsPanel extends JPanel {
         MigLayout migLayout = new MigLayout("fillx", "[]rel[]", "[]10[]");
         setLayout(migLayout);
         add(buttonControlsPanel, "wrap");
+        add(panelCollection.getStimulationConfiguration(), "wrap");
+
         for (int i = 0; i < channels; i++) {
             dataset[i] = new TimeSeriesCollection(timeSeries[i]);
             chart[i] = createChart(dataset[i], "Analogue Input " + i);
