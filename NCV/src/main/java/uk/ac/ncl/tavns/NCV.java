@@ -2,6 +2,7 @@ package uk.ac.ncl.tavns;
 
 import org.jfree.ui.RefineryUtilities;
 import uk.ac.ncl.tavns.controller.AnalogueInput;
+import uk.ac.ncl.tavns.controller.StimProtocols;
 import uk.ac.ncl.tavns.controller.Utilities;
 import uk.ac.ncl.tavns.view.*;
 
@@ -19,8 +20,9 @@ public class NCV extends JFrame {
     ChartsPanel chartsPanel;
     ButtonControlsPanel buttonControlsPanel;
     ConfigurationPanel configurationPanel;
-    StimulationConfigurationPanel stimulationConfiguration = new StimulationConfigurationPanel();
-    PanelCollection panelCollection = new PanelCollection(buttonControlsPanel, chartsPanel, configurationPanel, stimulationConfiguration);
+    StimulationConfigurationPanel stimulationConfigurationPanel;
+    StimProtocols stimProtocols;
+    PanelCollection panelCollection = new PanelCollection(buttonControlsPanel, chartsPanel, configurationPanel, stimulationConfigurationPanel);
 
 
     /**
@@ -35,11 +37,13 @@ public class NCV extends JFrame {
         int numSampsPerChan = Integer.parseInt(properties.getProperty("samples_per_channel"));
         String inputDevice = properties.getProperty("input_device");
         String outputDevice = properties.getProperty("output_device");
+        stimProtocols = new StimProtocols();
         analogueInput = new AnalogueInput(numberOfChannels, numSampsPerChan, inputDevice);
         final JTabbedPane tabbedPane = new JTabbedPane();
         chartsPanel = new ChartsPanel(panelCollection, numberOfChannels, analogueInput, outputDevice);
         panelCollection.setChartsPanel(chartsPanel);
         configurationPanel = new ConfigurationPanel(panelCollection);
+        stimulationConfigurationPanel = new StimulationConfigurationPanel();
         tabbedPane.add("Input Traces", chartsPanel);
         tabbedPane.add("Configuration", configurationPanel);
         setContentPane(tabbedPane);

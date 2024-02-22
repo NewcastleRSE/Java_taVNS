@@ -23,7 +23,7 @@ public class ButtonControlsPanel extends JPanel implements ActionListener {
     private final JButton startTrace = new JButton("Stop");
 
     private final AnalogueInput analogueInput;
-    private final String digitalOutputDevice;
+    private final String outputDevice;
     private byte outputState = 0;
     private JTextField txt_stimValue = new JTextField("2.5");
     private PanelCollection panelCollection;
@@ -34,12 +34,12 @@ public class ButtonControlsPanel extends JPanel implements ActionListener {
      * Panel containing buttons and input fields. Displayed at the top of the charts panel
      * @param panelCollection
      * @param analogueInput
-     * @param digitalOutputDevice
+     * @param outputDevice
      */
-    public ButtonControlsPanel(PanelCollection panelCollection, AnalogueInput analogueInput, String digitalOutputDevice) {
+    public ButtonControlsPanel(PanelCollection panelCollection, AnalogueInput analogueInput, String outputDevice) {
         properties = Utilities.loadProperties();
         this.analogueInput = analogueInput;
-        this.digitalOutputDevice = digitalOutputDevice;
+        this.outputDevice = outputDevice;
         this.panelCollection = panelCollection;
         setPreferredSize(new Dimension(1000, 30));
         Border lineBorder = BorderFactory.createLineBorder(Color.black);
@@ -125,19 +125,17 @@ public class ButtonControlsPanel extends JPanel implements ActionListener {
             Utilities.saveData(timeSeries);
             analogueInput.setIsRunning(true);
         } else if (e.getActionCommand().equals("Dig Out")) {
-            byte[] data = {outputState, outputState};
-            DigitalWrite digitalOutput = new DigitalWrite(digitalOutputDevice, data, "/port0/line0");
-            digitalOutput.start();
+            StimProtocols.digitalOutSetState(outputDevice, outputState, "/port0/line0");
+
         } else if (e.getActionCommand().equals("Test Ramp Stim")) {
-            Thread thread = new Thread(new AnalogueRamp(digitalOutputDevice, "ao1",
+            Thread thread = new Thread(new AnalogueRamp(outputDevice, "ao1",
                     "AOTask", 10, 200));
             thread.start();
         } else if (e.getActionCommand().equals("Analogue Stim")) {
             String sval = txt_stimValue.getText();
             double stimValue = (sval.equals("") || sval==null)?0:Double.parseDouble(txt_stimValue.getText());
-//            AnalogueWrite analogueWrite = null;
             try {
-                Thread thread = new Thread( new AnalogueWrite(digitalOutputDevice, "ao1",
+                Thread thread = new Thread( new AnalogueWrite(outputDevice, "ao1",
                         "AOTask", stimValue));
                 thread.start();
             } catch (NiDaqException ex) {

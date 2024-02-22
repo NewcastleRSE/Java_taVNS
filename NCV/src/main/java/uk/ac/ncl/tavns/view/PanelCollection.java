@@ -45,4 +45,5 @@ public class PanelCollection {
     public void setStimulationConfiguration(StimulationConfigurationPanel stimulationConfiguration) {
         this.stimulationConfiguration = stimulationConfiguration;
     }
+
 }
