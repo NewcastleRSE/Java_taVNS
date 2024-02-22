@@ -2,6 +2,7 @@ package uk.ac.ncl.tavns.view;
 
 import eu.hansolo.custom.SteelCheckBox;
 import kirkwood.nidaq.access.NiDaqException;
+import org.jfree.chart.ChartPanel;
 import org.jfree.data.time.TimeSeries;
 import uk.ac.ncl.tavns.controller.*;
 
@@ -10,6 +11,7 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Properties;
 
 /**
  * @author Jannetta S. Steyn
@@ -24,17 +26,28 @@ public class ButtonControlsPanel extends JPanel implements ActionListener {
     private final String digitalOutputDevice;
     private byte outputState = 0;
     private JTextField txt_stimValue = new JTextField("2.5");
+    private PanelCollection panelCollection;
+    private Properties properties;
     // to here
 
+    /**
+     * Panel containing buttons and input fields. Displayed at the top of the charts panel
+     * @param panelCollection
+     * @param analogueInput
+     * @param digitalOutputDevice
+     */
     public ButtonControlsPanel(PanelCollection panelCollection, AnalogueInput analogueInput, String digitalOutputDevice) {
+        properties = Utilities.loadProperties();
         this.analogueInput = analogueInput;
         this.digitalOutputDevice = digitalOutputDevice;
+        this.panelCollection = panelCollection;
         setPreferredSize(new Dimension(1000, 30));
         Border lineBorder = BorderFactory.createLineBorder(Color.black);
         setBorder(lineBorder);
         setLayout(new FlowLayout());
         startTrace.setBackground(Color.ORANGE);
         add(startTrace);
+        add(new JSeparator(SwingConstants.VERTICAL));
         SteelCheckBox steelCheckBox = new SteelCheckBox();
         add(steelCheckBox);
         // check this
@@ -49,11 +62,14 @@ public class ButtonControlsPanel extends JPanel implements ActionListener {
         add(save);
         JButton reset = new JButton("Reset");
         add(reset);
+        JButton resize = new JButton("Resize");
+        add(resize);
 
         startTrace.addActionListener(this);
         digOut.addActionListener(this);
         save.addActionListener(this);
         reset.addActionListener(this);
+        resize.addActionListener(this);
         steelCheckBox.addItemListener(e -> {
             outputState = e.getStateChange() == 1 ? (byte)1 : (byte)0;
             System.out.println(outputState);
@@ -82,11 +98,27 @@ public class ButtonControlsPanel extends JPanel implements ActionListener {
             analogueInput.setIsRunning(false);
             System.out.println("Timeseries length: " + timeSeries.length);
             if (timeSeries[0].getItemCount() > 0)
-            for (int n = 0; n < number_of_series; n++) {
-                timeSeries[n].delete(0, timeSeries[n].getItemCount() - 1);
-            }
-
+                for (int n = 0; n < number_of_series; n++) {
+                    timeSeries[n].delete(0, timeSeries[n].getItemCount() - 1);
+                }
             analogueInput.setIsRunning(true);
+        } else if (e.getActionCommand().equals("Resize")) {
+            properties = Utilities.loadProperties();
+            ChartsPanel chartsPanel = panelCollection.getChartsPanel();
+            ChartPanel[] chartPanel = chartsPanel.getChartPanel();
+            System.out.println("Resize panels to: " + properties.getProperty("chart_width") +
+                    ", " + properties.getProperty("chart_height"));
+            for (int i = 0; i < chartPanel.length; i++) {
+                chartPanel[i].setPreferredSize(new Dimension(Integer.parseInt(properties.getProperty("chart_width")),
+                        Integer.parseInt(properties.getProperty("chart_height"))));
+                chartPanel[i].setSize(new Dimension(Integer.parseInt(properties.getProperty("chart_width")),
+                        Integer.parseInt(properties.getProperty("chart_height"))));
+                chartPanel[i].revalidate();
+            }
+            chartsPanel.revalidate();
+            chartsPanel.repaint();
+            this.revalidate();
+            this.repaint();
         } else if (e.getActionCommand().equals("Save")) {
             TimeSeries[] timeSeries = analogueInput.getTimeSeries();
             analogueInput.setIsRunning(false);

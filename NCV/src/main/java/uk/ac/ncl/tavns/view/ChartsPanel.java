@@ -18,8 +18,16 @@ import java.util.Properties;
 public class ChartsPanel extends JPanel {
 
     private static ButtonControlsPanel buttonControlsPanel;
-    Properties properties = Utilities.loadProperties();
+    private Properties properties = Utilities.loadProperties();
+    private ChartPanel[] chartPanel;
 
+    /**
+     * Panel containing charts for displaying analogue input traces
+     * @param panelCollection
+     * @param channels
+     * @param analogueInput
+     * @param digitalOutputDevice
+     */
     public ChartsPanel(PanelCollection panelCollection, int channels, AnalogueInput analogueInput, String digitalOutputDevice) {
         super();
         panelCollection.setButtonControlsPanel(new ButtonControlsPanel(panelCollection, analogueInput, digitalOutputDevice));
@@ -27,7 +35,7 @@ public class ChartsPanel extends JPanel {
         TimeSeriesCollection[] dataset = new TimeSeriesCollection[channels];
         TimeSeries[] timeSeries = analogueInput.getTimeSeries();
         JFreeChart[] chart = new JFreeChart[channels];
-        ChartPanel[] chartPanel = new ChartPanel[channels];
+        chartPanel = new ChartPanel[channels];
         MigLayout migLayout = new MigLayout("fillx", "[]rel[]", "[]10[]");
         setLayout(migLayout);
         add(buttonControlsPanel, "wrap");
@@ -40,6 +48,7 @@ public class ChartsPanel extends JPanel {
             chartPanel[i].setPreferredSize(new java.awt.Dimension(Integer.parseInt(properties.getProperty("chart_width")),
                     Integer.parseInt(properties.getProperty("chart_height"))));
         }
+
         Thread t1 = new Thread(analogueInput);
         t1.start();
     }
@@ -63,4 +72,19 @@ public class ChartsPanel extends JPanel {
         return result;
     }
 
+    public static ButtonControlsPanel getButtonControlsPanel() {
+        return buttonControlsPanel;
+    }
+
+    public static void setButtonControlsPanel(ButtonControlsPanel buttonControlsPanel) {
+        ChartsPanel.buttonControlsPanel = buttonControlsPanel;
+    }
+
+    public ChartPanel[] getChartPanel() {
+        return chartPanel;
+    }
+
+    public void setChartPanel(ChartPanel[] chartPanel) {
+        this.chartPanel = chartPanel;
+    }
 }

@@ -80,6 +80,7 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
             properties.setProperty("output_device", tf_outputDevice.getText());
             savePropertyFile(properties);
 
+
         }
     }
 
