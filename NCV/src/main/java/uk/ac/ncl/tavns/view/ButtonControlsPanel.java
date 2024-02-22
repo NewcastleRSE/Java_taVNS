@@ -126,11 +126,8 @@ public class ButtonControlsPanel extends JPanel implements ActionListener {
             analogueInput.setIsRunning(true);
         } else if (e.getActionCommand().equals("Dig Out")) {
             StimProtocols.digitalOutSetState(outputDevice, outputState, "/port0/line0");
-
         } else if (e.getActionCommand().equals("Test Ramp Stim")) {
-            Thread thread = new Thread(new AnalogueRamp(outputDevice, "ao1",
-                    "AOTask", 10, 200));
-            thread.start();
+            StimProtocols.testRamp(outputDevice, "ao1");
         } else if (e.getActionCommand().equals("Analogue Stim")) {
             String sval = txt_stimValue.getText();
             double stimValue = (sval.equals("") || sval==null)?0:Double.parseDouble(txt_stimValue.getText());

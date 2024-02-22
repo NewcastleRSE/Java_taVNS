@@ -11,4 +11,10 @@ public class StimProtocols {
         digitalOutput.start();
 
     }
+
+    public static void testRamp(String outputDevice, String outputChannel) {
+        Thread thread = new Thread(new AnalogueRamp(outputDevice, outputChannel,
+                "AOTask", 10, 200));
+        thread.start();
+    }
 }
