@@ -1,10 +1,11 @@
 package uk.ac.ncl.tavns.view;
 
 import eu.hansolo.custom.SteelCheckBox;
-import kirkwood.nidaq.access.NiDaqException;
 import org.jfree.chart.ChartPanel;
 import org.jfree.data.time.TimeSeries;
-import uk.ac.ncl.tavns.controller.*;
+import uk.ac.ncl.tavns.controller.AnalogueInput;
+import uk.ac.ncl.tavns.controller.StimProtocols;
+import uk.ac.ncl.tavns.controller.Utilities;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -131,16 +132,7 @@ public class ButtonControlsPanel extends JPanel implements ActionListener {
         } else if (e.getActionCommand().equals("Analogue Stim")) {
             String sval = txt_stimValue.getText();
             double stimValue = (sval.equals("") || sval==null)?0:Double.parseDouble(txt_stimValue.getText());
-            try {
-                Thread thread = new Thread( new AnalogueWrite(outputDevice, "ao1",
-                        "AOTask", stimValue));
-                thread.start();
-            } catch (NiDaqException ex) {
-                if (ex.toString().equals("DAQmxErrorInvalidAODataWrite")) {
-
-                }
-                throw new RuntimeException(ex);
-            }
+            StimProtocols.singleAnalogStim(outputDevice, stimValue);
         } else {
             System.out.println(e.getActionCommand());
         }

@@ -1,5 +1,7 @@
 package uk.ac.ncl.tavns.controller;
 
+import kirkwood.nidaq.access.NiDaqException;
+
 public class StimProtocols {
 
     public StimProtocols() {
@@ -16,5 +18,16 @@ public class StimProtocols {
         Thread thread = new Thread(new AnalogueRamp(outputDevice, outputChannel,
                 "AOTask", 10, 200));
         thread.start();
+    }
+
+    public static void singleAnalogStim(String outputDevice, double stimvalue) {
+        try {
+            Thread thread = new Thread( new AnalogueWrite(outputDevice, "ao1",
+                    "AOTask", stimvalue));
+            thread.start();
+        } catch (NiDaqException ex) {
+            throw new RuntimeException(ex);
+        }
+
     }
 }
