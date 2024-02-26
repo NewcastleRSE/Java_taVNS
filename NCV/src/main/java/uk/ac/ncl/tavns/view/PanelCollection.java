@@ -1,5 +1,7 @@
 package uk.ac.ncl.tavns.view;
 
+import uk.ac.ncl.tavns.controller.StimProtocols;
+
 public class PanelCollection {
 
     private ButtonControlsPanel buttonControlsPanel;
@@ -7,7 +9,11 @@ public class PanelCollection {
     private ConfigurationPanel configurationPanel;
     private StimulationConfigurationPanel stimulationConfiguration;
 
-    public PanelCollection(ButtonControlsPanel buttonControlsPanel, ChartsPanel chartsPanel, ConfigurationPanel configurationPanel, StimulationConfigurationPanel stimulationConfiguration) {
+    private StimProtocols stimProtocols;
+
+    public PanelCollection(ButtonControlsPanel buttonControlsPanel, ChartsPanel chartsPanel,
+                           ConfigurationPanel configurationPanel,
+                           StimulationConfigurationPanel stimulationConfiguration) {
         this.buttonControlsPanel = buttonControlsPanel;
         this.chartsPanel = chartsPanel;
         this.configurationPanel = configurationPanel;
@@ -46,4 +52,11 @@ public class PanelCollection {
         this.stimulationConfiguration = stimulationConfiguration;
     }
 
+    public StimProtocols getStimProtocols() {
+        return stimProtocols;
+    }
+
+    public void setStimProtocols(StimProtocols stimProtocols) {
+        this.stimProtocols = stimProtocols;
+    }
 }

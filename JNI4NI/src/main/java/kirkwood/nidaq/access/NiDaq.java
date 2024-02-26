@@ -599,4 +599,16 @@ public class NiDaq {
 				/* sampsPerChanWritten */  	null,
 				/* reserved */             	null));
 	}
+
+    public void DAQmxWriteAnalogScalarF64 (Pointer taskHandle, int autoStart, double timeout, double value,
+                                   int reserved) throws NiDaqException {
+
+        checkError(Nicaiu.INSTANCE.DAQmxWriteAnalogScalarF64(
+                /* taskHandle */			taskHandle,
+                /* autoStart */        		new NativeLong(autoStart),
+                /* timeout */          		timeout,
+                /* value */       	    	value,
+                /* reserved */             	null));
+    }
+
 }

@@ -1,13 +1,19 @@
 package uk.ac.ncl.tavns.controller;
 
 import kirkwood.nidaq.access.NiDaqException;
+import org.jfree.data.time.TimeSeriesCollection;
+import uk.ac.ncl.tavns.view.ChartsPanel;
 
 /**
  * Class containing stimulation protocols
+ * Grounding: https://www.ni.com/en/support/documentation/supplemental/06/grounding-considerations---intermediate-analog-concepts.html
  */
 public class StimProtocols {
 
-    public StimProtocols() {
+    private static TimeSeriesCollection[] dataset;
+    AnalogueThresholdWrite analogueThresholdWrite = null;
+    public StimProtocols(ChartsPanel chartsPanel) {
+        this.dataset = chartsPanel.getTimeSeriesCollection();
     }
 
     /**
@@ -29,9 +35,9 @@ public class StimProtocols {
      * @param outputDevice
      * @param outputChannel
      */
-    public static void testRamp(String outputDevice, String outputChannel) {
+    public static void testRamp(String outputDevice, String outputChannel, int sleep) {
         Thread thread = new Thread(new AnalogueRamp(outputDevice, outputChannel,
-                "AOTask", 10, 200));
+                "AOTask", 10, sleep));
         thread.start();
     }
 
@@ -48,6 +54,31 @@ public class StimProtocols {
         } catch (NiDaqException ex) {
             throw new RuntimeException(ex);
         }
+    }
 
+    public boolean thresholdStimInit(String outputDevice, String outputChannel, double threshold, double stimValue) throws NiDaqException {
+        analogueThresholdWrite = new AnalogueThresholdWrite(outputDevice, outputChannel,
+                "ThresholdStim", stimValue, dataset[0]);
+        analogueThresholdWrite.setRunning(true);
+        Thread thread = new Thread(analogueThresholdWrite);
+        thread.start();
+        return true;
+    }
+
+
+    public void thresholdStimStart() throws NiDaqException {
+        analogueThresholdWrite.setRunning(true);
+    }
+
+    public void thresholdStimStop() {
+        analogueThresholdWrite.setRunning(false);
+    }
+
+    public AnalogueThresholdWrite getAnalogueThresholdWrite() {
+        return analogueThresholdWrite;
+    }
+
+    public void setAnalogueThresholdWrite(AnalogueThresholdWrite analogueThresholdWrite) {
+        this.analogueThresholdWrite = analogueThresholdWrite;
     }
 }

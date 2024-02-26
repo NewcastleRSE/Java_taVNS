@@ -20,6 +20,7 @@ public class ChartsPanel extends JPanel {
     private static ButtonControlsPanel buttonControlsPanel;
     private Properties properties = Utilities.loadProperties();
     private ChartPanel[] chartPanel;
+    private TimeSeriesCollection[] timeSeriesCollections;
 
     /**
      * Panel containing charts for displaying analogue input traces
@@ -31,9 +32,9 @@ public class ChartsPanel extends JPanel {
     public ChartsPanel(PanelCollection panelCollection, int channels, AnalogueInput analogueInput, String digitalOutputDevice) {
         super();
         panelCollection.setButtonControlsPanel(new ButtonControlsPanel(panelCollection, analogueInput, digitalOutputDevice));
-        panelCollection.setStimulationConfiguration(new StimulationConfigurationPanel());
+        panelCollection.setStimulationConfiguration(new StimulationConfigurationPanel(panelCollection, properties.getProperty("output_device"), "ao1"));
         buttonControlsPanel = panelCollection.getButtonControlsPanel();
-        TimeSeriesCollection[] dataset = new TimeSeriesCollection[channels];
+        timeSeriesCollections = new TimeSeriesCollection[channels];
         TimeSeries[] timeSeries = analogueInput.getTimeSeries();
         JFreeChart[] chart = new JFreeChart[channels];
         chartPanel = new ChartPanel[channels];
@@ -43,8 +44,8 @@ public class ChartsPanel extends JPanel {
         add(panelCollection.getStimulationConfiguration(), "wrap");
 
         for (int i = 0; i < channels; i++) {
-            dataset[i] = new TimeSeriesCollection(timeSeries[i]);
-            chart[i] = createChart(dataset[i], "Analogue Input " + i);
+            timeSeriesCollections[i] = new TimeSeriesCollection(timeSeries[i]);
+            chart[i] = createChart(timeSeriesCollections[i], "Analogue Input " + i);
             chart[i].removeLegend();
             chartPanel[i] = new ChartPanel(chart[i]);
             add(chartPanel[i], "wrap");
@@ -89,5 +90,9 @@ public class ChartsPanel extends JPanel {
 
     public void setChartPanel(ChartPanel[] chartPanel) {
         this.chartPanel = chartPanel;
+    }
+
+    public TimeSeriesCollection[] getTimeSeriesCollection() {
+        return timeSeriesCollections;
     }
 }

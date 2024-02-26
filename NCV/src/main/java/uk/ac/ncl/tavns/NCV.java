@@ -17,12 +17,12 @@ import java.util.Properties;
 public class NCV extends JFrame {
 
     private final AnalogueInput analogueInput;
-    ChartsPanel chartsPanel;
-    ButtonControlsPanel buttonControlsPanel;
-    ConfigurationPanel configurationPanel;
-    StimulationConfigurationPanel stimulationConfigurationPanel;
-    StimProtocols stimProtocols;
-    PanelCollection panelCollection = new PanelCollection(buttonControlsPanel, chartsPanel, configurationPanel, stimulationConfigurationPanel);
+    private ChartsPanel chartsPanel;
+    private ButtonControlsPanel buttonControlsPanel;
+    private ConfigurationPanel configurationPanel;
+    private StimulationConfigurationPanel stimulationConfigurationPanel;
+    private PanelCollection panelCollection = new PanelCollection(buttonControlsPanel, chartsPanel, configurationPanel,
+            stimulationConfigurationPanel);
 
 
     /**
@@ -37,13 +37,13 @@ public class NCV extends JFrame {
         int numSampsPerChan = Integer.parseInt(properties.getProperty("samples_per_channel"));
         String inputDevice = properties.getProperty("input_device");
         String outputDevice = properties.getProperty("output_device");
-        stimProtocols = new StimProtocols();
         analogueInput = new AnalogueInput(numberOfChannels, numSampsPerChan, inputDevice);
         final JTabbedPane tabbedPane = new JTabbedPane();
         chartsPanel = new ChartsPanel(panelCollection, numberOfChannels, analogueInput, outputDevice);
-        panelCollection.setChartsPanel(chartsPanel);
         configurationPanel = new ConfigurationPanel(panelCollection);
-        stimulationConfigurationPanel = new StimulationConfigurationPanel();
+        panelCollection.setStimProtocols(new StimProtocols(chartsPanel));
+        panelCollection.setChartsPanel(chartsPanel);
+        stimulationConfigurationPanel = new StimulationConfigurationPanel(panelCollection, outputDevice, "ao1");
         tabbedPane.add("Input Traces", chartsPanel);
         tabbedPane.add("Configuration", configurationPanel);
         setContentPane(tabbedPane);

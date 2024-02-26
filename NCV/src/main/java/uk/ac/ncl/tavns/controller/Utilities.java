@@ -82,7 +82,7 @@ public class Utilities {
             int itemCount = timeSeries[0].getItemCount();
             for (int i = 0; i < itemCount; i++) {
                 String comma = (i == (itemCount-1)?"":",");
-                fileWriter.write(timeSeries[0].getTimePeriod(i) + comma);
+                fileWriter.write(timeSeries[0].getDataItem(i).getPeriod().getMiddleMillisecond()+ comma);
             }
             for (int n = 0; n < number_of_series; n++) {
 

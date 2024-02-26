@@ -161,7 +161,9 @@ public interface Nicaiu extends StdCallLibrary {
      * Original signature : <code>int32 DAQmxReadDigitalLines(TaskHandle, int32, float64, bool32, uInt8[], uInt32, int32*, int32*, bool32*)</code><br>
      * <i>native declaration : line 2616</i>
      */
-    int DAQmxReadDigitalLines(Pointer taskHandle, int numSampsPerChan, double timeout, NativeLong fillMode, ByteBuffer readArray, NativeLong arraySizeInBytes, IntBuffer sampsPerChanRead, IntBuffer numBytesPerSamp, NativeLongByReference reserved);
+    int DAQmxReadDigitalLines(Pointer taskHandle, int numSampsPerChan, double timeout, NativeLong fillMode,
+                              ByteBuffer readArray, NativeLong arraySizeInBytes, IntBuffer sampsPerChanRead,
+                              IntBuffer numBytesPerSamp, NativeLongByReference reserved);
 
     /**
      * Original signature: <code>int32 DAQmxCreateAOVoltageChan (TaskHandle taskHandle, const char physicalChannel[], const char nameToAssignToChannel[], float64 minVal, float64 maxVal, int32 units, const char customScaleName[])</code>
@@ -202,5 +204,8 @@ public interface Nicaiu extends StdCallLibrary {
     int DAQmxWriteAnalogF64(Pointer taskHandle, int numSampsPerChan, NativeLong autoStart, double timeout,
                             NativeLong dataLayout, DoubleBuffer writeArray, IntByReference sampsPerChanWritten,
                             NativeLongByReference reserved);
+
+    int DAQmxWriteAnalogScalarF64 (Pointer taskHandle, NativeLong autoStart, double timeout, double value,
+                                   NativeLongByReference reserved);
 }
 

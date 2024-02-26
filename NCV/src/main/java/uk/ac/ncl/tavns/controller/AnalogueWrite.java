@@ -5,14 +5,12 @@ import kirkwood.nidaq.access.NiDaq;
 import kirkwood.nidaq.access.NiDaqException;
 import kirkwood.nidaq.jna.Nicaiu;
 
-import java.nio.DoubleBuffer;
-
 public class AnalogueWrite implements Runnable {
-    private static NiDaq daq = new NiDaq();
-    int minVal = 0;
-    int maxVal = 5;
-    Pointer doTask;
-    double stimValue;
+    private static final NiDaq daq = new NiDaq();
+    private int minVal = 0;
+    private int maxVal = 5;
+    private Pointer doTask;
+    private double stimValue;
 
     /**
      * Constructor
@@ -38,11 +36,7 @@ public class AnalogueWrite implements Runnable {
         System.out.println("Run thread");
         try {
             daq.startTask(doTask);
-            double[] fbb = {stimValue, stimValue};
-            DoubleBuffer data = DoubleBuffer.wrap(fbb);
-            daq.writeAnalogF64(doTask, 1, 1, 10, Nicaiu.DAQmx_Val_GroupByChannel,
-                    data, 0);
-
+            daq.DAQmxWriteAnalogScalarF64(doTask,1, 5, stimValue, 0);
         } catch (NiDaqException e) {
             e.printStackTrace();
         }
