@@ -15,11 +15,13 @@ public class AnalogueThresholdWrite implements Runnable {
     private double stimValue;
     private boolean running = true;
     private TimeSeriesCollection timeSeriesCollection;
+    double stimThreshold;
 
     public AnalogueThresholdWrite(String outputDevice, String outputChannel, String taskName, double stimValue,
-                                  TimeSeriesCollection timeSeriesCollection) throws NiDaqException {
+                                  TimeSeriesCollection timeSeriesCollection, double stimthreshold) throws NiDaqException {
         this.timeSeriesCollection = timeSeriesCollection;
         this.stimValue = stimValue;
+        this.stimThreshold = stimthreshold;
         try {
             System.out.println("Initialise thread");
             String physicalChannel = outputDevice + "/" + outputChannel;
@@ -35,42 +37,66 @@ public class AnalogueThresholdWrite implements Runnable {
         }
     }
 
+    /**
+     * Run thread
+     */
     @Override
     public void run() {
-        try {
-            System.out.println("Run thread");
-            while (running) {
-                TimeSeries timeSeries = timeSeriesCollection.getSeries(0);
-                int itemCount = timeSeries.getItemCount();
-                System.out.println(doTask + ": " + stimValue + ", " + timeSeries.getDataItem(itemCount-1).getValue());
+        while (true) {
+            try {
+                System.out.println("Run thread");
+                // Keep thread running
+                // Sleep for 10 millis otherwise start it doesn't go into the running loop ??!?!?!?
+                Thread.sleep(10);
+                // Start stimulating when running is true
+                while (running) {
+                    TimeSeries timeSeries = timeSeriesCollection.getSeries(0);
+                    int itemCount = timeSeries.getItemCount();
+                    Double datapoint = timeSeries.getDataItem(itemCount - 1).getValue().doubleValue();
 
-                daq.startTask(doTask);
-                daq.DAQmxWriteAnalogScalarF64(doTask,1, 10, stimValue, 0);
-                Thread.sleep(200);
-                daq.stopTask(doTask);
-                double zero = 0D;
-                daq.DAQmxWriteAnalogScalarF64(doTask,1, 10, zero, 0);
-                daq.stopTask(doTask);
-                Thread.sleep(200);
+                    if (datapoint > stimThreshold) {
+                        daq.startTask(doTask);
+                        daq.DAQmxWriteAnalogScalarF64(doTask, 1, 10, 0.6, 0);
+//                        Thread.sleep(200);
+                        long start = System.nanoTime();
+                        while(start + 450 >= System.nanoTime());
+                        daq.stopTask(doTask);
+                        double zero = 0D;
+                        daq.DAQmxWriteAnalogScalarF64(doTask, 1, 10, zero, 0);
+                        daq.stopTask(doTask);
+//                        Thread.sleep(200);
+                        while(start + 450 >= System.nanoTime());
+
+                    }
+                }
+            } catch (NiDaqException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
             }
-        } catch (NiDaqException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        try {
-            System.out.println("Close all");
-            daq.stopTask(doTask);
-            daq.clearTask(doTask);
-        } catch (NiDaqException e) {
-            throw new RuntimeException(e);
+            try {
+                System.out.println("Close all");
+                daq.clearTask(doTask);
+            } catch (NiDaqException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
+    /**
+     * Return whether thread is stimulating or not. If running=true, it should be stimulating
+     *
+     * @return
+     */
     public boolean isRunning() {
         return running;
     }
 
+    /**
+     * Set running to true to start stimulating and false to stop.
+     *
+     * @param running
+     */
     public void setRunning(boolean running) {
         this.running = running;
     }

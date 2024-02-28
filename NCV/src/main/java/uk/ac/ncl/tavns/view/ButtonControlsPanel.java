@@ -89,11 +89,15 @@ public class ButtonControlsPanel extends JPanel implements ActionListener {
             startTrace.setBackground(new Color(1, 106, 180));
             startTrace.setForeground(Color.WHITE);
             analogueInput.setIsRunning(false);
+            StimulationConfigurationPanel stimulationConfigurationPanel = panelCollection.getStimulationConfiguration();
+            stimulationConfigurationPanel.setVisible(false);
         } else if (e.getActionCommand().equals("Start")) {
             startTrace.setText("Stop");
             startTrace.setBackground(Color.ORANGE);
             startTrace.setForeground(Color.BLACK);
             analogueInput.setIsRunning(true);
+            StimulationConfigurationPanel stimulationConfigurationPanel = panelCollection.getStimulationConfiguration();
+            stimulationConfigurationPanel.setVisible(true);
         } else if (e.getActionCommand().equals("Reset")) {
             // clear graphs
             // reset timeseries

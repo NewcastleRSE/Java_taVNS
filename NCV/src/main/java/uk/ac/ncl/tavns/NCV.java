@@ -23,6 +23,7 @@ public class NCV extends JFrame {
     private StimulationConfigurationPanel stimulationConfigurationPanel;
     private PanelCollection panelCollection = new PanelCollection(buttonControlsPanel, chartsPanel, configurationPanel,
             stimulationConfigurationPanel);
+    private StimProtocols stimProtocols;
 
 
     /**
@@ -32,18 +33,21 @@ public class NCV extends JFrame {
      */
     public NCV(String title) {
         super(title);
+        // Load properties
         Properties properties = Utilities.loadProperties();
         int numberOfChannels = Integer.parseInt(properties.getProperty("number_of_ai_channels"));
         int numSampsPerChan = Integer.parseInt(properties.getProperty("samples_per_channel"));
         String inputDevice = properties.getProperty("input_device");
         String outputDevice = properties.getProperty("output_device");
+
         analogueInput = new AnalogueInput(numberOfChannels, numSampsPerChan, inputDevice);
-        final JTabbedPane tabbedPane = new JTabbedPane();
         chartsPanel = new ChartsPanel(panelCollection, numberOfChannels, analogueInput, outputDevice);
+        stimProtocols = new StimProtocols(chartsPanel);
+        panelCollection.setStimProtocols(stimProtocols);
         configurationPanel = new ConfigurationPanel(panelCollection);
-        panelCollection.setStimProtocols(new StimProtocols(chartsPanel));
         panelCollection.setChartsPanel(chartsPanel);
         stimulationConfigurationPanel = new StimulationConfigurationPanel(panelCollection, outputDevice, "ao1");
+        final JTabbedPane tabbedPane = new JTabbedPane();
         tabbedPane.add("Input Traces", chartsPanel);
         tabbedPane.add("Configuration", configurationPanel);
         setContentPane(tabbedPane);

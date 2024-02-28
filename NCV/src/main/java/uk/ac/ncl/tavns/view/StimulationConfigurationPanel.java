@@ -11,7 +11,7 @@ import java.awt.event.ActionListener;
 
 public class StimulationConfigurationPanel extends JPanel implements ActionListener {
     // Threshold for starting stimulation
-    private JTextField tf_startThreshold = new JTextField("3",5);
+    private JTextField tf_startThreshold = new JTextField("-0.6",5);
     // Should we use a ramp up?
     private JCheckBox cb_rampup = new JCheckBox("Ramp up", true);
     // How long should the rampup take?
@@ -62,11 +62,13 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
             startStim.setBackground(new Color(1, 106, 180));
             startStim.setForeground(Color.WHITE);
             double startThreshold = Double.parseDouble(tf_startThreshold.getText());
-            System.out.println("Stim " + outputDevice + outputChannel);
             try {
-                if (!stimInitialised)
+                if (!stimInitialised) {
+                    if (stimProtocols == null)
+                        stimProtocols = new StimProtocols(panelCollection.getChartsPanel());
                     stimInitialised = stimProtocols.thresholdStimInit(outputDevice, outputChannel, startThreshold,
                             Double.parseDouble(tf_startThreshold.getText()));
+                }
                 stimProtocols.thresholdStimStart();
             } catch (NiDaqException ex) {
                 throw new RuntimeException(ex);
