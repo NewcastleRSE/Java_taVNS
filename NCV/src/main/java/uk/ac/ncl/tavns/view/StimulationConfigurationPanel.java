@@ -70,16 +70,19 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
                             Double.parseDouble(tf_startThreshold.getText()));
                 }
                 stimProtocols.thresholdStimStart();
+                stimProtocols.thresholdStimStart();
             } catch (NiDaqException ex) {
                 throw new RuntimeException(ex);
             }
 
         }
         if (e.getActionCommand().equals("Stop stimulation")) {
+            double startThreshold = Double.parseDouble(tf_startThreshold.getText());
             startStim.setText("Start stimulation");
             startStim.setBackground(Color.ORANGE);
             startStim.setForeground(Color.BLACK);
             stimProtocols.thresholdStimStop();
+
         }
 
     }

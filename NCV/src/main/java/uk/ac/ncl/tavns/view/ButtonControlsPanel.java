@@ -55,7 +55,7 @@ public class ButtonControlsPanel extends JPanel implements ActionListener {
         // check this
         JButton digOut = new JButton("Dig Out");
         add(digOut);
-        add(new JLabel("Sleep between stims"));
+        add(new JLabel("Sleep between stims (ms)"));
         add(txt_sleepValue);
         JButton testRampStim = new JButton("Test Ramp Stim");
         add(testRampStim);

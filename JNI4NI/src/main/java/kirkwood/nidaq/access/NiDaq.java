@@ -56,7 +56,7 @@ public class NiDaq {
         btName[btName.length - 1] = 0;
 
         PointerByReference taskHandleRef = new PointerByReference();
-        checkError(Nicaiu.INSTANCE.DAQmxCreateTask(btName, taskHandleRef));
+        git stcheckError(Nicaiu.INSTANCE.DAQmxCreateTask(btName, taskHandleRef));
         Pointer taskHandle = taskHandleRef.getValue();
         return taskHandle;
     }
