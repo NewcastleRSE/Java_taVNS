@@ -33,7 +33,7 @@ public class AnalogueWrite implements Runnable {
     }
 
     public void run() {
-        System.out.println("Run thread");
+//        System.out.println("Run thread");
         try {
             daq.startTask(doTask);
             daq.DAQmxWriteAnalogScalarF64(doTask,1, 5, stimValue, 0);

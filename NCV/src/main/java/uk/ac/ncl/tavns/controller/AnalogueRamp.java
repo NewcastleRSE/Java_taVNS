@@ -33,7 +33,7 @@ public class AnalogueRamp implements Runnable {
 
     @Override
     public void run() {
-        System.out.println("Run thread");
+//        System.out.println("Run thread");
         try {
             for (int i = 0; i < stims; i++) {
                 daq.startTask(doTask);

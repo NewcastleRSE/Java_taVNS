@@ -44,7 +44,7 @@ public class AnalogueThresholdWrite implements Runnable {
     public void run() {
         while (true) {
             try {
-                System.out.println("Run thread");
+//                System.out.println("Run thread");
                 // Keep thread running
                 // Sleep for 10 millis otherwise start it doesn't go into the running loop ??!?!?!?
                 Thread.sleep(10);
