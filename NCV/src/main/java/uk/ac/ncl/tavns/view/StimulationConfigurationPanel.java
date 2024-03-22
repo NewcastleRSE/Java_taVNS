@@ -1,5 +1,6 @@
 package uk.ac.ncl.tavns.view;
 
+import eu.hansolo.custom.SteelCheckBox;
 import kirkwood.nidaq.access.NiDaqException;
 import net.miginfocom.swing.MigLayout;
 import uk.ac.ncl.tavns.controller.StimParameters;
@@ -17,9 +18,10 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
     // Should we use a ramp up?
     private JCheckBox cb_rampup = new JCheckBox("Ramp up", true);
     // How long should the rampup take?
+    private SteelCheckBox steelCheckBox = new SteelCheckBox();
     private JTextField tf_rampupDuration = new JTextField("3", 5);
     // Threshold for discontinuing stimulation
-    private JTextField tf_stopThreshold = new JTextField("3",5);
+//    private JTextField tf_stopThreshold = new JTextField("3",5);
     // Maximum duration of overall stimulation
     private JTextField tf_maxDuration = new JTextField("3", 5);
     private JTextField tf_stimValue = new JTextField("2.5", 5); // Stimulation value
@@ -56,12 +58,14 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
         startStim.setBackground(Color.ORANGE);
         startStim.setForeground(Color.BLACK);
 
-        pnl_txtFields.add(new JLabel("Start threshold"));
+        pnl_txtFields.add(new JLabel("Stim threshold"));
         pnl_txtFields.add(tf_startThreshold);
-        pnl_txtFields.add(new JLabel("Stop threshold"));
-        pnl_txtFields.add(tf_stopThreshold);
+//        pnl_txtFields.add(new JLabel("Stop threshold"));
+//        pnl_txtFields.add(tf_stopThreshold);
         pnl_txtFields.add(new JLabel(""));
         pnl_txtFields.add(cb_rampup);
+        steelCheckBox.setText("Fall <=> Rise");
+        pnl_txtFields.add(steelCheckBox);
         pnl_txtFields.add(new JLabel("Rampup duration"));
         pnl_txtFields.add(tf_rampupDuration);
         pnl_txtFields.add(new JLabel("Maximum stimulation duration"));
@@ -133,10 +137,11 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
         stimParameters.setOutputChannel(outputChannel);
         if (stimParameters.getTaskName() == null) stimParameters.setTaskName("");
         stimParameters.setStimValue(Double.parseDouble(tf_stimValue.getText()));
-        stimParameters.setStimStartThreshold(Double.parseDouble(tf_startThreshold.getText()));
-        stimParameters.setStimEndThreshold(Double.parseDouble(tf_stopThreshold.getText()));
+        stimParameters.setStimThreshold(Double.parseDouble(tf_startThreshold.getText()));
+//        stimParameters.setStimEndThreshold(Double.parseDouble(tf_stopThreshold.getText()));
         stimParameters.setRampUp(cb_rampup.isSelected());
         stimParameters.setStimDuration(Double.parseDouble(tf_maxDuration.getText()));
+        stimParameters.setRise(steelCheckBox.isRised());
     }
 
 }

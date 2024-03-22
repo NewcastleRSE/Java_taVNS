@@ -57,7 +57,8 @@ public class AnalogueThresholdWrite implements Runnable {
                     int itemCount = timeSeries.getItemCount();
                     Double datapoint = timeSeries.getDataItem(itemCount - 1).getValue().doubleValue();
 
-                    if (datapoint > stimParameters.getStimStartThreshold()) {
+                    if ((stimParameters.isRise() && datapoint >= stimParameters.getStimThreshold()) ||
+                    (!stimParameters.isRise() && datapoint <= stimParameters.getStimThreshold())) {
                         //
                         if (ramp) {
                             for (int i = 0; i < stims; i++) {

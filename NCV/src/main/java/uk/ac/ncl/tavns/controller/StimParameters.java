@@ -9,21 +9,22 @@ public class StimParameters {
     private String taskName;
     private double stimValue;
     private TimeSeriesCollection timeSeriesCollection;
-    private double stimStartThreshold;
-    private double stimEndThreshold;
+    private double stimThreshold;
+    private boolean rise; // If true check for threshold on rise else on fall
+//    private double stimEndThreshold;
     private boolean rampUp;
     private double stimDuration;
 
     public StimParameters(String outputDevice, String outputChannel, String taskName, double stimValue,
-                          TimeSeriesCollection timeSeriesCollection, double stimStartThreshold,
+                          TimeSeriesCollection timeSeriesCollection, double stimThreshold,
                           double stimEndThreshold, boolean rampUp, double stimDuration) {
         this.outputDevice = outputDevice;
         this.outputChannel = outputChannel;
         this.taskName = taskName;
         this.stimValue = stimValue;
         this.timeSeriesCollection = timeSeriesCollection;
-        this.stimStartThreshold = stimStartThreshold;
-        this.stimEndThreshold = stimEndThreshold;
+        this.stimThreshold = stimThreshold;
+//        this.stimEndThreshold = stimEndThreshold;
         this.rampUp = rampUp;
         this.stimDuration = stimDuration;
     }
@@ -71,21 +72,21 @@ public class StimParameters {
         this.timeSeriesCollection = timeSeriesCollection;
     }
 
-    public double getStimStartThreshold() {
-        return stimStartThreshold;
+    public double getStimThreshold() {
+        return stimThreshold;
     }
 
-    public void setStimStartThreshold(double stimStartThreshold) {
-        this.stimStartThreshold = stimStartThreshold;
+    public void setStimThreshold(double stimThreshold) {
+        this.stimThreshold = stimThreshold;
     }
 
-    public double getStimEndThreshold() {
-        return stimEndThreshold;
-    }
-
-    public void setStimEndThreshold(double stimEndThreshold) {
-        this.stimEndThreshold = stimEndThreshold;
-    }
+//    public double getStimEndThreshold() {
+//        return stimEndThreshold;
+//    }
+//
+//    public void setStimEndThreshold(double stimEndThreshold) {
+//        this.stimEndThreshold = stimEndThreshold;
+//    }
 
     public boolean isRampUp() {
         return rampUp;
@@ -101,5 +102,18 @@ public class StimParameters {
 
     public void setStimDuration(double stimDuration) {
         this.stimDuration = stimDuration;
+    }
+
+    /**
+     * If ture, check for threshold on rise, if false, check for rise on fall
+     * i.e. rise > threshold, fall < threshold
+     * @return
+     */
+    public boolean isRise() {
+        return rise;
+    }
+
+    public void setRise(boolean rise) {
+        this.rise = rise;
     }
 }

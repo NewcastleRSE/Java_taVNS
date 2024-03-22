@@ -51,9 +51,10 @@ public class ButtonControlsPanel extends JPanel implements ActionListener {
         add(startTrace);
         add(new JSeparator(SwingConstants.VERTICAL));
         SteelCheckBox steelCheckBox = new SteelCheckBox();
+        steelCheckBox.setText("0 <=> 1");
         add(steelCheckBox);
         // check this
-        JButton digOut = new JButton("Dig Out");
+        JButton digOut = new JButton("Digital Out");
         add(digOut);
         add(new JLabel("Sleep between stims"));
         add(txt_sleepValue);
