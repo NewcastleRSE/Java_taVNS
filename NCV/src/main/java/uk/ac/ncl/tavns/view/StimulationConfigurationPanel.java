@@ -58,12 +58,12 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
 
         pnl_txtFields.add(new JLabel("Start threshold"));
         pnl_txtFields.add(tf_startThreshold);
+        pnl_txtFields.add(new JLabel("Stop threshold"));
+        pnl_txtFields.add(tf_stopThreshold);
         pnl_txtFields.add(new JLabel(""));
         pnl_txtFields.add(cb_rampup);
         pnl_txtFields.add(new JLabel("Rampup duration"));
         pnl_txtFields.add(tf_rampupDuration);
-        pnl_txtFields.add(new JLabel("Stop threshold"));
-        pnl_txtFields.add(tf_stopThreshold);
         pnl_txtFields.add(new JLabel("Maximum stimulation duration"));
         pnl_txtFields.add(tf_maxDuration);
         pnl_txtFields.add(new JLabel("Stimulation value"));
