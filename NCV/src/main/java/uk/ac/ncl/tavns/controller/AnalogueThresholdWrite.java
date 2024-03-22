@@ -15,8 +15,6 @@ public class AnalogueThresholdWrite implements Runnable {
     private Pointer doTask;
     private boolean running = true;
     private TimeSeriesCollection timeSeriesCollection;
-    double stimStartThreshold;
-    String outputDevice;
     String physicalChannel;
     int sleep = 100;
     int stims = 5; // the number of stims in a ramp
@@ -26,7 +24,6 @@ public class AnalogueThresholdWrite implements Runnable {
     public AnalogueThresholdWrite(StimParameters stimParameters) throws NiDaqException {
         this.stimParameters = stimParameters;
         this.timeSeriesCollection = stimParameters.getTimeSeriesCollection();
-        this.stimStartThreshold = stimParameters.getStimStartThreshold();
 //        this.rampup = stimParameters.isRampUp();
         ramp = stimParameters.isRampUp();
         try {
@@ -60,7 +57,7 @@ public class AnalogueThresholdWrite implements Runnable {
                     int itemCount = timeSeries.getItemCount();
                     Double datapoint = timeSeries.getDataItem(itemCount - 1).getValue().doubleValue();
 
-                    if (datapoint > stimStartThreshold) {
+                    if (datapoint > stimParameters.getStimStartThreshold()) {
                         //
                         if (ramp) {
                             for (int i = 0; i < stims; i++) {
