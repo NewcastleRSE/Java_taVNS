@@ -28,7 +28,7 @@ public class StimParameters {
         this.stimDuration = stimDuration;
     }
 
-    public StimParameters(String outputDevice) {
+    public StimParameters() {
     }
 
     public String getOutputDevice() {

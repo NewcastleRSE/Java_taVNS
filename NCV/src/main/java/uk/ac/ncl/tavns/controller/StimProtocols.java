@@ -58,15 +58,11 @@ public class StimProtocols {
 
     /**
      * Start stimulation at specified threshold
-     * @param outputDevice
-     * @param outputChannel
-     * @param threshold
-     * @param stimValue
+     * @param stimParameters
      * @return
      * @throws NiDaqException
      */
-    public boolean thresholdStimInit(String outputDevice, String outputChannel, double threshold, double stimValue,
-                                     StimParameters stimParameters)
+    public boolean thresholdStimInit(StimParameters stimParameters)
             throws NiDaqException {
         stimParameters.setTaskName("ThresholdStim");
         stimParameters.setTimeSeriesCollection(dataset[0]);

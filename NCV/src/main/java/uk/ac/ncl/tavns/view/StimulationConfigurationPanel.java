@@ -31,6 +31,8 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
     private StimProtocols stimProtocols;
     JPanel pnl_txtFields = new JPanel();
     JPanel pnl_buttons = new JPanel();
+    StimParameters stimParameters = new StimParameters();
+
     public StimulationConfigurationPanel(PanelCollection panelCollection, String outputDevice, String outputChannel) {
         super();
         this.panelCollection = panelCollection;
@@ -81,19 +83,15 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
                 if (!stimInitialised) {
                     if (stimProtocols == null)
                         stimProtocols = new StimProtocols(panelCollection.getChartsPanel());
-                    StimParameters stimParameters = new StimParameters(
-                            outputDevice,
-                            outputChannel,
-                            "",
-                            Double.parseDouble(tf_stimValue.getText()),
-                            null,
-                            Double.parseDouble(tf_startThreshold.getText()),
-                            Double.parseDouble(tf_stopThreshold.getText()),
-                            cb_rampup.isSelected(),
-                            Double.parseDouble(tf_maxDuration.getText())
-                            );
-                    stimInitialised = stimProtocols.thresholdStimInit(outputDevice, outputChannel, startThreshold,
-                            Double.parseDouble(tf_stimValue.getText()), stimParameters);
+                    stimParameters.setOutputDevice(outputDevice);
+                    stimParameters.setOutputChannel(outputChannel);
+                    stimParameters.setTaskName("");
+                    stimParameters.setStimValue(Double.parseDouble(tf_stimValue.getText()));
+                    stimParameters.setStimStartThreshold(Double.parseDouble(tf_startThreshold.getText()));
+                    stimParameters.setStimEndThreshold(Double.parseDouble(tf_stopThreshold.getText()));
+                    stimParameters.setRampUp(cb_rampup.isSelected());
+                    stimParameters.setStimDuration(Double.parseDouble(tf_maxDuration.getText()));
+                    stimInitialised = stimProtocols.thresholdStimInit(stimParameters);
                 }
                 stimProtocols.thresholdStimStart();
             } catch (NiDaqException ex) {

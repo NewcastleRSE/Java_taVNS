@@ -20,16 +20,17 @@ public class AnalogueThresholdWrite implements Runnable {
     String physicalChannel;
     int sleep = 100;
     int stims = 5; // the number of stims in a ramp
-    boolean ramp = true;
+    boolean ramp;
+    boolean rampup;
 
     public AnalogueThresholdWrite(StimParameters stimParameters) throws NiDaqException {
         this.timeSeriesCollection = stimParameters.getTimeSeriesCollection();
         this.stimValue = stimParameters.getStimValue();
         this.stimThreshold = stimParameters.getStimStartThreshold();
+        this.rampup = stimParameters.isRampUp();
+        ramp = rampup;
         try {
-            System.out.println("Initialise thread");
             physicalChannel = stimParameters.getOutputDevice() + "/" + stimParameters.getOutputChannel();
-            System.out.println("Physical channel: " + physicalChannel);
             doTask = daq.createTask(stimParameters.getTaskName());
             daq.resetDevice(stimParameters.getOutputDevice());
             daq.createAOVoltageChannel(doTask, physicalChannel, "", minVal, maxVal,
@@ -60,6 +61,7 @@ public class AnalogueThresholdWrite implements Runnable {
                     Double datapoint = timeSeries.getDataItem(itemCount - 1).getValue().doubleValue();
 
                     if (datapoint > stimThreshold) {
+                        //
                         if (ramp) {
                             for (int i = 0; i < stims; i++) {
                                 daq.startTask(doTask);
@@ -89,8 +91,9 @@ public class AnalogueThresholdWrite implements Runnable {
                         while(start + nanoseconds >= System.nanoTime());
 //                        Thread.sleep(sleep);
 
-                    } else ramp = true;
+                    } else ramp = rampup;
                 }
+
             } catch (NiDaqException e) {
                 e.printStackTrace();
             } catch (InterruptedException e) {
