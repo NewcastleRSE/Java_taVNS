@@ -97,6 +97,11 @@ public class Utilities {
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
-
     }
+
+
+    public static double normalise(double val, double min, double max, double rangemin, double rangemax) {
+        return rangemin + ((val - min) * (rangemax - rangemin) / (max - min));
+    }
+
 }

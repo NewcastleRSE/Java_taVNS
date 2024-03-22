@@ -16,21 +16,29 @@ public class AnalogueThresholdWrite implements Runnable {
     private boolean running = true;
     private TimeSeriesCollection timeSeriesCollection;
     double stimThreshold;
+    String taskName;
+    String outputDevice;
+    String physicalChannel;
+    int sleep = 100;
+    int stims = 5; // the number of stims in a ramp
+    boolean ramp = true;
 
     public AnalogueThresholdWrite(String outputDevice, String outputChannel, String taskName, double stimValue,
                                   TimeSeriesCollection timeSeriesCollection, double stimthreshold) throws NiDaqException {
         this.timeSeriesCollection = timeSeriesCollection;
         this.stimValue = stimValue;
         this.stimThreshold = stimthreshold;
+        this.taskName = taskName;
+        this.outputDevice = outputDevice;
         try {
             System.out.println("Initialise thread");
-            String physicalChannel = outputDevice + "/" + outputChannel;
-            System.out.println(physicalChannel);
+            physicalChannel = outputDevice + "/" + outputChannel;
+            System.out.println("Physical channel: " + physicalChannel);
             doTask = daq.createTask(taskName);
             daq.resetDevice(outputDevice);
             daq.createAOVoltageChannel(doTask, physicalChannel, "", minVal, maxVal,
                     Nicaiu.DAQmx_Val_Volts, null);
-        } catch (NiDaqException e) {
+        } catch (Exception e) {
             daq.stopTask(doTask);
             daq.clearTask(doTask);
             throw new RuntimeException(e);
@@ -42,12 +50,13 @@ public class AnalogueThresholdWrite implements Runnable {
      */
     @Override
     public void run() {
+        // Keep thread running
         while (true) {
             try {
-//                System.out.println("Run thread");
+                //System.out.println("Run thread");
                 // Keep thread running
                 // Sleep for 10 millis otherwise start it doesn't go into the running loop ??!?!?!?
-                Thread.sleep(10);
+                Thread.sleep(1);
                 // Start stimulating when running is true
                 while (running) {
                     TimeSeries timeSeries = timeSeriesCollection.getSeries(0);
@@ -55,32 +64,44 @@ public class AnalogueThresholdWrite implements Runnable {
                     Double datapoint = timeSeries.getDataItem(itemCount - 1).getValue().doubleValue();
 
                     if (datapoint > stimThreshold) {
+                        if (ramp) {
+                            for (int i = 0; i < stims; i++) {
+                                daq.startTask(doTask);
+                                daq.DAQmxWriteAnalogScalarF64(doTask, 1, 5, Utilities.normalise(i, 0, stims, 0, 5), 0);
+                                Thread.sleep(sleep);
+                                daq.stopTask(doTask);
+                                double zero = 0D;
+                                daq.DAQmxWriteAnalogScalarF64(doTask, 1, 5, zero, 0);
+                                daq.stopTask(doTask);
+                                Thread.sleep(sleep);
+                            }
+                            ramp = false;
+                        }
+
                         daq.startTask(doTask);
-                        daq.DAQmxWriteAnalogScalarF64(doTask, 1, 10, 0.6, 0);
-//                        Thread.sleep(200);
+                        double value = 1D;
+                        daq.DAQmxWriteAnalogScalarF64(doTask, 1, 10, value, 0);
                         long start = System.nanoTime();
-                        while(start + 450 >= System.nanoTime());
+                        long nanoseconds = 200000000;
+                        while(start + nanoseconds >= System.nanoTime());
+//                        Thread.sleep(sleep);
                         daq.stopTask(doTask);
                         double zero = 0D;
                         daq.DAQmxWriteAnalogScalarF64(doTask, 1, 10, zero, 0);
                         daq.stopTask(doTask);
-//                        Thread.sleep(200);
-                        while(start + 450 >= System.nanoTime());
+                        start = System.nanoTime();
+                        while(start + nanoseconds >= System.nanoTime());
+//                        Thread.sleep(sleep);
 
-                    }
+                    } else ramp = true;
                 }
             } catch (NiDaqException e) {
                 e.printStackTrace();
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            try {
-                System.out.println("Close all");
-                daq.clearTask(doTask);
-            } catch (NiDaqException e) {
-                throw new RuntimeException(e);
-            }
         }
+
     }
 
     /**
