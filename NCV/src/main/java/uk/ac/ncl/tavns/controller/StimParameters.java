@@ -4,15 +4,15 @@ import org.jfree.data.time.TimeSeriesCollection;
 
 public class StimParameters {
 
-    String outputDevice;
-    String outputChannel;
-    String taskName;
-    double stimValue;
-    TimeSeriesCollection timeSeriesCollection;
-    double stimStartThreshold;
-    double stimEndThreshold;
-    boolean rampUp;
-    double stimDuration;
+    private String outputDevice;
+    private String outputChannel;
+    private String taskName;
+    private double stimValue;
+    private TimeSeriesCollection timeSeriesCollection;
+    private double stimStartThreshold;
+    private double stimEndThreshold;
+    private boolean rampUp;
+    private double stimDuration;
 
     public StimParameters(String outputDevice, String outputChannel, String taskName, double stimValue,
                           TimeSeriesCollection timeSeriesCollection, double stimStartThreshold,

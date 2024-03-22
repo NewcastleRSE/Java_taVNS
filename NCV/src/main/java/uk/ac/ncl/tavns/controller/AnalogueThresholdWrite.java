@@ -13,7 +13,6 @@ public class AnalogueThresholdWrite implements Runnable {
     private int minVal = 0;
     private int maxVal = 5;
     private Pointer doTask;
-    private double stimValue;
     private boolean running = true;
     private TimeSeriesCollection timeSeriesCollection;
     double stimStartThreshold;
@@ -27,7 +26,6 @@ public class AnalogueThresholdWrite implements Runnable {
     public AnalogueThresholdWrite(StimParameters stimParameters) throws NiDaqException {
         this.stimParameters = stimParameters;
         this.timeSeriesCollection = stimParameters.getTimeSeriesCollection();
-        this.stimValue = stimParameters.getStimValue();
         this.stimStartThreshold = stimParameters.getStimStartThreshold();
 //        this.rampup = stimParameters.isRampUp();
         ramp = stimParameters.isRampUp();
@@ -67,7 +65,8 @@ public class AnalogueThresholdWrite implements Runnable {
                         if (ramp) {
                             for (int i = 0; i < stims; i++) {
                                 daq.startTask(doTask);
-                                daq.DAQmxWriteAnalogScalarF64(doTask, 1, 5, Utilities.normalise(i, 0, stims, 0, 5), 0);
+                                daq.DAQmxWriteAnalogScalarF64(doTask, 1, 5,
+                                        Utilities.normalise(i, 0, stims, 0, 5), 0);
                                 Thread.sleep(sleep);
                                 daq.stopTask(doTask);
                                 double zero = 0D;
@@ -80,7 +79,7 @@ public class AnalogueThresholdWrite implements Runnable {
 
                         daq.startTask(doTask);
                         double value = 1D;
-                        daq.DAQmxWriteAnalogScalarF64(doTask, 1, 10, stimValue, 0);
+                        daq.DAQmxWriteAnalogScalarF64(doTask, 1, 10, stimParameters.getStimValue(), 0);
                         long start = System.nanoTime();
                         long nanoseconds = 200000000;
                         while(start + nanoseconds >= System.nanoTime());
