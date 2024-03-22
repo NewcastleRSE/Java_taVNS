@@ -33,6 +33,13 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
     JPanel pnl_buttons = new JPanel();
     StimParameters stimParameters = new StimParameters();
 
+    /**
+     * This panel contains the text fields for capturing the parameters for stimulation protocols. It also
+     * holds the buttons
+     * @param panelCollection
+     * @param outputDevice
+     * @param outputChannel
+     */
     public StimulationConfigurationPanel(PanelCollection panelCollection, String outputDevice, String outputChannel) {
         super();
         this.panelCollection = panelCollection;
@@ -78,19 +85,12 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
             startStim.setText("Stop stimulation");
             startStim.setBackground(new Color(1, 106, 180));
             startStim.setForeground(Color.WHITE);
-            double startThreshold = Double.parseDouble(tf_startThreshold.getText());
             try {
+                populateStimParameters();
                 if (!stimInitialised) {
-                    if (stimProtocols == null)
+                    if (stimProtocols == null) {
                         stimProtocols = new StimProtocols(panelCollection.getChartsPanel());
-                    stimParameters.setOutputDevice(outputDevice);
-                    stimParameters.setOutputChannel(outputChannel);
-                    stimParameters.setTaskName("");
-                    stimParameters.setStimValue(Double.parseDouble(tf_stimValue.getText()));
-                    stimParameters.setStimStartThreshold(Double.parseDouble(tf_startThreshold.getText()));
-                    stimParameters.setStimEndThreshold(Double.parseDouble(tf_stopThreshold.getText()));
-                    stimParameters.setRampUp(cb_rampup.isSelected());
-                    stimParameters.setStimDuration(Double.parseDouble(tf_maxDuration.getText()));
+                    }
                     stimInitialised = stimProtocols.thresholdStimInit(stimParameters);
                 }
                 stimProtocols.thresholdStimStart();
@@ -101,6 +101,7 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
         }
         if (e.getActionCommand().equals("Stop stimulation")) {
             startStim.setText("Start stimulation");
+            populateStimParameters();
             startStim.setBackground(Color.ORANGE);
             startStim.setForeground(Color.BLACK);
             stimProtocols.thresholdStimStop();
@@ -122,6 +123,20 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
         System.arraycopy(array2, 0, result, array1.length, array2.length);
 
         return result;
+    }
+
+    /**
+     * Populate the StimParameters class from the GUI widgets.
+     */
+    public void populateStimParameters() {
+        stimParameters.setOutputDevice(outputDevice);
+        stimParameters.setOutputChannel(outputChannel);
+        if (stimParameters.getTaskName() == null) stimParameters.setTaskName("");
+        stimParameters.setStimValue(Double.parseDouble(tf_stimValue.getText()));
+        stimParameters.setStimStartThreshold(Double.parseDouble(tf_startThreshold.getText()));
+        stimParameters.setStimEndThreshold(Double.parseDouble(tf_stopThreshold.getText()));
+        stimParameters.setRampUp(cb_rampup.isSelected());
+        stimParameters.setStimDuration(Double.parseDouble(tf_maxDuration.getText()));
     }
 
 }

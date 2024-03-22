@@ -9,26 +9,28 @@ import org.jfree.data.time.TimeSeriesCollection;
 
 public class AnalogueThresholdWrite implements Runnable {
     private static NiDaq daq = new NiDaq();
+    StimParameters stimParameters;
     private int minVal = 0;
     private int maxVal = 5;
     private Pointer doTask;
     private double stimValue;
     private boolean running = true;
     private TimeSeriesCollection timeSeriesCollection;
-    double stimThreshold;
+    double stimStartThreshold;
     String outputDevice;
     String physicalChannel;
     int sleep = 100;
     int stims = 5; // the number of stims in a ramp
     boolean ramp;
-    boolean rampup;
+//    boolean rampup;
 
     public AnalogueThresholdWrite(StimParameters stimParameters) throws NiDaqException {
+        this.stimParameters = stimParameters;
         this.timeSeriesCollection = stimParameters.getTimeSeriesCollection();
         this.stimValue = stimParameters.getStimValue();
-        this.stimThreshold = stimParameters.getStimStartThreshold();
-        this.rampup = stimParameters.isRampUp();
-        ramp = rampup;
+        this.stimStartThreshold = stimParameters.getStimStartThreshold();
+//        this.rampup = stimParameters.isRampUp();
+        ramp = stimParameters.isRampUp();
         try {
             physicalChannel = stimParameters.getOutputDevice() + "/" + stimParameters.getOutputChannel();
             doTask = daq.createTask(stimParameters.getTaskName());
@@ -60,7 +62,7 @@ public class AnalogueThresholdWrite implements Runnable {
                     int itemCount = timeSeries.getItemCount();
                     Double datapoint = timeSeries.getDataItem(itemCount - 1).getValue().doubleValue();
 
-                    if (datapoint > stimThreshold) {
+                    if (datapoint > stimStartThreshold) {
                         //
                         if (ramp) {
                             for (int i = 0; i < stims; i++) {
@@ -91,7 +93,7 @@ public class AnalogueThresholdWrite implements Runnable {
                         while(start + nanoseconds >= System.nanoTime());
 //                        Thread.sleep(sleep);
 
-                    } else ramp = rampup;
+                    } else ramp = stimParameters.isRampUp();
                 }
 
             } catch (NiDaqException e) {
