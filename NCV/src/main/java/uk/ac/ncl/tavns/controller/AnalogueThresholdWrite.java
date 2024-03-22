@@ -16,26 +16,22 @@ public class AnalogueThresholdWrite implements Runnable {
     private boolean running = true;
     private TimeSeriesCollection timeSeriesCollection;
     double stimThreshold;
-    String taskName;
     String outputDevice;
     String physicalChannel;
     int sleep = 100;
     int stims = 5; // the number of stims in a ramp
     boolean ramp = true;
 
-    public AnalogueThresholdWrite(String outputDevice, String outputChannel, String taskName, double stimValue,
-                                  TimeSeriesCollection timeSeriesCollection, double stimthreshold) throws NiDaqException {
-        this.timeSeriesCollection = timeSeriesCollection;
-        this.stimValue = stimValue;
-        this.stimThreshold = stimthreshold;
-        this.taskName = taskName;
-        this.outputDevice = outputDevice;
+    public AnalogueThresholdWrite(StimParameters stimParameters) throws NiDaqException {
+        this.timeSeriesCollection = stimParameters.getTimeSeriesCollection();
+        this.stimValue = stimParameters.getStimValue();
+        this.stimThreshold = stimParameters.getStimStartThreshold();
         try {
             System.out.println("Initialise thread");
-            physicalChannel = outputDevice + "/" + outputChannel;
+            physicalChannel = stimParameters.getOutputDevice() + "/" + stimParameters.getOutputChannel();
             System.out.println("Physical channel: " + physicalChannel);
-            doTask = daq.createTask(taskName);
-            daq.resetDevice(outputDevice);
+            doTask = daq.createTask(stimParameters.getTaskName());
+            daq.resetDevice(stimParameters.getOutputDevice());
             daq.createAOVoltageChannel(doTask, physicalChannel, "", minVal, maxVal,
                     Nicaiu.DAQmx_Val_Volts, null);
         } catch (Exception e) {

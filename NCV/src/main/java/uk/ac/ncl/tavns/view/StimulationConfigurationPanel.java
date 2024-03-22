@@ -2,6 +2,7 @@ package uk.ac.ncl.tavns.view;
 
 import kirkwood.nidaq.access.NiDaqException;
 import net.miginfocom.swing.MigLayout;
+import uk.ac.ncl.tavns.controller.StimParameters;
 import uk.ac.ncl.tavns.controller.StimProtocols;
 
 import javax.swing.*;
@@ -80,8 +81,19 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
                 if (!stimInitialised) {
                     if (stimProtocols == null)
                         stimProtocols = new StimProtocols(panelCollection.getChartsPanel());
+                    StimParameters stimParameters = new StimParameters(
+                            outputDevice,
+                            outputChannel,
+                            "",
+                            Double.parseDouble(tf_stimValue.getText()),
+                            null,
+                            Double.parseDouble(tf_startThreshold.getText()),
+                            Double.parseDouble(tf_stopThreshold.getText()),
+                            cb_rampup.isSelected(),
+                            Double.parseDouble(tf_maxDuration.getText())
+                            );
                     stimInitialised = stimProtocols.thresholdStimInit(outputDevice, outputChannel, startThreshold,
-                            Double.parseDouble(tf_stimValue.getText()));
+                            Double.parseDouble(tf_stimValue.getText()), stimParameters);
                 }
                 stimProtocols.thresholdStimStart();
             } catch (NiDaqException ex) {
