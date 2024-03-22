@@ -80,7 +80,7 @@ public class AnalogueThresholdWrite implements Runnable {
 
                         daq.startTask(doTask);
                         double value = 1D;
-                        daq.DAQmxWriteAnalogScalarF64(doTask, 1, 10, value, 0);
+                        daq.DAQmxWriteAnalogScalarF64(doTask, 1, 10, stimValue, 0);
                         long start = System.nanoTime();
                         long nanoseconds = 200000000;
                         while(start + nanoseconds >= System.nanoTime());

@@ -56,7 +56,17 @@ public class StimProtocols {
         }
     }
 
-    public boolean thresholdStimInit(String outputDevice, String outputChannel, double threshold, double stimValue) throws NiDaqException {
+    /**
+     * Start stimulation at specified threshold
+     * @param outputDevice
+     * @param outputChannel
+     * @param threshold
+     * @param stimValue
+     * @return
+     * @throws NiDaqException
+     */
+    public boolean thresholdStimInit(String outputDevice, String outputChannel, double threshold, double stimValue)
+            throws NiDaqException {
         analogueThresholdWrite = new AnalogueThresholdWrite(outputDevice, outputChannel,
                 "ThresholdStim", stimValue, dataset[0], threshold);
         analogueThresholdWrite.setRunning(true);

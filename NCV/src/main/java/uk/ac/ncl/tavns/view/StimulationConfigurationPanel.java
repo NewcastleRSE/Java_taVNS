@@ -1,6 +1,7 @@
 package uk.ac.ncl.tavns.view;
 
 import kirkwood.nidaq.access.NiDaqException;
+import net.miginfocom.swing.MigLayout;
 import uk.ac.ncl.tavns.controller.StimProtocols;
 
 import javax.swing.*;
@@ -20,35 +21,48 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
     private JTextField tf_stopThreshold = new JTextField("3",5);
     // Maximum duration of overall stimulation
     private JTextField tf_maxDuration = new JTextField("3", 5);
+    private JTextField tf_stimValue = new JTextField("2.5", 5); // Stimulation value
     private JButton startStim = new JButton("Start stimulation");
     private String outputDevice;
     private String outputChannel;
     private boolean stimInitialised = false;
     private PanelCollection panelCollection;
     private StimProtocols stimProtocols;
+    JPanel pnl_txtFields = new JPanel();
+    JPanel pnl_buttons = new JPanel();
     public StimulationConfigurationPanel(PanelCollection panelCollection, String outputDevice, String outputChannel) {
         super();
         this.panelCollection = panelCollection;
         this.outputDevice = outputDevice;
         this.outputChannel = outputChannel;
         this.stimProtocols = panelCollection.getStimProtocols();
-        setPreferredSize(new Dimension(1000, 30));
+        setLayout(new MigLayout());
         Border lineBorder = BorderFactory.createLineBorder(Color.black);
         setBorder(lineBorder);
-        setLayout(new FlowLayout());
+
+        setPreferredSize(new Dimension(1000, 60));
+        pnl_buttons.setLayout(new FlowLayout());
+        pnl_txtFields.setLayout(new FlowLayout());
         startStim.setBackground(Color.ORANGE);
         startStim.setForeground(Color.BLACK);
-        add(new JLabel("Start threshold"));
-        add(tf_startThreshold);
-        add(new JLabel(""));
-        add(cb_rampup);
-        add(new JLabel("Rampup duration"));
-        add(tf_rampupDuration);
-        add(new JLabel("Stop threshold"));
-        add(tf_stopThreshold);
-        add(new JLabel("Maximum stimulation duration"));
-        add(tf_maxDuration);
-        add(startStim);
+
+        pnl_txtFields.add(new JLabel("Start threshold"));
+        pnl_txtFields.add(tf_startThreshold);
+        pnl_txtFields.add(new JLabel(""));
+        pnl_txtFields.add(cb_rampup);
+        pnl_txtFields.add(new JLabel("Rampup duration"));
+        pnl_txtFields.add(tf_rampupDuration);
+        pnl_txtFields.add(new JLabel("Stop threshold"));
+        pnl_txtFields.add(tf_stopThreshold);
+        pnl_txtFields.add(new JLabel("Maximum stimulation duration"));
+        pnl_txtFields.add(tf_maxDuration);
+        pnl_txtFields.add(new JLabel("Stimulation value"));
+        pnl_txtFields.add(tf_stimValue);
+
+        pnl_buttons.add(startStim);
+
+        add(pnl_txtFields, "wrap");
+        add(pnl_buttons);
 
         startStim.addActionListener(this);
 
@@ -67,7 +81,7 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
                     if (stimProtocols == null)
                         stimProtocols = new StimProtocols(panelCollection.getChartsPanel());
                     stimInitialised = stimProtocols.thresholdStimInit(outputDevice, outputChannel, startThreshold,
-                            Double.parseDouble(tf_startThreshold.getText()));
+                            Double.parseDouble(tf_stimValue.getText()));
                 }
                 stimProtocols.thresholdStimStart();
             } catch (NiDaqException ex) {
