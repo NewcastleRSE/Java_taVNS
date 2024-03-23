@@ -50,9 +50,12 @@ public class ButtonControlsPanel extends JPanel implements ActionListener {
         startTrace.setBackground(Color.ORANGE);
         add(startTrace);
         add(new JSeparator(SwingConstants.VERTICAL));
+        JPanel smallbox = new JPanel();
         SteelCheckBox steelCheckBox = new SteelCheckBox();
         steelCheckBox.setText("0 <=> 1");
-        add(steelCheckBox);
+        smallbox.setBorder(lineBorder);
+        smallbox.add(steelCheckBox);
+        add(smallbox);
         // check this
         JButton digOut = new JButton("Digital Out");
         add(digOut);
