@@ -71,12 +71,12 @@ public class AnalogueThresholdWrite implements Runnable {
                                 double normalised = Utilities.normalise(i, 0, numberOfSpikes, 0, stimParameters.getStimValue());
                                 System.out.println(i + " of " + numberOfSpikes + ": " + normalised);
                                 daq.DAQmxWriteAnalogScalarF64(doTask,1, 5, normalised, 0);
-                                Thread.sleep(165);
+                                Thread.sleep(stimParameters.getSpikePeriod());
                                 daq.stopTask(doTask);
                                 double zero = 0D;
                                 daq.DAQmxWriteAnalogScalarF64(doTask,1, 5, zero, 0);
+                                Thread.sleep(stimParameters.getRestPeriod());
                                 daq.stopTask(doTask);
-                                Thread.sleep(165);
                             }
                             ramp = false;
                         }
@@ -84,12 +84,12 @@ public class AnalogueThresholdWrite implements Runnable {
                         daq.startTask(doTask);
                         double value = stimParameters.getStimValue();
                         daq.DAQmxWriteAnalogScalarF64(doTask, 1, 10, value, 0);
-                        Thread.sleep(165);
+                        Thread.sleep(stimParameters.getSpikePeriod());
                         daq.stopTask(doTask);
                         double zero = 0D;
                         daq.DAQmxWriteAnalogScalarF64(doTask, 1, 10, zero, 0);
                         daq.stopTask(doTask);
-                        Thread.sleep(165);
+                        Thread.sleep(stimParameters.getRestPeriod());
                     } else ramp = stimParameters.isRampUp();
                 }
 

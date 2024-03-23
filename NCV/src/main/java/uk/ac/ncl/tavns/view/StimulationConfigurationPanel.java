@@ -63,23 +63,22 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
 
         setPreferredSize(new Dimension(1000, 60));
         pnl_buttons.setLayout(new FlowLayout());
-        pnl_txtFields.setLayout(new FlowLayout());
+        pnl_txtFields.setLayout(new MigLayout("", "[][][][][][][]",""));
         startStim.setBackground(Color.ORANGE);
         startStim.setForeground(Color.BLACK);
 
         pnl_txtFields.add(new JLabel("Stim threshold"));
         pnl_txtFields.add(tf_startThreshold);
-        pnl_txtFields.add(new JLabel(""));
+        pnl_txtFields.add(new JLabel("# stims in ramp"));
+        pnl_txtFields.add(tf_numberOfSpikes);
+        pnl_txtFields.add(new JLabel("Stimulation value"));
+        pnl_txtFields.add(tf_stimValue);
         pnl_txtFields.add(cb_rampup);
         JPanel smallBox = new JPanel();
         smallBox.setBorder(lineBorder);
         cb_rise.setText("Fall <=> Rise");
         smallBox.add(cb_rise);
-        pnl_txtFields.add(smallBox);
-        pnl_txtFields.add(new JLabel("# stims in ramp"));
-        pnl_txtFields.add(tf_numberOfSpikes);
-        pnl_txtFields.add(new JLabel("Stimulation value"));
-        pnl_txtFields.add(tf_stimValue);
+        pnl_txtFields.add(smallBox, "wrap");
         pnl_txtFields.add(new JLabel("Stim length (ms)"));
         pnl_txtFields.add(tf_stimLength);
         pnl_txtFields.add(new JLabel("Period between stims (ms)"));
@@ -152,6 +151,8 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
         stimParameters.setRise(cb_rise.isSelected());
         stimParameters.setRampUp(cb_rampup.isSelected());
         stimParameters.setNumberOfSpikes(Long.parseLong(tf_numberOfSpikes.getText()));
+        stimParameters.setSpikePeriod(Long.parseLong(tf_stimLength.getText()));
+        stimParameters.setRestPeriod(Long.parseLong(tf_restPeriod.getText()));
 
     }
 

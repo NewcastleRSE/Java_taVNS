@@ -44,7 +44,10 @@ public class StimParameters {
      * Length of period between spikes
      */
     private Long restPeriod;
-
+    /**
+     * Time period of spike
+     */
+    private Long spikePeriod;
      /**
      * Default constructor
      */
@@ -146,5 +149,13 @@ public class StimParameters {
 
     public void setRestPeriod(Long restPeriod) {
         this.restPeriod = restPeriod;
+    }
+
+    public Long getSpikePeriod() {
+        return spikePeriod;
+    }
+
+    public void setSpikePeriod(Long spikePeriod) {
+        this.spikePeriod = spikePeriod;
     }
 }
