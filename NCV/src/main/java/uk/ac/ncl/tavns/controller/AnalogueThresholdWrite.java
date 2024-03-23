@@ -17,7 +17,6 @@ public class AnalogueThresholdWrite implements Runnable {
     private TimeSeriesCollection timeSeriesCollection;
     String physicalChannel;
     int sleep = 100;
-    int stims = 5; // the number of stims in a ramp
     boolean ramp;
 //    boolean rampup;
 
@@ -59,12 +58,14 @@ public class AnalogueThresholdWrite implements Runnable {
 
                     if ((stimParameters.isRise() && datapoint >= stimParameters.getStimThreshold()) ||
                     (!stimParameters.isRise() && datapoint <= stimParameters.getStimThreshold())) {
-                        //
+                        System.out.printf("Stim when: " + stimParameters.isRise() + " and " + stimParameters.getStimThreshold());
+                        // If ramp is selected do ramp up before stimulation
                         if (ramp) {
-                            for (int i = 0; i < stims; i++) {
+                            for (int i = 0; i < stimParameters.getStimDuration(); i++) {
                                 daq.startTask(doTask);
                                 daq.DAQmxWriteAnalogScalarF64(doTask, 1, 5,
-                                        Utilities.normalise(i, 0, stims, 0, 5), 0);
+                                        Utilities.normalise(i, 0, stimParameters.getStimDuration(), 0,
+                                                stimParameters.getStimValue()), 0);
                                 Thread.sleep(sleep);
                                 daq.stopTask(doTask);
                                 double zero = 0D;

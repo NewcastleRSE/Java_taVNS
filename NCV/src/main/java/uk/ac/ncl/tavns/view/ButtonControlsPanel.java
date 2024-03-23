@@ -51,10 +51,10 @@ public class ButtonControlsPanel extends JPanel implements ActionListener {
         add(startTrace);
         add(new JSeparator(SwingConstants.VERTICAL));
         JPanel smallbox = new JPanel();
-        SteelCheckBox steelCheckBox = new SteelCheckBox();
-        steelCheckBox.setText("0 <=> 1");
+        SteelCheckBox cb_digitalOne = new SteelCheckBox();
+        cb_digitalOne.setText("0 <=> 1");
         smallbox.setBorder(lineBorder);
-        smallbox.add(steelCheckBox);
+        smallbox.add(cb_digitalOne);
         add(smallbox);
         // check this
         JButton digOut = new JButton("Digital Out");
@@ -78,7 +78,7 @@ public class ButtonControlsPanel extends JPanel implements ActionListener {
         save.addActionListener(this);
         reset.addActionListener(this);
         resize.addActionListener(this);
-        steelCheckBox.addItemListener(e -> {
+        cb_digitalOne.addItemListener(e -> {
             outputState = e.getStateChange() == 1 ? (byte)1 : (byte)0;
             System.out.println(outputState);
         });

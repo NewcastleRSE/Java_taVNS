@@ -18,7 +18,7 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
     // Should we use a ramp up?
     private JCheckBox cb_rampup = new JCheckBox("Ramp up", true);
     // How long should the rampup take?
-    private SteelCheckBox steelCheckBox = new SteelCheckBox();
+    private SteelCheckBox cb_rise = new SteelCheckBox();
     private JTextField tf_rampupDuration = new JTextField("3", 5);
     // Threshold for discontinuing stimulation
 //    private JTextField tf_stopThreshold = new JTextField("3",5);
@@ -64,10 +64,10 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
         pnl_txtFields.add(cb_rampup);
         JPanel smallBox = new JPanel();
         smallBox.setBorder(lineBorder);
-        steelCheckBox.setText("Fall <=> Rise");
-        smallBox.add(steelCheckBox);
+        cb_rise.setText("Fall <=> Rise");
+        smallBox.add(cb_rise);
         pnl_txtFields.add(smallBox);
-        pnl_txtFields.add(new JLabel("Rampup duration"));
+        pnl_txtFields.add(new JLabel("# stims in ramp"));
         pnl_txtFields.add(tf_rampupDuration);
         pnl_txtFields.add(new JLabel("Maximum stimulation duration"));
         pnl_txtFields.add(tf_maxDuration);
@@ -75,7 +75,6 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
         pnl_txtFields.add(tf_stimValue);
 
         pnl_buttons.add(startStim);
-
         add(pnl_txtFields, "wrap");
         add(pnl_buttons);
 
@@ -142,7 +141,7 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
 //        stimParameters.setStimEndThreshold(Double.parseDouble(tf_stopThreshold.getText()));
         stimParameters.setRampUp(cb_rampup.isSelected());
         stimParameters.setStimDuration(Double.parseDouble(tf_maxDuration.getText()));
-        stimParameters.setRise(steelCheckBox.isRised());
+        stimParameters.setRise(cb_rise.isRised());
     }
 
 }
