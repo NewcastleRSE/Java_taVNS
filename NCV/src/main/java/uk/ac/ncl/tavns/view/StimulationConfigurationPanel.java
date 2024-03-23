@@ -13,19 +13,28 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class StimulationConfigurationPanel extends JPanel implements ActionListener {
-    // Threshold for starting stimulation
-    private JTextField tf_startThreshold = new JTextField("-0.6",5);
-    // Should we use a ramp up?
-    private JCheckBox cb_rampup = new JCheckBox("Ramp up", true);
+    /**
+     Threshold for starting stimulation
+     **/
+    private JTextField tf_startThreshold = new JTextField("-0.6",5); // threshold at which to start stim
+    /**
+     * Should we use a ramp up?
+     */
+    private JCheckBox cb_rampup = new JCheckBox("Ramp up", true); // if true do ramp up
     // How long should the rampup take?
-    private SteelCheckBox cb_rise = new SteelCheckBox();
-    private JTextField tf_rampupDuration = new JTextField("3", 5);
-    // Threshold for discontinuing stimulation
-//    private JTextField tf_stopThreshold = new JTextField("3",5);
-    // Maximum duration of overall stimulation
-    private JTextField tf_maxDuration = new JTextField("3", 5);
-    private JTextField tf_stimValue = new JTextField("2.5", 5); // Stimulation value
-    private JButton startStim = new JButton("Start stimulation");
+    private SteelCheckBox cb_rise = new SteelCheckBox(); // if true stim on voltage rise
+    private JTextField tf_numberOfSpikes = new JTextField("3", 5); // number of stims in the rampup
+//    private JTextField tf_maxDuration = new JTextField("3", 5); //
+    private JTextField tf_stimValue = new JTextField("2.5", 5); // voltage to stimulate at
+    /**
+     * Time period of stim
+     */
+    private JTextField tf_stimLength = new JTextField("165", 5);
+    /**
+     * Time period between stims
+     */
+    private JTextField tf_restPeriod = new JTextField("165", 5);
+    private JButton startStim = new JButton("Start stimulation"); // start stimulating
     private String outputDevice;
     private String outputChannel;
     private boolean stimInitialised = false;
@@ -68,11 +77,13 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
         smallBox.add(cb_rise);
         pnl_txtFields.add(smallBox);
         pnl_txtFields.add(new JLabel("# stims in ramp"));
-        pnl_txtFields.add(tf_rampupDuration);
-        pnl_txtFields.add(new JLabel("Maximum stimulation duration"));
-        pnl_txtFields.add(tf_maxDuration);
+        pnl_txtFields.add(tf_numberOfSpikes);
         pnl_txtFields.add(new JLabel("Stimulation value"));
         pnl_txtFields.add(tf_stimValue);
+        pnl_txtFields.add(new JLabel("Stim length (ms)"));
+        pnl_txtFields.add(tf_stimLength);
+        pnl_txtFields.add(new JLabel("Period between stims (ms)"));
+        pnl_txtFields.add(tf_restPeriod);
 
         pnl_buttons.add(startStim);
         add(pnl_txtFields, "wrap");
@@ -133,14 +144,15 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
      * Populate the StimParameters class from the GUI widgets.
      */
     public void populateStimParameters() {
-        stimParameters.setOutputDevice(outputDevice);
-        stimParameters.setOutputChannel(outputChannel);
-        if (stimParameters.getTaskName() == null) stimParameters.setTaskName("");
+        stimParameters.setOutputDevice(outputDevice); // output device
+        stimParameters.setOutputChannel(outputChannel); // output channel
+        if (stimParameters.getTaskName() == null) stimParameters.setTaskName(""); // task name
         stimParameters.setStimValue(Double.parseDouble(tf_stimValue.getText()));
         stimParameters.setStimThreshold(Double.parseDouble(tf_startThreshold.getText()));
         stimParameters.setRise(cb_rise.isSelected());
         stimParameters.setRampUp(cb_rampup.isSelected());
-        stimParameters.setStimDuration(Double.parseDouble(tf_maxDuration.getText()));
+        stimParameters.setNumberOfSpikes(Long.parseLong(tf_numberOfSpikes.getText()));
+
     }
 
 }

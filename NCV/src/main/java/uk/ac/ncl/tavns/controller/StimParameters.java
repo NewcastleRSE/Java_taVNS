@@ -4,31 +4,50 @@ import org.jfree.data.time.TimeSeriesCollection;
 
 public class StimParameters {
 
+    /**
+     * NiDAQ Output device
+     */
     private String outputDevice;
+    /**
+     * NiDAQ Outuput channel
+     */
     private String outputChannel;
+    /**
+     * NiDAQ task name
+     */
     private String taskName;
+    /**
+     * Voltage at which to stimulate
+     */
     private double stimValue;
+    /**
+     * Recorded values
+     */
     private TimeSeriesCollection timeSeriesCollection;
+    /**
+     * Threshold at which to stimulate
+     */
     private double stimThreshold;
+    /**
+     * If true stimulate on rise of voltage signal
+     */
     private boolean rise; // If true check for threshold on rise else on fall
-//    private double stimEndThreshold;
+    /**
+     * If true, do rampup before stimulation
+     */
     private boolean rampUp;
-    private double stimDuration;
+    /**
+     * Number of stims in rampup
+     */
+    private Long numberOfSpikes;
+    /**
+     * Length of period between spikes
+     */
+    private Long restPeriod;
 
-    public StimParameters(String outputDevice, String outputChannel, String taskName, double stimValue,
-                          TimeSeriesCollection timeSeriesCollection, double stimThreshold,
-                          double stimEndThreshold, boolean rampUp, double stimDuration) {
-        this.outputDevice = outputDevice;
-        this.outputChannel = outputChannel;
-        this.taskName = taskName;
-        this.stimValue = stimValue;
-        this.timeSeriesCollection = timeSeriesCollection;
-        this.stimThreshold = stimThreshold;
-//        this.stimEndThreshold = stimEndThreshold;
-        this.rampUp = rampUp;
-        this.stimDuration = stimDuration;
-    }
-
+     /**
+     * Default constructor
+     */
     public StimParameters() {
     }
 
@@ -96,12 +115,12 @@ public class StimParameters {
         this.rampUp = rampUp;
     }
 
-    public double getStimDuration() {
-        return stimDuration;
+    public Long getNumberOfSpikes() {
+        return numberOfSpikes;
     }
 
-    public void setStimDuration(double stimDuration) {
-        this.stimDuration = stimDuration;
+    public void setNumberOfSpikes(long numberOfSpikes) {
+        this.numberOfSpikes = numberOfSpikes;
     }
 
     /**
@@ -115,5 +134,17 @@ public class StimParameters {
 
     public void setRise(boolean rise) {
         this.rise = rise;
+    }
+
+    public void setNumberOfSpikes(Long numberOfSpikes) {
+        this.numberOfSpikes = numberOfSpikes;
+    }
+
+    public Long getRestPeriod() {
+        return restPeriod;
+    }
+
+    public void setRestPeriod(Long restPeriod) {
+        this.restPeriod = restPeriod;
     }
 }

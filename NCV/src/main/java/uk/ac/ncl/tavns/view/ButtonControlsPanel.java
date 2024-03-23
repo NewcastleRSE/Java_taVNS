@@ -26,7 +26,7 @@ public class ButtonControlsPanel extends JPanel implements ActionListener {
     private final AnalogueInput analogueInput;
     private final String outputDevice;
     private byte outputState = 0;
-    private JTextField txt_stimValue = new JTextField("2.5", 5);
+    private JTextField txt_stimValue = new JTextField("5", 5);
     private JTextField txt_sleepValue = new JTextField("165", 5);
     private PanelCollection panelCollection;
     private Properties properties;

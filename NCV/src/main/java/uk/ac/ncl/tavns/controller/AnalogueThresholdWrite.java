@@ -15,6 +15,9 @@ public class AnalogueThresholdWrite implements Runnable {
     private Pointer doTask;
     private boolean running = true;
     private TimeSeriesCollection timeSeriesCollection;
+    /**
+     * Physical channel is a combination of the device and the channel
+     */
     String physicalChannel;
     int sleep = 100;
     boolean ramp;
@@ -23,7 +26,6 @@ public class AnalogueThresholdWrite implements Runnable {
     public AnalogueThresholdWrite(StimParameters stimParameters) throws NiDaqException {
         this.stimParameters = stimParameters;
         this.timeSeriesCollection = stimParameters.getTimeSeriesCollection();
-//        this.rampup = stimParameters.isRampUp();
         ramp = stimParameters.isRampUp();
         try {
             physicalChannel = stimParameters.getOutputDevice() + "/" + stimParameters.getOutputChannel();
@@ -44,6 +46,7 @@ public class AnalogueThresholdWrite implements Runnable {
     @Override
     public void run() {
         // Keep thread running
+
         while (true) {
             try {
                 //System.out.println("Run thread");
@@ -51,46 +54,42 @@ public class AnalogueThresholdWrite implements Runnable {
                 // Sleep for 10 millis otherwise start it doesn't go into the running loop ??!?!?!?
                 Thread.sleep(1);
                 // Start stimulating when running is true
+                long numberOfSpikes = stimParameters.getNumberOfSpikes();
+                ramp = stimParameters.isRampUp();
                 while (running) {
                     TimeSeries timeSeries = timeSeriesCollection.getSeries(0);
                     int itemCount = timeSeries.getItemCount();
                     Double datapoint = timeSeries.getDataItem(itemCount - 1).getValue().doubleValue();
-
+                    daq.stopTask(doTask);
+                    // check whether stimulation should happen on fall or rise of breath amplitude
                     if ((stimParameters.isRise() && datapoint >= stimParameters.getStimThreshold()) ||
                     (!stimParameters.isRise() && datapoint <= stimParameters.getStimThreshold())) {
-                        System.out.printf("Stim when: " + stimParameters.isRise() + " and " + stimParameters.getStimThreshold());
                         // If ramp is selected do ramp up before stimulation
                         if (ramp) {
-                            for (int i = 0; i < stimParameters.getStimDuration(); i++) {
+                            for (int i = 1; i <= numberOfSpikes; i++) {
                                 daq.startTask(doTask);
-                                daq.DAQmxWriteAnalogScalarF64(doTask, 1, 5,
-                                        Utilities.normalise(i, 0, stimParameters.getStimDuration(), 0,
-                                                stimParameters.getStimValue()), 0);
-                                Thread.sleep(sleep);
+                                double normalised = Utilities.normalise(i, 0, numberOfSpikes, 0, stimParameters.getStimValue());
+                                System.out.println(i + " of " + numberOfSpikes + ": " + normalised);
+                                daq.DAQmxWriteAnalogScalarF64(doTask,1, 5, normalised, 0);
+                                Thread.sleep(165);
                                 daq.stopTask(doTask);
                                 double zero = 0D;
-                                daq.DAQmxWriteAnalogScalarF64(doTask, 1, 5, zero, 0);
+                                daq.DAQmxWriteAnalogScalarF64(doTask,1, 5, zero, 0);
                                 daq.stopTask(doTask);
-                                Thread.sleep(sleep);
+                                Thread.sleep(165);
                             }
                             ramp = false;
                         }
 
                         daq.startTask(doTask);
-                        double value = 1D;
-                        daq.DAQmxWriteAnalogScalarF64(doTask, 1, 10, stimParameters.getStimValue(), 0);
-                        long start = System.nanoTime();
-                        long nanoseconds = 200000000;
-                        while(start + nanoseconds >= System.nanoTime());
-//                        Thread.sleep(sleep);
+                        double value = stimParameters.getStimValue();
+                        daq.DAQmxWriteAnalogScalarF64(doTask, 1, 10, value, 0);
+                        Thread.sleep(165);
                         daq.stopTask(doTask);
                         double zero = 0D;
                         daq.DAQmxWriteAnalogScalarF64(doTask, 1, 10, zero, 0);
                         daq.stopTask(doTask);
-                        start = System.nanoTime();
-                        while(start + nanoseconds >= System.nanoTime());
-//                        Thread.sleep(sleep);
-
+                        Thread.sleep(165);
                     } else ramp = stimParameters.isRampUp();
                 }
 
@@ -103,6 +102,17 @@ public class AnalogueThresholdWrite implements Runnable {
 
     }
 
+    public void nanoSleep(long millitime) {
+//        long nanoseconds = millitime * 1000000;
+//        long start;
+//        start = System.nanoTime();
+//        while(start + nanoseconds >= System.nanoTime());
+        try {
+            Thread.sleep(millitime);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
     /**
      * Return whether thread is stimulating or not. If running=true, it should be stimulating
      *

@@ -37,7 +37,8 @@ public class AnalogueRamp implements Runnable {
         try {
             for (int i = 0; i < stims; i++) {
                 daq.startTask(doTask);
-                daq.DAQmxWriteAnalogScalarF64(doTask,1, 5, Utilities.normalise(i, 0, stims, 0, 5), 0);
+                double normalised = Utilities.normalise(i, 0, stims, 0, 5);
+                daq.DAQmxWriteAnalogScalarF64(doTask,1, 5, normalised, 0);
                 Thread.sleep(sleep);
                 daq.stopTask(doTask);
                 double zero = 0D;
