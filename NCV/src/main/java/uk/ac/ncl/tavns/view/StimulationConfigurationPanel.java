@@ -138,10 +138,9 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
         if (stimParameters.getTaskName() == null) stimParameters.setTaskName("");
         stimParameters.setStimValue(Double.parseDouble(tf_stimValue.getText()));
         stimParameters.setStimThreshold(Double.parseDouble(tf_startThreshold.getText()));
-//        stimParameters.setStimEndThreshold(Double.parseDouble(tf_stopThreshold.getText()));
+        stimParameters.setRise(cb_rise.isSelected());
         stimParameters.setRampUp(cb_rampup.isSelected());
         stimParameters.setStimDuration(Double.parseDouble(tf_maxDuration.getText()));
-        stimParameters.setRise(cb_rise.isRised());
     }
 
 }

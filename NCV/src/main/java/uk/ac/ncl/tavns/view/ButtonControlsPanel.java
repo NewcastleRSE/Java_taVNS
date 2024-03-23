@@ -136,7 +136,7 @@ public class ButtonControlsPanel extends JPanel implements ActionListener {
             analogueInput.setIsRunning(false);
             Utilities.saveData(timeSeries);
             analogueInput.setIsRunning(true);
-        } else if (e.getActionCommand().equals("Dig Out")) {
+        } else if (e.getActionCommand().equals("Digital Out")) {
             StimProtocols.digitalOutSetState(outputDevice, outputState, "/port0/line0");
         } else if (e.getActionCommand().equals("Test Ramp Stim")) {
             int sleep = Integer.parseInt(txt_sleepValue.getText());
