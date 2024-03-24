@@ -11,6 +11,7 @@
     <modules>
         <module>JNI4NI</module>
         <module>SteelCheckBox</module>
+        <module>NCV</module>
     </modules>
 
     <properties>
@@ -19,21 +20,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <dependencies>
-        <dependency>
-            <groupId>org.jfree</groupId>
-            <artifactId>jfreechart</artifactId>
-            <version>1.5.4</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jfree</groupId>
-            <artifactId>jcommon</artifactId>
-            <version>1.0.23</version>
-        </dependency>
-        <dependency>
-            <groupId>net.java.dev.jna</groupId>
-            <artifactId>jna</artifactId>
-            <version>5.7.0</version>
-        </dependency>
+
     </dependencies>
 
 </project>
