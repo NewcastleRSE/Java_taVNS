@@ -14,19 +14,19 @@ import java.util.Arrays;
 public class AnalogueInput implements Runnable {
 
     private static NiDaq daq = new NiDaq();
-    private final int numSampsPerChan;
+    private final int numSamplesPerChan;
     private boolean isRunning = true;
     private TimeSeries[] timeSeries;
     private String inputDevice;
 
-    public AnalogueInput(int numberOfChannels, int numSampsPerChan, String inputDevice) {
+    public AnalogueInput(int numberOfChannels, int numSamplesPerChan, String inputDevice) {
 
         this.timeSeries = new TimeSeries[numberOfChannels];
         this.inputDevice = inputDevice;
         for (int i = 0; i < numberOfChannels; i++) {
             timeSeries[i] = new TimeSeries("Legend: " + i);
         }
-        this.numSampsPerChan = numSampsPerChan;
+        this.numSamplesPerChan = numSamplesPerChan;
 
     }
 
@@ -40,14 +40,14 @@ public class AnalogueInput implements Runnable {
                     Nicaiu.DAQmx_Val_Cfg_Default, -10.0, 10.0, Nicaiu.DAQmx_Val_Volts,
                     null);
             daq.cfgSampClkTiming(aiTask, "", 100.0, Nicaiu.DAQmx_Val_Rising, Nicaiu.DAQmx_Val_FiniteSamps,
-                    numSampsPerChan);
+                    numSamplesPerChan);
             daq.startTask(aiTask);
             int read = 0;
             double[] buffer = new double[inputBufferSize];
 
             DoubleBuffer inputBuffer = DoubleBuffer.wrap(buffer);
             IntBuffer samplesPerChannelRead = IntBuffer.wrap(new int[]{read});
-            daq.readAnalogF64(aiTask, numSampsPerChan, 100.0, Nicaiu.DAQmx_Val_GroupByChannel, inputBuffer,
+            daq.readAnalogF64(aiTask, numSamplesPerChan, 100.0, Nicaiu.DAQmx_Val_GroupByChannel, inputBuffer,
                     inputBufferSize, samplesPerChannelRead);
 
             daq.stopTask(aiTask);
@@ -60,6 +60,8 @@ public class AnalogueInput implements Runnable {
                 daq.clearTask(aiTask);
                 return null;
             } catch (NiDaqException e2) {
+                e.printStackTrace();
+                // TODO
             }
             throw (e);
         }
@@ -68,15 +70,15 @@ public class AnalogueInput implements Runnable {
     @Override
     public void run() {
         final Millisecond now = new Millisecond();
-        System.out.println("Samples per channel: " + numSampsPerChan);
+        System.out.println("Samples per channel: " + numSamplesPerChan);
         while (true) {
             try {
-                int inputBufferSize = timeSeries.length * numSampsPerChan *2;
+                int inputBufferSize = timeSeries.length * numSamplesPerChan *2;
                 double[] data = readAnalogueIn(inputBufferSize, inputDevice);
                 if (data != null) {
                     for (int i = 0; i < timeSeries.length; i++) {
-                        int start = i * numSampsPerChan;
-                        int end = start + numSampsPerChan;
+                        int start = i * numSamplesPerChan;
+                        int end = start + numSamplesPerChan;
                         if (isRunning)
                             timeSeries[i].addOrUpdate(new Millisecond(), mean(Arrays.copyOfRange(data, start, end)));
                         else
