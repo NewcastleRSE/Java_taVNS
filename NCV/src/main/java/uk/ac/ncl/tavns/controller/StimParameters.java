@@ -11,11 +11,19 @@ public class StimParameters {
     /**
      * NiDAQ Outuput channel
      */
-    private String outputChannel;
+    private String analogueOutputChannel;
     /**
-     * NiDAQ task name
+     * NIDAQ digital output channel
      */
-    private String taskName;
+    private String digitalOutputChannel;
+    /**
+     * NiDAQ analogue task name
+     */
+    private String analogueTask;
+    /**
+     * NiDAQ digital task name;
+     */
+    private String digitalTask;
     /**
      * Voltage at which to stimulate
      */
@@ -62,20 +70,20 @@ public class StimParameters {
         this.outputDevice = outputDevice;
     }
 
-    public String getOutputChannel() {
-        return outputChannel;
+    public String getAnalogueOutputChannel() {
+        return analogueOutputChannel;
     }
 
-    public void setOutputChannel(String outputChannel) {
-        this.outputChannel = outputChannel;
+    public void setAnalogueOutputChannel(String analogueOutputChannel) {
+        this.analogueOutputChannel = analogueOutputChannel;
     }
 
-    public String getTaskName() {
-        return taskName;
+    public String getAnalogueTask() {
+        return analogueTask;
     }
 
-    public void setTaskName(String taskName) {
-        this.taskName = taskName;
+    public void setAnalogueTask(String analogueTask) {
+        this.analogueTask = analogueTask;
     }
 
     public double getStimValue() {
@@ -157,5 +165,21 @@ public class StimParameters {
 
     public void setSpikePeriod(Long spikePeriod) {
         this.spikePeriod = spikePeriod;
+    }
+
+    public String getDigitalTask() {
+        return digitalTask;
+    }
+
+    public void setDigitalTask(String digitalTask) {
+        this.digitalTask = digitalTask;
+    }
+
+    public String getDigitalOutputChannel() {
+        return digitalOutputChannel;
+    }
+
+    public void setDigitalOutputChannel(String digitalOutputChannel) {
+        this.digitalOutputChannel = digitalOutputChannel;
     }
 }

@@ -46,7 +46,8 @@ public class NCV extends JFrame {
         panelCollection.setStimProtocols(stimProtocols);
         configurationPanel = new ConfigurationPanel(panelCollection);
         panelCollection.setChartsPanel(chartsPanel);
-        stimulationConfigurationPanel = new StimulationConfigurationPanel(panelCollection, outputDevice, "ao1");
+        stimulationConfigurationPanel = new StimulationConfigurationPanel(panelCollection, outputDevice,
+                "ao1", "/port0/line0");
         final JTabbedPane tabbedPane = new JTabbedPane();
         tabbedPane.add("Input Traces", chartsPanel);
         tabbedPane.add("Configuration", configurationPanel);

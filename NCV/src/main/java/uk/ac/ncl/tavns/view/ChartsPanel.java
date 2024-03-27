@@ -32,7 +32,8 @@ public class ChartsPanel extends JPanel {
     public ChartsPanel(PanelCollection panelCollection, int channels, AnalogueInput analogueInput, String digitalOutputDevice) {
         super();
         panelCollection.setButtonControlsPanel(new ButtonControlsPanel(panelCollection, analogueInput, digitalOutputDevice));
-        panelCollection.setStimulationConfiguration(new StimulationConfigurationPanel(panelCollection, properties.getProperty("output_device"), "ao1"));
+        panelCollection.setStimulationConfiguration(new StimulationConfigurationPanel(panelCollection,
+                properties.getProperty("output_device"), "ao1", "port0/line0"));
         buttonControlsPanel = panelCollection.getButtonControlsPanel();
         timeSeriesCollections = new TimeSeriesCollection[channels];
         TimeSeries[] timeSeries = analogueInput.getTimeSeries();

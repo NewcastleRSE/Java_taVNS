@@ -64,7 +64,8 @@ public class StimProtocols {
      */
     public boolean thresholdStimInit(StimParameters stimParameters)
             throws NiDaqException {
-        stimParameters.setTaskName("ThresholdStim");
+        stimParameters.setAnalogueTask("ThresholdStim");
+        stimParameters.setDigitalTask("DigitalStim");
         stimParameters.setTimeSeriesCollection(dataset[0]);
         analogueThresholdWrite = new AnalogueThresholdWrite(stimParameters);
         analogueThresholdWrite.setRunning(true);

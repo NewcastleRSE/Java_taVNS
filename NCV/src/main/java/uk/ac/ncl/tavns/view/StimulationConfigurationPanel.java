@@ -36,7 +36,8 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
     private JTextField tf_restPeriod = new JTextField("165", 5);
     private JButton startStim = new JButton("Start stimulation"); // start stimulating
     private String outputDevice;
-    private String outputChannel;
+    private String analogueOutputChannel;
+    private String digitalOutputChannel;
     private boolean stimInitialised = false;
     private PanelCollection panelCollection;
     private StimProtocols stimProtocols;
@@ -49,13 +50,15 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
      * holds the buttons
      * @param panelCollection
      * @param outputDevice
-     * @param outputChannel
+     * @param analogueOutputChannel
      */
-    public StimulationConfigurationPanel(PanelCollection panelCollection, String outputDevice, String outputChannel) {
+    public StimulationConfigurationPanel(PanelCollection panelCollection, String outputDevice,
+                                         String analogueOutputChannel, String digitalOutputChannel) {
         super();
         this.panelCollection = panelCollection;
         this.outputDevice = outputDevice;
-        this.outputChannel = outputChannel;
+        this.analogueOutputChannel = analogueOutputChannel;
+        this.digitalOutputChannel = digitalOutputChannel;
         this.stimProtocols = panelCollection.getStimProtocols();
         setLayout(new MigLayout());
         Border lineBorder = BorderFactory.createLineBorder(Color.black);
@@ -144,8 +147,10 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
      */
     public void populateStimParameters() {
         stimParameters.setOutputDevice(outputDevice); // output device
-        stimParameters.setOutputChannel(outputChannel); // output channel
-        if (stimParameters.getTaskName() == null) stimParameters.setTaskName(""); // task name
+        stimParameters.setAnalogueOutputChannel(analogueOutputChannel); // analogue output channel
+        stimParameters.setDigitalOutputChannel(digitalOutputChannel); // digital output channel
+        if (stimParameters.getAnalogueTask() == null) stimParameters.setAnalogueTask(""); // task name
+        if (stimParameters.getDigitalTask() == null) stimParameters.setDigitalTask("");
         stimParameters.setStimValue(Double.parseDouble(tf_stimValue.getText()));
         stimParameters.setStimThreshold(Double.parseDouble(tf_startThreshold.getText()));
         stimParameters.setRise(cb_rise.isSelected());
