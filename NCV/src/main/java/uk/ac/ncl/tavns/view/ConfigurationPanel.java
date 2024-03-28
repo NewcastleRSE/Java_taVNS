@@ -18,6 +18,8 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
     private static JTextField tf_samplesPerChannel = new JTextField( 5);
     private static JTextField tf_inputDevice = new JTextField(5);
     private static JTextField tf_outputDevice = new JTextField(5);
+    private static JTextField tf_digitalOutputChannel = new JTextField(5);
+    private static JTextField tf_analogueOutputChannel = new JTextField(5);
     private static JTextField tf_chartWidth = new JTextField("1000",5);
     private static JTextField tf_chartHeight = new JTextField("270",5);
     private JButton save = new JButton("Save");
@@ -33,6 +35,8 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
         tf_samplesPerChannel.setText(properties.getProperty("samples_per_channel"));
         tf_inputDevice.setText(properties.getProperty("input_device"));
         tf_outputDevice.setText(properties.getProperty("output_device"));
+        tf_analogueOutputChannel.setText(properties.getProperty("analogue_output_port"));
+        tf_digitalOutputChannel.setText(properties.getProperty("digital_output_port"));
         tf_chartHeight.setText(properties.getProperty("chart_height"));
         tf_chartWidth.setText(properties.getProperty("chart_width"));
         MigLayout migLayout = new MigLayout("wrap 5");
@@ -55,6 +59,10 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
         add(tf_inputDevice);
         add(new Label("Output Device: "));
         add(tf_outputDevice, "wrap");
+        add(new Label("Analogue Output port"));
+        add(tf_analogueOutputChannel);
+        add(new Label("Digital Output port"));
+        add(tf_digitalOutputChannel, "wrap");
         add(new Label("Samples per channel: "));
         add(tf_samplesPerChannel, "wrap");
         add(new Label("Number of Analogue Input channels: "));
@@ -78,6 +86,8 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
             properties.setProperty("number_of_ai_channels", tf_aiChannels.getText());
             properties.setProperty("input_device", tf_inputDevice.getText());
             properties.setProperty("output_device", tf_outputDevice.getText());
+            properties.setProperty("digital_output_channel", tf_digitalOutputChannel.getText());
+            properties.setProperty("analogue_output_channel", tf_analogueOutputChannel.getText());
             savePropertyFile(properties);
 
 

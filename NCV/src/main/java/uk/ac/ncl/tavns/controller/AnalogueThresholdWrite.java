@@ -73,6 +73,7 @@ public class AnalogueThresholdWrite implements Runnable {
                     // check whether stimulation should happen on fall or rise of breath amplitude
                     if ((stimParameters.isRise() && datapoint >= stimParameters.getStimThreshold()) ||
                             (!stimParameters.isRise() && datapoint <= stimParameters.getStimThreshold())) {
+
                         // If ramp is selected do ramp up before stimulation
                         if (ramp) {
                             for (int i = 1; i <= numberOfSpikes; i++) {
@@ -112,8 +113,6 @@ public class AnalogueThresholdWrite implements Runnable {
                     } else ramp = stimParameters.isRampUp();
 
                 }
-
-
                 double zero = 0D;
                 daq.DAQmxWriteAnalogScalarF64(analogueTask, 1, 10, zero, 0);
                 daq.stopTask(analogueTask);

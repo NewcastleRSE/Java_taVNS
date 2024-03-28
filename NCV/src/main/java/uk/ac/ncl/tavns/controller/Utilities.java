@@ -70,6 +70,8 @@ public class Utilities {
         properties.setProperty("output_device", "Dev1");
         properties.setProperty("chart_width", "1000");
         properties.setProperty("chart_height", "720");
+        properties.setProperty("digital_output_channel", "port0/line0");
+        properties.setProperty("analogue_output_channel", "ao1");
     }
 
     public static void saveData(TimeSeries[] timeSeries) {

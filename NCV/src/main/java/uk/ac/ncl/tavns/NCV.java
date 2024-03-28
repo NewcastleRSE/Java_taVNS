@@ -39,6 +39,8 @@ public class NCV extends JFrame {
         int numSampsPerChan = Integer.parseInt(properties.getProperty("samples_per_channel"));
         String inputDevice = properties.getProperty("input_device");
         String outputDevice = properties.getProperty("output_device");
+        String analogueOutputChannel = properties.getProperty("analogue_output_channel");
+        String digitalOutputChannel = properties.getProperty("digital_output_channel");
 
         analogueInput = new AnalogueInput(numberOfChannels, numSampsPerChan, inputDevice);
         chartsPanel = new ChartsPanel(panelCollection, numberOfChannels, analogueInput, outputDevice);
@@ -47,7 +49,7 @@ public class NCV extends JFrame {
         configurationPanel = new ConfigurationPanel(panelCollection);
         panelCollection.setChartsPanel(chartsPanel);
         stimulationConfigurationPanel = new StimulationConfigurationPanel(panelCollection, outputDevice,
-                "ao1", "/port0/line0");
+                analogueOutputChannel, digitalOutputChannel);
         final JTabbedPane tabbedPane = new JTabbedPane();
         tabbedPane.add("Input Traces", chartsPanel);
         tabbedPane.add("Configuration", configurationPanel);
