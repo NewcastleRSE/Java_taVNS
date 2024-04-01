@@ -6,13 +6,15 @@ import kirkwood.nidaq.access.NiDaqException;
 import kirkwood.nidaq.jna.Nicaiu;
 import org.jfree.data.time.Millisecond;
 import org.jfree.data.time.TimeSeries;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.DoubleBuffer;
 import java.nio.IntBuffer;
 import java.util.Arrays;
 
 public class AnalogueInput implements Runnable {
-
+    final static Logger logger = LoggerFactory.getLogger(AnalogueInput.class);
     private static NiDaq daq = new NiDaq();
     private final int numSamplesPerChan;
     private boolean isRunning = true;
@@ -55,6 +57,7 @@ public class AnalogueInput implements Runnable {
             return buffer;
 
         } catch (NiDaqException e) {
+            logger.debug("Something's gone wrong");
             try {
                 daq.stopTask(aiTask);
                 daq.clearTask(aiTask);
@@ -86,7 +89,7 @@ public class AnalogueInput implements Runnable {
                     }
                 }
             } catch (NiDaqException e) {
-                System.out.println("NidaqException:");
+                logger.debug("NidaqException:");
                 e.printStackTrace();
                 // ToDo
             }

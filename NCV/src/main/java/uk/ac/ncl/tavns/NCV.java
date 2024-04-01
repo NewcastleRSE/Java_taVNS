@@ -1,6 +1,8 @@
 package uk.ac.ncl.tavns;
 
 import org.jfree.ui.RefineryUtilities;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import uk.ac.ncl.tavns.controller.AnalogueInput;
 import uk.ac.ncl.tavns.controller.StimProtocols;
 import uk.ac.ncl.tavns.controller.Utilities;
@@ -16,6 +18,7 @@ import java.util.Properties;
  */
 public class NCV extends JFrame {
 
+    private static final Logger logger = LoggerFactory.getLogger(NCV.class);
     private final AnalogueInput analogueInput;
     private ChartsPanel chartsPanel;
     private ButtonControlsPanel buttonControlsPanel;
@@ -67,13 +70,11 @@ public class NCV extends JFrame {
     private synchronized void closeDaq() {
         var yesOrNo = JOptionPane.showConfirmDialog(null, "Save data before quitting?", "Quit NCV?", JOptionPane.YES_NO_OPTION);
         setRunning(false);
-        System.out.println("DAQ closed");
+        logger.debug("DAQ closed");
         if (yesOrNo == JOptionPane.YES_NO_OPTION) { // if YES (0) then save and exit
             Utilities.saveData(analogueInput.getTimeSeries());
         }
         System.exit(0);
-        System.out.println("DAQ closed");
-
     }
 
     /**
@@ -91,6 +92,7 @@ public class NCV extends JFrame {
      * @param args - not used at the moment
      */
     public static void main(String[] args) {
+        logger.debug("Application start");
         final NCV ncv = new NCV("NIDAQ Channel Visualiser");
         ncv.pack();
         RefineryUtilities.centerFrameOnScreen(ncv);
