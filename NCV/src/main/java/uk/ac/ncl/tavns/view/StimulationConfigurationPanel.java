@@ -1,8 +1,8 @@
 package uk.ac.ncl.tavns.view;
 
-import eu.hansolo.custom.SteelCheckBox;
 import kirkwood.nidaq.access.NiDaqException;
 import net.miginfocom.swing.MigLayout;
+import uk.ac.ncl.SteelCheckBox.custom.SteelCheckBox;
 import uk.ac.ncl.tavns.controller.StimParameters;
 import uk.ac.ncl.tavns.controller.StimProtocols;
 
