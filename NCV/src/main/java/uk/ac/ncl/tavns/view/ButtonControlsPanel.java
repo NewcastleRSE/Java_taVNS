@@ -1,6 +1,6 @@
 package uk.ac.ncl.tavns.view;
 
-import eu.hansolo.custom.SteelCheckBox;
+import uk.ac.ncl.SteelCheckBox.custom.SteelCheckBox;
 import org.jfree.chart.ChartPanel;
 import org.jfree.data.time.TimeSeries;
 import uk.ac.ncl.tavns.controller.AnalogueInput;
