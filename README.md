@@ -23,9 +23,9 @@ blood pressure and continuous performance tests. In parallel we are studying ANS
 mood, fatigue and QoL in people with depression and HF. Non-invasive ANS modulation is a potential novel therapeutic strategy targeting mood, fatigue and QoL in HF.
 
 ### Project Team
-Dr Jannetta Steyn, Newcastle University  ([jannetta.steyn@newcastle.ac.uk](mailto:jannetta.steyn@newcastle.ac.uk))  
-Dr Frances Turner, Newcastle University  ([frances.hutchings@newcastle.ac.uk](mailto:frances.hutchings@newcastle.ac.uk))
-Dr. Tiago da Silva Costa, Newcastle University ([tiago.da-silva-costa@newcastle.ac.uk](mailto:tiago.da-silva-costa@newcastle.ac.uk))
+- Dr Jannetta Steyn, Newcastle University  ([jannetta.steyn@newcastle.ac.uk](mailto:jannetta.steyn@newcastle.ac.uk))  
+- Dr Frances Turner, Newcastle University  ([frances.hutchings@newcastle.ac.uk](mailto:frances.hutchings@newcastle.ac.uk))
+- Dr. Tiago da Silva Costa, Newcastle University ([tiago.da-silva-costa@newcastle.ac.uk](mailto:tiago.da-silva-costa@newcastle.ac.uk))
 
 ### RSE Contacts
 Frances & Jannetta  
