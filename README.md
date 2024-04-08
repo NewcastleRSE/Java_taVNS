@@ -65,8 +65,7 @@ pip install -e git+https://github.com/CCS-Lab/DS8R_python#egg=ds8r
 
 ### Running Locally
 
-This application is best run in a virtual environment such as `venv`. Make sure **Python 3**, **pip** and **venv**
-are installed
+The application is written in Java and requires OpenJDK 20. The software is packaged into an executable jar using maven.
 
 ### Running Tests
 
