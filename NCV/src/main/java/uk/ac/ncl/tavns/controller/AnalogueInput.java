@@ -32,42 +32,76 @@ public class AnalogueInput implements Runnable {
 
     }
 
-    public double[] readAnalogueIn(int inputBufferSize, String inputDevice) throws NiDaqException {
+    public double[] readAnalogueIn(int inputBufferSize, String inputDevice) {
         Pointer aiTask = null;
+
         try {
             aiTask = daq.createTask("AITask");
-
             String physicalChannel = inputDevice + "/ai0:" + (timeSeries.length - 1);
-            daq.createAIVoltageChannel(aiTask, physicalChannel, "",
-                    Nicaiu.DAQmx_Val_Cfg_Default, -10.0, 10.0, Nicaiu.DAQmx_Val_Volts,
-                    null);
-            daq.cfgSampClkTiming(aiTask, "", 100.0, Nicaiu.DAQmx_Val_Rising, Nicaiu.DAQmx_Val_FiniteSamps,
-                    numSamplesPerChan);
-            daq.startTask(aiTask);
-            int read = 0;
-            double[] buffer = new double[inputBufferSize];
-
-            DoubleBuffer inputBuffer = DoubleBuffer.wrap(buffer);
-            IntBuffer samplesPerChannelRead = IntBuffer.wrap(new int[]{read});
-            daq.readAnalogF64(aiTask, numSamplesPerChan, 100.0, Nicaiu.DAQmx_Val_GroupByChannel, inputBuffer,
-                    inputBufferSize, samplesPerChannelRead);
-
-            daq.stopTask(aiTask);
-            daq.clearTask(aiTask);
-            return buffer;
-
-        } catch (NiDaqException e) {
-            logger.debug("Something's gone wrong");
             try {
-                daq.stopTask(aiTask);
-                daq.clearTask(aiTask);
-                return null;
-            } catch (NiDaqException e2) {
-                e.printStackTrace();
-                // TODO
+                daq.createAIVoltageChannel(aiTask, physicalChannel, "",
+                        Nicaiu.DAQmx_Val_Cfg_Default, -10.0, 10.0, Nicaiu.DAQmx_Val_Volts,
+                        null);
+                try {
+                    daq.cfgSampClkTiming(aiTask, "", 100.0, Nicaiu.DAQmx_Val_Rising, Nicaiu.DAQmx_Val_FiniteSamps,
+                            numSamplesPerChan);
+                    try {
+                        daq.startTask(aiTask);
+                        int read = 0;
+                        double[] buffer = new double[inputBufferSize];
+
+                        DoubleBuffer inputBuffer = DoubleBuffer.wrap(buffer);
+                        IntBuffer samplesPerChannelRead = IntBuffer.wrap(new int[]{read});
+                        try {
+                            daq.readAnalogF64(aiTask, numSamplesPerChan, 100.0, Nicaiu.DAQmx_Val_GroupByChannel, inputBuffer,
+                                    inputBufferSize, samplesPerChannelRead);
+                            try {
+                                daq.stopTask(aiTask);
+                                try {
+                                    daq.clearTask(aiTask);
+                                } catch (NiDaqException e) {
+                                    logger.debug("Can't clear task " + aiTask);
+                                }
+                                return buffer;
+                            } catch (NiDaqException e) {
+                                logger.debug("Can't stop task " + aiTask);
+                            }
+                        } catch (NiDaqException e) {
+                            logger.debug("Can't read analogue");
+                        }
+                    } catch (NiDaqException e) {
+                        logger.debug("Can't start AI task " + aiTask);
+                    }
+                } catch (NiDaqException e) {
+                    logger.debug("Can' Configure Sample Clock Timing");;
+                }
+            } catch (NiDaqException e) {
+                logger.debug("Can't create AI Voltage Channel");;
             }
-            throw (e);
+        } catch (NiDaqException e) {
+            logger.debug("Can't create AI task " + aiTask);
         }
+
+
+
+
+
+
+        return null;
+
+//        try {
+//        } catch (NiDaqException e) {
+//            logger.debug("Something's gone wrong");
+//            try {
+//                daq.stopTask(aiTask);
+//                daq.clearTask(aiTask);
+//                return null;
+//            } catch (NiDaqException e2) {
+//                e.printStackTrace();
+//                // TODO
+//            }
+//            throw (e);
+//        }
     }
 
     @Override
@@ -75,7 +109,7 @@ public class AnalogueInput implements Runnable {
         final Millisecond now = new Millisecond();
         System.out.println("Samples per channel: " + numSamplesPerChan);
         while (true) {
-            try {
+//            try {
                 int inputBufferSize = timeSeries.length * numSamplesPerChan *2;
                 double[] data = readAnalogueIn(inputBufferSize, inputDevice);
                 if (data != null) {
@@ -88,11 +122,11 @@ public class AnalogueInput implements Runnable {
                             timeSeries[i].addOrUpdate(new Millisecond(), null);
                     }
                 }
-            } catch (NiDaqException e) {
-                logger.debug("NidaqException:");
-                e.printStackTrace();
-                // ToDo
-            }
+//            } catch (NiDaqException e) {
+//                logger.debug("NidaqException:");
+//                e.printStackTrace();
+//                // ToDo
+//            }
 
         }
     }
