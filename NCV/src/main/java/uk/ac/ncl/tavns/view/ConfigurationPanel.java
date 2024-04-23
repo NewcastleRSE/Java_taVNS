@@ -35,8 +35,8 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
         tf_samplesPerChannel.setText(properties.getProperty("samples_per_channel"));
         tf_inputDevice.setText(properties.getProperty("input_device"));
         tf_outputDevice.setText(properties.getProperty("output_device"));
-        tf_analogueOutputChannel.setText(properties.getProperty("analogue_output_port"));
-        tf_digitalOutputChannel.setText(properties.getProperty("digital_output_port"));
+        tf_analogueOutputChannel.setText(properties.getProperty("analogue_output_channel"));
+        tf_digitalOutputChannel.setText(properties.getProperty("digital_output_channel"));
         tf_chartHeight.setText(properties.getProperty("chart_height"));
         tf_chartWidth.setText(properties.getProperty("chart_width"));
         MigLayout migLayout = new MigLayout("wrap 5");
@@ -59,9 +59,9 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
         add(tf_inputDevice);
         add(new Label("Output Device: "));
         add(tf_outputDevice, "wrap");
-        add(new Label("Analogue Output port"));
+        add(new Label("Analogue Output channel"));
         add(tf_analogueOutputChannel);
-        add(new Label("Digital Output port"));
+        add(new Label("Digital Output channel"));
         add(tf_digitalOutputChannel, "wrap");
         add(new Label("Samples per channel: "));
         add(tf_samplesPerChannel, "wrap");

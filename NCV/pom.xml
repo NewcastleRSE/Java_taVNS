@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.example</groupId>
         <artifactId>taVNS</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>0.3</version>
     </parent>
 
     <artifactId>NCV</artifactId>

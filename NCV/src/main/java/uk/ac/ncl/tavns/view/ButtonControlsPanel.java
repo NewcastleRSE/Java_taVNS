@@ -1,8 +1,8 @@
 package uk.ac.ncl.tavns.view;
 
-import uk.ac.ncl.SteelCheckBox.custom.SteelCheckBox;
 import org.jfree.chart.ChartPanel;
 import org.jfree.data.time.TimeSeries;
+import uk.ac.ncl.SteelCheckBox.custom.SteelCheckBox;
 import uk.ac.ncl.tavns.controller.AnalogueInput;
 import uk.ac.ncl.tavns.controller.StimProtocols;
 import uk.ac.ncl.tavns.controller.Utilities;
