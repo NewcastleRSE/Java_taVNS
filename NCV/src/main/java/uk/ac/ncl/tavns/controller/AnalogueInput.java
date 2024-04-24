@@ -36,8 +36,11 @@ public class AnalogueInput implements Runnable {
         Pointer aiTask = null;
 
         try {
-            aiTask = daq.createTask("AITask");
+            ;
+            aiTask = daq.createTask("AITask1");
             String physicalChannel = inputDevice + "/ai0:" + (timeSeries.length - 1);
+            logger.debug("Physical channel: " + physicalChannel);
+            logger.debug("AI task: " + aiTask.toString());
             try {
                 daq.createAIVoltageChannel(aiTask, physicalChannel, "",
                         Nicaiu.DAQmx_Val_Cfg_Default, -10.0, 10.0, Nicaiu.DAQmx_Val_Volts,
@@ -78,8 +81,11 @@ public class AnalogueInput implements Runnable {
             } catch (NiDaqException e) {
                 logger.debug("Can't create AI Voltage Channel");;
             }
+            daq.clearTask(aiTask);
         } catch (NiDaqException e) {
             logger.debug("Can't create AI task " + aiTask);
+            e.printStackTrace();
+            throw new RuntimeException();
         }
 
 
@@ -107,27 +113,21 @@ public class AnalogueInput implements Runnable {
     @Override
     public void run() {
         final Millisecond now = new Millisecond();
-        System.out.println("Samples per channel: " + numSamplesPerChan);
+        logger.debug("Samples per channel: " + numSamplesPerChan);
         while (true) {
-//            try {
-                int inputBufferSize = timeSeries.length * numSamplesPerChan *2;
-                double[] data = readAnalogueIn(inputBufferSize, inputDevice);
-                if (data != null) {
-                    for (int i = 0; i < timeSeries.length; i++) {
-                        int start = i * numSamplesPerChan;
-                        int end = start + numSamplesPerChan;
-                        if (isRunning)
-                            timeSeries[i].addOrUpdate(new Millisecond(), mean(Arrays.copyOfRange(data, start, end)));
-                        else
-                            timeSeries[i].addOrUpdate(new Millisecond(), null);
-                    }
+            int inputBufferSize = timeSeries.length * numSamplesPerChan *2;
+            logger.trace("Input device: " + inputDevice);
+            double[] data = readAnalogueIn(inputBufferSize, inputDevice);
+            if (data != null) {
+                for (int i = 0; i < timeSeries.length; i++) {
+                    int start = i * numSamplesPerChan;
+                    int end = start + numSamplesPerChan;
+                    if (isRunning)
+                        timeSeries[i].addOrUpdate(new Millisecond(), mean(Arrays.copyOfRange(data, start, end)));
+                    else
+                        timeSeries[i].addOrUpdate(new Millisecond(), null);
                 }
-//            } catch (NiDaqException e) {
-//                logger.debug("NidaqException:");
-//                e.printStackTrace();
-//                // ToDo
-//            }
-
+            }
         }
     }
 
