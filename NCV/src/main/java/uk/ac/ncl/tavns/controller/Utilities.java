@@ -60,6 +60,10 @@ public class Utilities {
         return properties;
     }
 
+    /**
+     * Return a properties class with the default properties set to default values
+     * @param properties
+     */
     private static void defaultProperties(Properties properties) {
         System.out.println("Create properties file");
         properties.setProperty("plot_range_minimum", "0");
@@ -74,6 +78,10 @@ public class Utilities {
         properties.setProperty("analogue_output_channel", "ao1");
     }
 
+    /**
+     * Save data gathered in TimeSeries to a csv file. A time-date stamp is used for the filename
+     * @param timeSeries An array of time series to be saved to a single file
+     */
     public static void saveData(TimeSeries[] timeSeries) {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd_HHmmss");
         LocalDateTime now = LocalDateTime.now();
@@ -102,6 +110,15 @@ public class Utilities {
     }
 
 
+    /**
+     * Normalise a value that falls in a range from rangemin to rangemax to fit in a range min to max
+     * @param val
+     * @param min
+     * @param max
+     * @param rangemin
+     * @param rangemax
+     * @return the normalised value
+     */
     public static double normalise(double val, double min, double max, double rangemin, double rangemax) {
         return rangemin + ((val - min) * (rangemax - rangemin) / (max - min));
     }
