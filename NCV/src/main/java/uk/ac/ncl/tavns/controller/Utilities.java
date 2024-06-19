@@ -82,10 +82,10 @@ public class Utilities {
      * Save data gathered in TimeSeries to a csv file. A time-date stamp is used for the filename
      * @param timeSeries An array of time series to be saved to a single file
      */
-    public static void saveData(TimeSeries[] timeSeries) {
+    public static void saveData(TimeSeries[] timeSeries, String participantID) {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd_HHmmss");
         LocalDateTime now = LocalDateTime.now();
-        File filename = new File(dtf.format(now) + ".csv");
+        File filename = new File(participantID + "_" + dtf.format(now) + ".csv");
         try {
             FileWriter fileWriter = new FileWriter(filename);
             int number_of_series = timeSeries.length;

@@ -72,7 +72,7 @@ public class NCV extends JFrame {
         setRunning(false);
         logger.debug("DAQ closed");
         if (yesOrNo == JOptionPane.YES_NO_OPTION) { // if YES (0) then save and exit
-            Utilities.saveData(analogueInput.getTimeSeries());
+            Utilities.saveData(analogueInput.getTimeSeries(), panelCollection.getStimulationConfiguration().getTf_participantID().getText());
         }
         System.exit(0);
     }

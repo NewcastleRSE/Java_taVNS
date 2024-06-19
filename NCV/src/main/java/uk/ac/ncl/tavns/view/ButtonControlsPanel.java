@@ -134,7 +134,8 @@ public class ButtonControlsPanel extends JPanel implements ActionListener {
         } else if (e.getActionCommand().equals("Save")) {
             TimeSeries[] timeSeries = analogueInput.getTimeSeries();
             analogueInput.setIsRunning(false);
-            Utilities.saveData(timeSeries);
+            String participantID = panelCollection.getStimulationConfiguration().getTf_participantID().getText();
+            Utilities.saveData(timeSeries, participantID);
             analogueInput.setIsRunning(true);
         } else if (e.getActionCommand().equals("Digital Out")) {
             StimProtocols.digitalOutSetState(outputDevice, outputState, "port0/line0");

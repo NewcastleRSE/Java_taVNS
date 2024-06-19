@@ -14,6 +14,10 @@ import java.awt.event.ActionListener;
 
 public class StimulationConfigurationPanel extends JPanel implements ActionListener {
     /**
+     * An id for the participant to be appended to the beginning of the filename
+     */
+    private JTextField tf_participantID = new JTextField(15);
+    /**
      Threshold for starting stimulation
      **/
     private JTextField tf_startThreshold = new JTextField("-0.6",5); // threshold at which to start stim
@@ -41,9 +45,9 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
     private boolean stimInitialised = false;
     private PanelCollection panelCollection;
     private StimProtocols stimProtocols;
-    JPanel pnl_txtFields = new JPanel();
-    JPanel pnl_buttons = new JPanel();
-    StimParameters stimParameters = new StimParameters();
+    private JPanel pnl_txtFields = new JPanel();
+    private JPanel pnl_buttons = new JPanel();
+    private StimParameters stimParameters = new StimParameters();
 
     /**
      * This panel contains the text fields for capturing the parameters for stimulation protocols. It also
@@ -70,6 +74,8 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
         startStim.setBackground(Color.ORANGE);
         startStim.setForeground(Color.BLACK);
 
+        pnl_txtFields.add(new JLabel("Participant ID"));
+        pnl_txtFields.add(tf_participantID, "wrap");
         pnl_txtFields.add(new JLabel("Stim threshold"));
         pnl_txtFields.add(tf_startThreshold);
         pnl_txtFields.add(new JLabel("# stims in ramp"));
@@ -161,4 +167,7 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
 
     }
 
+    public JTextField getTf_participantID() {
+        return tf_participantID;
+    }
 }
