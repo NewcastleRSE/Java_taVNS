@@ -83,15 +83,18 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
         pnl_txtFields.add(new JLabel("Stimulation value"));
         pnl_txtFields.add(tf_stimValue);
         pnl_txtFields.add(cb_rampup);
-        JPanel smallBox = new JPanel();
-        smallBox.setBorder(lineBorder);
-        cb_rise.setText("Fall <=> Rise");
-        smallBox.add(cb_rise);
-        pnl_txtFields.add(smallBox, "wrap");
         pnl_txtFields.add(new JLabel("Stim length (ms)"));
         pnl_txtFields.add(tf_stimLength);
         pnl_txtFields.add(new JLabel("Period between stims (ms)"));
-        pnl_txtFields.add(tf_restPeriod);
+        pnl_txtFields.add(tf_restPeriod, "wrap");
+        JPanel smallBox = new JPanel();
+        smallBox.setBorder(lineBorder);
+        JLabel lbl_rise = new JLabel("expiratory-gated <=> inspiratory-gated");
+        cb_rise.setText("");
+        smallBox.add(lbl_rise, "wrap");
+        smallBox.add(cb_rise);
+        pnl_txtFields.add(smallBox, "span");
+
 
         pnl_buttons.add(startStim);
         add(pnl_txtFields, "wrap");
