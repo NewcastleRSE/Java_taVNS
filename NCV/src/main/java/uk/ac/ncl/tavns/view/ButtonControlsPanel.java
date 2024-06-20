@@ -132,11 +132,15 @@ public class ButtonControlsPanel extends JPanel implements ActionListener {
             this.revalidate();
             this.repaint();
         } else if (e.getActionCommand().equals("Save")) {
-            TimeSeries[] timeSeries = analogueInput.getTimeSeries();
-            analogueInput.setIsRunning(false);
-            String participantID = panelCollection.getStimulationConfiguration().getTf_participantID().getText();
-            Utilities.saveData(timeSeries, participantID);
-            analogueInput.setIsRunning(true);
+            if (panelCollection.getStimulationConfiguration().getTf_participantID().getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(this.getParent(), "Participant ID can't be empty");
+            } else {
+                TimeSeries[] timeSeries = analogueInput.getTimeSeries();
+                analogueInput.setIsRunning(false);
+                String participantID = panelCollection.getStimulationConfiguration().getTf_participantID().getText();
+                Utilities.saveData(timeSeries, participantID);
+                analogueInput.setIsRunning(true);
+            }
         } else if (e.getActionCommand().equals("Digital Out")) {
             StimProtocols.digitalOutSetState(outputDevice, outputState, "port0/line0");
         } else if (e.getActionCommand().equals("Test Ramp Stim")) {

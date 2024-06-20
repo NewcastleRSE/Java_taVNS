@@ -36,11 +36,10 @@ public class AnalogueInput implements Runnable {
         Pointer aiTask = null;
 
         try {
-            ;
             aiTask = daq.createTask("AITask1");
             String physicalChannel = inputDevice + "/ai0:" + (timeSeries.length - 1);
-            logger.debug("Physical channel: " + physicalChannel);
-            logger.debug("AI task: " + aiTask.toString());
+            logger.trace("Physical channel: " + physicalChannel);
+            logger.trace("AI task: " + aiTask.toString());
             try {
                 daq.createAIVoltageChannel(aiTask, physicalChannel, "",
                         Nicaiu.DAQmx_Val_Cfg_Default, -10.0, 10.0, Nicaiu.DAQmx_Val_Volts,
@@ -63,27 +62,27 @@ public class AnalogueInput implements Runnable {
                                 try {
                                     daq.clearTask(aiTask);
                                 } catch (NiDaqException e) {
-                                    logger.debug("Can't clear task " + aiTask);
+                                    logger.trace("Can't clear task " + aiTask);
                                 }
                                 return buffer;
                             } catch (NiDaqException e) {
-                                logger.debug("Can't stop task " + aiTask);
+                                logger.trace("Can't stop task " + aiTask);
                             }
                         } catch (NiDaqException e) {
-                            logger.debug("Can't read analogue");
+                            logger.trace("Can't read analogue");
                         }
                     } catch (NiDaqException e) {
-                        logger.debug("Can't start AI task " + aiTask);
+                        logger.trace("Can't start AI task " + aiTask);
                     }
                 } catch (NiDaqException e) {
-                    logger.debug("Can' Configure Sample Clock Timing");;
+                    logger.trace("Can' Configure Sample Clock Timing");;
                 }
             } catch (NiDaqException e) {
-                logger.debug("Can't create AI Voltage Channel");;
+                logger.trace("Can't create AI Voltage Channel");;
             }
             daq.clearTask(aiTask);
         } catch (NiDaqException e) {
-            logger.debug("Can't create AI task " + aiTask);
+            logger.trace("Can't create AI task " + aiTask);
             e.printStackTrace();
             throw new RuntimeException();
         }

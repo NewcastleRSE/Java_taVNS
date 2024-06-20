@@ -1,6 +1,8 @@
 package uk.ac.ncl.tavns.controller;
 
 import org.jfree.data.time.TimeSeries;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -10,6 +12,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Properties;
 
 public class Utilities {
+    private static final Logger logger = LoggerFactory.getLogger(Utilities.class);
 
     /**
      * Set the specified property with the specified value
@@ -82,7 +85,7 @@ public class Utilities {
      * Save data gathered in TimeSeries to a csv file. A time-date stamp is used for the filename
      * @param timeSeries An array of time series to be saved to a single file
      */
-    public static void saveData(TimeSeries[] timeSeries, String participantID) {
+    public static boolean saveData(TimeSeries[] timeSeries, String participantID) {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd_HHmmss");
         LocalDateTime now = LocalDateTime.now();
         File filename = new File(participantID + "_" + dtf.format(now) + ".csv");
@@ -104,8 +107,12 @@ public class Utilities {
                 fileWriter.write("\n");
             }
             fileWriter.close();
+            return true;
         } catch (IOException ex) {
-            throw new RuntimeException(ex);
+            logger.error("Data not saved");
+            ex.printStackTrace();
+            return false;
+            //throw new RuntimeException(ex);
         }
     }
 

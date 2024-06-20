@@ -59,6 +59,7 @@ public class NCV extends JFrame {
         setContentPane(tabbedPane);
         this.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent arg0) {
+
                 closeDaq();
             }
         });
@@ -71,10 +72,20 @@ public class NCV extends JFrame {
         var yesOrNo = JOptionPane.showConfirmDialog(null, "Save data before quitting?", "Quit NCV?", JOptionPane.YES_NO_OPTION);
         setRunning(false);
         logger.debug("DAQ closed");
-        if (yesOrNo == JOptionPane.YES_NO_OPTION) { // if YES (0) then save and exit
-            Utilities.saveData(analogueInput.getTimeSeries(), panelCollection.getStimulationConfiguration().getTf_participantID().getText());
+        if (yesOrNo == JOptionPane.CANCEL_OPTION) {
+            logger.debug("Save cancelled");
+        } else if (yesOrNo == JOptionPane.YES_OPTION) { // if YES (0) then save and exit
+            String participantID = panelCollection.getStimulationConfiguration().getTf_participantID().getText().trim();
+            while (participantID == null || participantID.isEmpty())
+                participantID = JOptionPane.showInputDialog(null, "Please enter a particpant ID",
+                        "", JOptionPane.QUESTION_MESSAGE);
+            logger.debug("Data saved, Exit program");
+            System.exit(0);
+
+        } else {
+            logger.debug("Exit program");
+            System.exit(0);
         }
-        System.exit(0);
     }
 
     /**
