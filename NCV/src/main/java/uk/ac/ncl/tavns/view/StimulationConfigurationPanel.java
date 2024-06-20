@@ -1,16 +1,15 @@
 package uk.ac.ncl.tavns.view;
 
-import uk.ac.ncl.SteelCheckBox.custom.SteelCheckBox;
 import kirkwood.nidaq.access.NiDaqException;
 import net.miginfocom.swing.MigLayout;
+import uk.ac.ncl.SteelCheckBox.custom.SteelCheckBox;
 import uk.ac.ncl.tavns.controller.StimParameters;
 import uk.ac.ncl.tavns.controller.StimProtocols;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 
 public class StimulationConfigurationPanel extends JPanel implements ActionListener {
     /**
@@ -29,7 +28,7 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
     private SteelCheckBox cb_rise = new SteelCheckBox(); // if true stim on voltage rise
     private JTextField tf_numberOfSpikes = new JTextField("3", 5); // number of stims in the rampup
 //    private JTextField tf_maxDuration = new JTextField("3", 5); //
-    private JTextField tf_stimValue = new JTextField("2.5", 5); // voltage to stimulate at
+    private JTextField tf_stimValue = new JTextField("0.1", 5); // voltage to stimulate at
     /**
      * Time period of stim
      */
@@ -70,7 +69,7 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
 
         setPreferredSize(new Dimension(1000, 60));
         pnl_buttons.setLayout(new FlowLayout());
-        pnl_txtFields.setLayout(new MigLayout("", "[][][][][][][]",""));
+        pnl_txtFields.setLayout(new MigLayout("", "[][][][]",""));
         startStim.setBackground(Color.ORANGE);
         startStim.setForeground(Color.BLACK);
 
@@ -79,9 +78,29 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
         pnl_txtFields.add(new JLabel("Stim threshold"));
         pnl_txtFields.add(tf_startThreshold);
         pnl_txtFields.add(new JLabel("# stims in ramp"));
-        pnl_txtFields.add(tf_numberOfSpikes);
-        pnl_txtFields.add(new JLabel("Stimulation value"));
+        pnl_txtFields.add(tf_numberOfSpikes, "wrap");
+        pnl_txtFields.add(new JLabel("Stimulation peak amplitude (V)"));
         pnl_txtFields.add(tf_stimValue);
+        JLabel lbl_stimAmp = new JLabel("10.0mA");
+        pnl_txtFields.add(lbl_stimAmp, "span 2, wrap");
+
+        // Check max value entered
+        tf_stimValue.addFocusListener(new FocusAdapter() {
+            public void focusLost(FocusEvent e) {
+                try {
+                    float stimValue = Float.parseFloat(tf_stimValue.getText());
+                    if (!(stimValue >= 0 && stimValue <= 0.20000005)) {
+                        tf_stimValue.setText("0");
+                        JOptionPane.showMessageDialog(null, "Enter a value between 0 and 0.2 volt");
+                    }
+                    lbl_stimAmp.setText(Float.toString(Float.parseFloat(tf_stimValue.getText()) * 100f) + "mA");
+                } catch (NumberFormatException ne) {
+                    tf_stimValue.setText("0");
+                    JOptionPane.showMessageDialog(null, "Enter only a numerical value");
+                }
+            }
+        });
+
         pnl_txtFields.add(cb_rampup);
         pnl_txtFields.add(new JLabel("Stim length (ms)"));
         pnl_txtFields.add(tf_stimLength);
