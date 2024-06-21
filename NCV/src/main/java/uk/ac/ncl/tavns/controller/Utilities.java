@@ -93,15 +93,24 @@ public class Utilities {
             FileWriter fileWriter = new FileWriter(filename);
             int number_of_series = timeSeries.length;
             int itemCount = timeSeries[0].getItemCount();
-            for (int i = 0; i < itemCount; i++) {
-                String comma = (i == (itemCount-1)?"":",");
-                fileWriter.write(timeSeries[0].getDataItem(i).getPeriod().getMiddleMillisecond()+ comma);
-            }
-            for (int n = 0; n < number_of_series; n++) {
+//            for (int i = 0; i < itemCount; i++) {
+//                String comma = (i == (itemCount-1)?"":",");
+//                fileWriter.write(timeSeries[0].getDataItem(i).getPeriod().getMiddleMillisecond()+ comma);
+//            }
+//            for (int n = 0; n < number_of_series; n++) {
+//
+//                fileWriter.write("\n");
+//                for (int i = 0; i < itemCount; i++) {
+//                    String comma = (i == (itemCount - 1)?"":",");
+//                    fileWriter.write(timeSeries[n].getDataItem(i).getValue() + comma);
+//                }
+//                fileWriter.write("\n");
+//            }
 
-                fileWriter.write("\n");
-                for (int i = 0; i < itemCount; i++) {
-                    String comma = (i == (itemCount - 1)?"":",");
+            for (int i = 0; i < itemCount; i++) {
+                fileWriter.write(timeSeries[0].getDataItem(i).getPeriod().getMiddleMillisecond() + ",");
+                for (int n = 0; n < number_of_series; n++) {
+                    String comma = (n == (number_of_series - 1)?"":",");
                     fileWriter.write(timeSeries[n].getDataItem(i).getValue() + comma);
                 }
                 fileWriter.write("\n");

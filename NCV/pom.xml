@@ -63,6 +63,13 @@
             <version>2.0.7</version>
             <scope>compile</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/tech.tablesaw/tablesaw-core -->
+        <dependency>
+            <groupId>tech.tablesaw</groupId>
+            <artifactId>tablesaw-core</artifactId>
+            <version>0.43.1</version>
+        </dependency>
+
     </dependencies>
     <build>
         <plugins>
