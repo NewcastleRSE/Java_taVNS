@@ -79,7 +79,7 @@ public class NCV extends JFrame {
             while (participantID == null || participantID.isEmpty())
                 participantID = JOptionPane.showInputDialog(null, "Please enter a particpant ID",
                         "", JOptionPane.QUESTION_MESSAGE);
-            Utilities.saveData(analogueInput.getTimeSeries(), participantID);
+            Utilities.saveData(analogueInput.getTimeSeries(), participantID, chartsPanel.getChartTitles());
             logger.debug("Data saved, Exit program");
             System.exit(0);
 

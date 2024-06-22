@@ -13,6 +13,7 @@ import uk.ac.ncl.tavns.controller.AnalogueInput;
 import uk.ac.ncl.tavns.controller.Utilities;
 
 import javax.swing.*;
+import java.util.ArrayList;
 import java.util.Properties;
 
 public class ChartsPanel extends JPanel {
@@ -96,5 +97,13 @@ public class ChartsPanel extends JPanel {
 
     public TimeSeriesCollection[] getTimeSeriesCollection() {
         return timeSeriesCollections;
+    }
+
+    public ArrayList<String> getChartTitles() {
+        ArrayList<String> titles = new ArrayList<>();
+        for (int i = 0; i < getChartPanel().length; i++) {
+            titles.add(getChartPanel()[i].getChart().getTitle().getText());
+        }
+        return titles;
     }
 }

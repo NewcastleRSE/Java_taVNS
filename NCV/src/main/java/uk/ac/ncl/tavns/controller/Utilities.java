@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Properties;
 
 public class Utilities {
@@ -85,7 +86,7 @@ public class Utilities {
      * Save data gathered in TimeSeries to a csv file. A time-date stamp is used for the filename
      * @param timeSeries An array of time series to be saved to a single file
      */
-    public static boolean saveData(TimeSeries[] timeSeries, String participantID) {
+    public static boolean saveData(TimeSeries[] timeSeries, String participantID, ArrayList<String> columnTitles) {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd_HHmmss");
         LocalDateTime now = LocalDateTime.now();
         File filename = new File(participantID + "_" + dtf.format(now) + ".csv");
@@ -93,20 +94,16 @@ public class Utilities {
             FileWriter fileWriter = new FileWriter(filename);
             int number_of_series = timeSeries.length;
             int itemCount = timeSeries[0].getItemCount();
-//            for (int i = 0; i < itemCount; i++) {
-//                String comma = (i == (itemCount-1)?"":",");
-//                fileWriter.write(timeSeries[0].getDataItem(i).getPeriod().getMiddleMillisecond()+ comma);
-//            }
-//            for (int n = 0; n < number_of_series; n++) {
-//
-//                fileWriter.write("\n");
-//                for (int i = 0; i < itemCount; i++) {
-//                    String comma = (i == (itemCount - 1)?"":",");
-//                    fileWriter.write(timeSeries[n].getDataItem(i).getValue() + comma);
-//                }
-//                fileWriter.write("\n");
-//            }
 
+            // Write headers for columns
+            fileWriter.write("TimeStamp,");
+            for (int i = 0; i < columnTitles.size(); i++) {
+                String comma = (i == (columnTitles.size() - 1)?"":",");
+                fileWriter.write(columnTitles.get(i) + comma);
+            }
+            fileWriter.write("\n");
+
+            // Write timeseries data - each series in a column
             for (int i = 0; i < itemCount; i++) {
                 fileWriter.write(timeSeries[0].getDataItem(i).getPeriod().getMiddleMillisecond() + ",");
                 for (int n = 0; n < number_of_series; n++) {

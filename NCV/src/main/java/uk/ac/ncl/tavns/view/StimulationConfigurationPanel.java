@@ -47,6 +47,7 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
     private JPanel pnl_txtFields = new JPanel();
     private JPanel pnl_buttons = new JPanel();
     private StimParameters stimParameters = new StimParameters();
+    private JLabel lbl_stimAmp = new JLabel("10.0mA");
 
     /**
      * This panel contains the text fields for capturing the parameters for stimulation protocols. It also
@@ -81,23 +82,21 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
         pnl_txtFields.add(tf_numberOfSpikes, "wrap");
         pnl_txtFields.add(new JLabel("Stimulation peak amplitude (V)"));
         pnl_txtFields.add(tf_stimValue);
-        JLabel lbl_stimAmp = new JLabel("10.0mA");
+        tf_stimValue.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER){
+                    updateCurrent();
+                }
+            }
+
+        });
         pnl_txtFields.add(lbl_stimAmp, "span 2, wrap");
 
         // Check max value entered
         tf_stimValue.addFocusListener(new FocusAdapter() {
             public void focusLost(FocusEvent e) {
-                try {
-                    float stimValue = Float.parseFloat(tf_stimValue.getText());
-                    if (!(stimValue >= 0 && stimValue <= 0.20000005)) {
-                        tf_stimValue.setText("0");
-                        JOptionPane.showMessageDialog(null, "Enter a value between 0 and 0.2 volt");
-                    }
-                    lbl_stimAmp.setText(Float.toString(Float.parseFloat(tf_stimValue.getText()) * 100f) + "mA");
-                } catch (NumberFormatException ne) {
-                    tf_stimValue.setText("0");
-                    JOptionPane.showMessageDialog(null, "Enter only a numerical value");
-                }
+                updateCurrent();
             }
         });
 
@@ -124,6 +123,19 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
 
     }
 
+    public void updateCurrent() {
+        try {
+            float stimValue = Float.parseFloat(tf_stimValue.getText());
+            if (!(stimValue >= 0 && stimValue <= 0.20000005)) {
+                tf_stimValue.setText("0");
+                JOptionPane.showMessageDialog(null, "Enter a value between 0 and 0.2 volt");
+            }
+            lbl_stimAmp.setText(Float.toString(Float.parseFloat(tf_stimValue.getText()) * 100f) + "mA");
+        } catch (NumberFormatException ne) {
+            tf_stimValue.setText("0");
+            JOptionPane.showMessageDialog(null, "Enter only a numerical value");
+        }
+    }
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("Start stimulation")) {

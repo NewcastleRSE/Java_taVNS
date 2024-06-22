@@ -138,7 +138,7 @@ public class ButtonControlsPanel extends JPanel implements ActionListener {
                 TimeSeries[] timeSeries = analogueInput.getTimeSeries();
                 analogueInput.setIsRunning(false);
                 String participantID = panelCollection.getStimulationConfiguration().getTf_participantID().getText();
-                Utilities.saveData(timeSeries, participantID);
+                Utilities.saveData(timeSeries, participantID, panelCollection.getChartsPanel().getChartTitles());
                 analogueInput.setIsRunning(true);
             }
         } else if (e.getActionCommand().equals("Digital Out")) {

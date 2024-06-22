@@ -1,3 +1,6 @@
-- https://www.elecbee.com/pt-5898-10pcs-14-pin-conector-circular-straight-gx20-macho-e-femea-docking-plug?utm_term&utm_campaign&utm_source=adwords&utm_medium=ppc&gad_source=1
-- https://micraymo.en.made-in-china.com/product/RNgQHpoxuAkr/China-Redel-14-Pin-Industrial-Plastic-Circular-Connector-Factory.html
-- https://www.digitimer.com/product/human-neurophysiology/peripheral-stimulators/ds8r-biphasic-constant-current-stimulator/
+- [14 Pin Conector Circular](https://www.elecbee.com/pt-5898-10pcs-14-pin-conector-circular-straight-gx20-macho-e-femea-docking-plug?utm_term&utm_campaign&utm_source=adwords&utm_medium=ppc&gad_source=1)
+- [14 Pin Industrial Plastic Circular Connector Factory](https://micraymo.en.made-in-china.com/product/RNgQHpoxuAkr/China-Redel-14-Pin-Industrial-Plastic-Circular-Connector-Factory.html)
+- [DigiTimer DigiStim Stimulator DS8R](https://www.digitimer.com/product/human-neurophysiology/peripheral-stimulators/ds8r-biphasic-constant-current-stimulator/)
+- [BioPac](https://www.biopac.com/)
+- [NiDAQ USB-6009](https://uk.farnell.com/ni/779026-01/usb-6009-multifunction-i-o-device/dp/3621343) or buy it off eBay (new) for less than £100
+- [NiDAQ USB-6259](https://documentation.help/NI-DAQmx-Device-Terminals/6259USBBNCPinout.html)
