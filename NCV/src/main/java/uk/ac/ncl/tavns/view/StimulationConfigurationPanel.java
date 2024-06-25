@@ -73,15 +73,26 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
         pnl_txtFields.setLayout(new MigLayout("", "[][][][]",""));
         startStim.setBackground(Color.ORANGE);
         startStim.setForeground(Color.BLACK);
-
-        pnl_txtFields.add(new JLabel("Participant ID"));
+        JLabel lbl_participantID = new JLabel("Participant ID");
+        pnl_txtFields.add(lbl_participantID);
+        lbl_participantID.setToolTipText("Add a unique ID for the participant.");
         pnl_txtFields.add(tf_participantID, "wrap");
-        pnl_txtFields.add(new JLabel("Stim threshold"));
+        tf_participantID.setToolTipText("Add a unique ID for the participant.");
+        JLabel lbl_startThreshold = new JLabel("Stim threshold");
+        pnl_txtFields.add(lbl_startThreshold);
+        lbl_startThreshold.setToolTipText("The voltage threshold at which to start and stop stimulation.");
         pnl_txtFields.add(tf_startThreshold);
-        pnl_txtFields.add(new JLabel("# stims in ramp"));
+        tf_startThreshold.setToolTipText("The voltage threshold at which to start and stop stimulation.");
+        JLabel lbl_numberOfSpikes = new JLabel("# stims in ramp");
+        pnl_txtFields.add(lbl_numberOfSpikes);
+        lbl_numberOfSpikes.setToolTipText("The number of stimuli to produce when ramping up.");
         pnl_txtFields.add(tf_numberOfSpikes, "wrap");
-        pnl_txtFields.add(new JLabel("Stimulation peak amplitude (V)"));
+        tf_numberOfSpikes.setToolTipText("The number of stimuli to produce when ramping up.");
+        JLabel lbl_stimValue = new JLabel("Stimulation peak amplitude (V)");
+        pnl_txtFields.add(lbl_stimValue);
+        lbl_stimValue.setToolTipText("Allow for any value between 0 and 0.2. This value is proportionally scaled to Amps by the Stimulator");
         pnl_txtFields.add(tf_stimValue);
+        tf_stimValue.setToolTipText("Allow for any value between 0 and 0.2. This value is proportionally scaled to Amps by the Stimulator");
         tf_stimValue.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -108,7 +119,9 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
         JPanel smallBox = new JPanel();
         smallBox.setBorder(lineBorder);
         JLabel lbl_rise = new JLabel("expiratory-gated <=> inspiratory-gated");
+        lbl_rise.setToolTipText("Slide to the left to select expiratory-gated stimulation and to the right for inspirator-gate stimulation");
         cb_rise.setText("");
+        cb_rise.setToolTipText("Slide to the left to select expiratory-gated stimulation and to the right for inspirator-gate stimulation");
         smallBox.add(lbl_rise, "wrap");
         smallBox.add(cb_rise);
         pnl_txtFields.add(smallBox, "span");
