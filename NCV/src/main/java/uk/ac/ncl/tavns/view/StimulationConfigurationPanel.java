@@ -2,7 +2,6 @@ package uk.ac.ncl.tavns.view;
 
 import kirkwood.nidaq.access.NiDaqException;
 import net.miginfocom.swing.MigLayout;
-import uk.ac.ncl.SteelCheckBox.custom.SteelCheckBox;
 import uk.ac.ncl.tavns.controller.StimParameters;
 import uk.ac.ncl.tavns.controller.StimProtocols;
 
@@ -25,7 +24,11 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
      */
     private JCheckBox cb_rampup = new JCheckBox("Ramp up", true); // if true do ramp up
     // How long should the rampup take?
-    private SteelCheckBox cb_rise = new SteelCheckBox(); // if true stim on voltage rise
+//    private SteelCheckBox cb_rise = new SteelCheckBox(); // if true stim on voltage rise
+    private ButtonGroup stimButtonGroup = new ButtonGroup();
+    private JRadioButton rb_insp = new JRadioButton("Inspiratory Gated", true);
+    private JRadioButton rb_exp = new JRadioButton("Expiratory Gated", true);
+    private JRadioButton rb_cont = new JRadioButton("Continuous", true);
     private JTextField tf_numberOfSpikes = new JTextField("3", 5); // number of stims in the rampup
 //    private JTextField tf_maxDuration = new JTextField("3", 5); //
     private JTextField tf_stimValue = new JTextField("0.1", 5); // voltage to stimulate at
@@ -110,19 +113,31 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
         pnl_txtFields.add(cb_rampup);
         pnl_txtFields.add(new JLabel("Frequency"));
         pnl_txtFields.add(tf_stimFrequency, "wrap");
-        JPanel smallBox = new JPanel();
-        smallBox.setBorder(lineBorder);
-        JLabel lbl_rise = new JLabel("expiratory-gated <=> inspiratory-gated");
-        lbl_rise.setToolTipText("Slide to the left to select expiratory-gated stimulation and to the right for inspirator-gate stimulation");
-        cb_rise.setText("");
-        cb_rise.setToolTipText("Slide to the left to select expiratory-gated stimulation and to the right for inspirator-gate stimulation");
-        smallBox.add(lbl_rise, "wrap");
-        smallBox.add(cb_rise);
-        pnl_txtFields.add(smallBox, "span");
+
+        JPanel pnl_stimButtons = new JPanel();
+        pnl_stimButtons.setBorder(lineBorder);
+        stimButtonGroup.add(rb_insp);
+        stimButtonGroup.add(rb_exp);
+        stimButtonGroup.add(rb_cont);
+        rb_insp.setSelected(true);
+        pnl_stimButtons.add(rb_insp);
+        pnl_stimButtons.add(rb_exp);
+        pnl_stimButtons.add(rb_cont);
+
+//        JPanel smallBox = new JPanel();
+//        smallBox.setBorder(lineBorder);
+//        JLabel lbl_rise = new JLabel("expiratory-gated <=> inspiratory-gated");
+//        lbl_rise.setToolTipText("Slide to the left to select expiratory-gated stimulation and to the right for inspirator-gate stimulation");
+//        cb_rise.setText("");
+//        cb_rise.setToolTipText("Slide to the left to select expiratory-gated stimulation and to the right for inspirator-gate stimulation");
+//        smallBox.add(lbl_rise, "wrap");
+//        smallBox.add(cb_rise);
+//        pnl_txtFields.add(smallBox, "span");
 
 
         pnl_buttons.add(startStim);
         add(pnl_txtFields, "wrap");
+        add(pnl_stimButtons, "wrap");
         add(pnl_buttons);
 
         startStim.addActionListener(this);
@@ -200,7 +215,11 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
         if (stimParameters.getDigitalTask() == null) stimParameters.setDigitalTask("");
         stimParameters.setStimValue(Double.parseDouble(tf_stimValue.getText()));
         stimParameters.setStimThreshold(Double.parseDouble(tf_startThreshold.getText()));
-        stimParameters.setRise(cb_rise.isSelected());
+        int stimValue = 0;
+        if (rb_insp.isSelected()) stimValue = 1;
+        if (rb_exp.isSelected()) stimValue = 2;
+        stimParameters.setStim(stimValue);
+//        stimParameters.setStim(cb_rise.isSelected());
         stimParameters.setRampUp(cb_rampup.isSelected());
         stimParameters.setNumberOfSpikes(Long.parseLong(tf_numberOfSpikes.getText()));
         stimParameters.setSpikeFrequency(Long.parseLong(tf_stimFrequency.getText()));

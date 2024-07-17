@@ -71,8 +71,8 @@ public class AnalogueThresholdWrite implements Runnable {
                     Double datapoint = timeSeries.getDataItem(itemCount - 1).getValue().doubleValue();
                     daq.stopTask(analogueTask);
                     // check whether stimulation should happen on fall or rise of breath amplitude
-                    if ((stimParameters.isRise() && datapoint >= stimParameters.getStimThreshold()) ||
-                            (!stimParameters.isRise() && datapoint <= stimParameters.getStimThreshold())) {
+                    if (((stimParameters.getStim() == 1) && datapoint >= stimParameters.getStimThreshold()) ||
+                            ((stimParameters.getStim() == 2) && datapoint <= stimParameters.getStimThreshold())) {
 
                         // If ramp is selected do ramp up before stimulation
                         if (ramp) {

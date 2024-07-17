@@ -37,9 +37,11 @@ public class StimParameters {
      */
     private double stimThreshold;
     /**
-     * If true stimulate on rise of voltage signal
+     * 0 for continuous stimulation
+     * 1 for stimulation on inspiration
+     * 2 for stimulation on expiration
      */
-    private boolean rise; // If true check for threshold on rise else on fall
+    private int stim; // If true check for threshold on rise else on fall
     /**
      * If true, do rampup before stimulation
      */
@@ -131,16 +133,17 @@ public class StimParameters {
     }
 
     /**
-     * If ture, check for threshold on rise, if false, check for rise on fall
-     * i.e. rise > threshold, fall < threshold
+     * 0 to stimulate continuously
+     * 1 to stimulate on inspiration
+     * 2 to stimulate on expiration
      * @return
      */
-    public boolean isRise() {
-        return rise;
+    public int getStim() {
+        return stim;
     }
 
-    public void setRise(boolean rise) {
-        this.rise = rise;
+    public void setStim(int stim) {
+        this.stim = stim;
     }
 
     public void setNumberOfSpikes(Long numberOfSpikes) {
