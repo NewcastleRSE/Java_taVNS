@@ -32,11 +32,7 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
     /**
      * Time period of stim
      */
-    private JTextField tf_stimLength = new JTextField("165", 5);
-    /**
-     * Time period between stims
-     */
-    private JTextField tf_restPeriod = new JTextField("165", 5);
+    private JTextField tf_stimFrequency = new JTextField("15", 5);
     private JButton startStim = new JButton("Start stimulation"); // start stimulating
     private String outputDevice;
     private String analogueOutputChannel;
@@ -112,10 +108,8 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
         });
 
         pnl_txtFields.add(cb_rampup);
-        pnl_txtFields.add(new JLabel("Stim length (ms)"));
-        pnl_txtFields.add(tf_stimLength);
-        pnl_txtFields.add(new JLabel("Period between stims (ms)"));
-        pnl_txtFields.add(tf_restPeriod, "wrap");
+        pnl_txtFields.add(new JLabel("Frequency"));
+        pnl_txtFields.add(tf_stimFrequency, "wrap");
         JPanel smallBox = new JPanel();
         smallBox.setBorder(lineBorder);
         JLabel lbl_rise = new JLabel("expiratory-gated <=> inspiratory-gated");
@@ -209,8 +203,7 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
         stimParameters.setRise(cb_rise.isSelected());
         stimParameters.setRampUp(cb_rampup.isSelected());
         stimParameters.setNumberOfSpikes(Long.parseLong(tf_numberOfSpikes.getText()));
-        stimParameters.setSpikePeriod(Long.parseLong(tf_stimLength.getText()));
-        stimParameters.setRestPeriod(Long.parseLong(tf_restPeriod.getText()));
+        stimParameters.setSpikeFrequency(Long.parseLong(tf_stimFrequency.getText()));
 
     }
 

@@ -27,7 +27,7 @@ public class ButtonControlsPanel extends JPanel implements ActionListener {
     private final String outputDevice;
     private byte outputState = 0;
     private JTextField txt_stimValue = new JTextField("5", 5);
-    private JTextField txt_sleepValue = new JTextField("165", 5);
+    private JTextField txt_frequency = new JTextField("15", 5);
     private PanelCollection panelCollection;
     private Properties properties;
     // to here
@@ -59,8 +59,8 @@ public class ButtonControlsPanel extends JPanel implements ActionListener {
         // check this
         JButton digOut = new JButton("Digital Out");
         add(digOut);
-        add(new JLabel("Sleep between stims"));
-        add(txt_sleepValue);
+        add(new JLabel("Frequency"));
+        add(txt_frequency);
         JButton testRampStim = new JButton("Test Ramp Stim");
         add(testRampStim);
         add(txt_stimValue);
@@ -144,7 +144,7 @@ public class ButtonControlsPanel extends JPanel implements ActionListener {
         } else if (e.getActionCommand().equals("Digital Out")) {
             StimProtocols.digitalOutSetState(outputDevice, outputState, "port0/line0");
         } else if (e.getActionCommand().equals("Test Ramp Stim")) {
-            int sleep = Integer.parseInt(txt_sleepValue.getText());
+            int sleep = Integer.parseInt(txt_frequency.getText());
             StimProtocols.testRamp(outputDevice, "ao1", sleep);
         } else if (e.getActionCommand().equals("Analogue Stim")) {
             String sval = txt_stimValue.getText();

@@ -4,8 +4,12 @@ import com.sun.jna.Pointer;
 import kirkwood.nidaq.access.NiDaq;
 import kirkwood.nidaq.access.NiDaqException;
 import kirkwood.nidaq.jna.Nicaiu;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DigitalWrite extends Thread  {
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
     private static NiDaq daq = new NiDaq();
     private static Pointer doTask;
     private byte[] data;
@@ -21,7 +25,8 @@ public class DigitalWrite extends Thread  {
         try {
             this.data = data;
             doTask = daq.createTask("DOTask");
-            daq.createDOChan(doTask, outputDevice + port, "", Nicaiu.DAQmx_Val_ChanForAllLines);
+            logger.debug("Digital write to: " + outputDevice + "/" + port);
+            daq.createDOChan(doTask, outputDevice + "/" + port, "", Nicaiu.DAQmx_Val_ChanForAllLines);
         } catch (NiDaqException e) {
             throw new RuntimeException(e);
         }
