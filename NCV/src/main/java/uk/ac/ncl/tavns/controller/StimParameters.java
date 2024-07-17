@@ -49,13 +49,9 @@ public class StimParameters {
      */
     private Long numberOfSpikes;
     /**
-     * Length of period between spikes
-     */
-    private Long restPeriod;
-    /**
      * Time period of spike
      */
-    private Long spikePeriod;
+    private Long spikeFrequency;
      /**
      * Default constructor
      */
@@ -151,20 +147,12 @@ public class StimParameters {
         this.numberOfSpikes = numberOfSpikes;
     }
 
-    public Long getRestPeriod() {
-        return restPeriod;
+    public Long getSpikeFrequency() {
+        return spikeFrequency;
     }
 
-    public void setRestPeriod(Long restPeriod) {
-        this.restPeriod = restPeriod;
-    }
-
-    public Long getSpikePeriod() {
-        return spikePeriod;
-    }
-
-    public void setSpikePeriod(Long spikePeriod) {
-        this.spikePeriod = spikePeriod;
+    public void setSpikeFrequency(Long spikeFrequency) {
+        this.spikeFrequency = spikeFrequency;
     }
 
     public String getDigitalTask() {
