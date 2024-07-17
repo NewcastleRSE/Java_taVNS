@@ -75,10 +75,10 @@ public class AnalogueInput implements Runnable {
                         logger.trace("Can't start AI task " + aiTask);
                     }
                 } catch (NiDaqException e) {
-                    logger.trace("Can' Configure Sample Clock Timing");;
+                    logger.trace("Can't Configure Sample Clock Timing");
                 }
             } catch (NiDaqException e) {
-                logger.trace("Can't create AI Voltage Channel");;
+                logger.trace("Can't create AI Voltage Channel");
             }
             daq.clearTask(aiTask);
         } catch (NiDaqException e) {
