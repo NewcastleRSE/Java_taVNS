@@ -10,17 +10,17 @@ public class AnalogueRamp implements Runnable {
     int minVal = 0;
     int maxVal = 5;
     int stims;
-    int sleep;
+    int frequency;
     Pointer doTask;
 
     /**
      * Constructor
      */
-    public AnalogueRamp(String outputDevice, String outputChannel, String taskName, int stims, int sleep) {
+    public AnalogueRamp(String outputDevice, String outputChannel, String taskName, int stims, int frequency) {
         try {
             System.out.println("Initialise thread");
             this.stims = stims;
-            this.sleep = sleep;
+            this.frequency = frequency;
             String physicalChannel = outputDevice + "/" + outputChannel;
             doTask = daq.createTask(taskName);
             daq.resetDevice(outputDevice);
@@ -39,12 +39,9 @@ public class AnalogueRamp implements Runnable {
                 daq.startTask(doTask);
                 double normalised = Utilities.normalise(i, 0, stims, 0, 5);
                 daq.DAQmxWriteAnalogScalarF64(doTask,1, 5, normalised, 0);
-                Thread.sleep(sleep);
+                Thread.sleep(1000 / frequency);
                 daq.stopTask(doTask);
-                double zero = 0D;
-                daq.DAQmxWriteAnalogScalarF64(doTask,1, 5, zero, 0);
-                daq.stopTask(doTask);
-                Thread.sleep(sleep);
+
             }
             daq.clearTask(doTask);
         } catch (NiDaqException e) {
