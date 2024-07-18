@@ -4,8 +4,11 @@ import com.sun.jna.Pointer;
 import kirkwood.nidaq.access.NiDaq;
 import kirkwood.nidaq.access.NiDaqException;
 import kirkwood.nidaq.jna.Nicaiu;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AnalogueRamp implements Runnable {
+    final static Logger logger = LoggerFactory.getLogger(AnalogueRamp.class);
     private static NiDaq daq = new NiDaq();
     int minVal = 0;
     int maxVal = 5;

@@ -6,8 +6,11 @@ import kirkwood.nidaq.access.NiDaqException;
 import kirkwood.nidaq.jna.Nicaiu;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AnalogueThresholdWrite implements Runnable {
+    final static Logger logger = LoggerFactory.getLogger(AnalogueThresholdWrite.class);
     private static NiDaq daq = new NiDaq();
     StimParameters stimParameters;
     private int minVal = 0;
@@ -60,7 +63,7 @@ public class AnalogueThresholdWrite implements Runnable {
             while (true) {
                 //System.out.println("Run thread");
                 // Keep thread running
-                // Sleep for 10 millis otherwise start it doesn't go into the running loop ??!?!?!?
+                // Sleep for 1 millis otherwise start it doesn't go into the running loop ??!?!?!?
                 Thread.sleep(1);
                 // Start stimulating when running is true
                 long numberOfSpikes = stimParameters.getNumberOfSpikes();
@@ -79,18 +82,20 @@ public class AnalogueThresholdWrite implements Runnable {
                             for (int i = 1; i <= numberOfSpikes; i++) {
                                 daq.startTask(analogueTask);
                                 double normalised = Utilities.normalise(i, 0, numberOfSpikes, 0, stimParameters.getStimValue());
-                                System.out.println(i + " of " + numberOfSpikes + ": " + normalised);
+                                logger.debug(i + " of " + numberOfSpikes + ": " + normalised);
                                 daq.DAQmxWriteAnalogScalarF64(analogueTask, 1, 5, normalised, 0);
                                 byte[] data1 = {1, 1};
                                 daq.stopTask(analogueTask);
                                 daq.startTask(digitalTask);
                                 daq.writeDigitalLines(digitalTask, 1, 1, 10, Nicaiu.DAQmx_Val_GroupByChannel, data1);
-                                Thread.sleep(stimParameters.getSpikeFrequency());
+                                Thread.sleep(100); //Thread.sleep(1000 / stimParameters.getSpikeFrequency());
                                 daq.stopTask(digitalTask);
                                 daq.stopTask(digitalTask);
                                 byte[] data0 = {0, 0};
                                 daq.writeDigitalLines(digitalTask, 1, 1, 10, Nicaiu.DAQmx_Val_GroupByChannel, data0);
                                 daq.stopTask(digitalTask);
+                                Thread.sleep(1000 / stimParameters.getSpikeFrequency());
+
                             }
                             ramp = false;
                         }
@@ -103,22 +108,43 @@ public class AnalogueThresholdWrite implements Runnable {
                         byte[] data1 = {1, 1};
                         // TTL: Digital stim for 100 microSeconds
                         daq.writeDigitalLines(digitalTask, 1, 1, 10, Nicaiu.DAQmx_Val_GroupByChannel, data1);
-                        microSleep(100);
+                        logger.debug("Stim: " +  stimParameters.getStimValue());
+                        Thread.sleep(100);
                         daq.stopTask(digitalTask);
                         daq.startTask(digitalTask);
                         byte[] data0 = {0, 0};
                         daq.writeDigitalLines(digitalTask, 1, 1, 10, Nicaiu.DAQmx_Val_GroupByChannel, data0);
                         daq.stopTask(analogueTask);
                         daq.stopTask(digitalTask);
-                    } else ramp = stimParameters.isRampUp();
+                    } else if (stimParameters.getStim() == 0) {
+                        daq.startTask(analogueTask);
+                        daq.startTask(digitalTask);
+                        double value = stimParameters.getStimValue();
+                        // Set analogue voltage in
+                        daq.DAQmxWriteAnalogScalarF64(analogueTask, 1, 10, value, 0);
+                        byte[] data1 = {1, 1};
+                        // TTL: Digital stim for 100 microSeconds
+                        daq.writeDigitalLines(digitalTask, 1, 1, 10, Nicaiu.DAQmx_Val_GroupByChannel, data1);
+                        logger.debug("Stim: " +  stimParameters.getStimValue());
+                        Thread.sleep(100);
+                        daq.stopTask(digitalTask);
+                        daq.startTask(digitalTask);
+                        byte[] data0 = {0, 0};
+                        daq.writeDigitalLines(digitalTask, 1, 1, 10, Nicaiu.DAQmx_Val_GroupByChannel, data0);
+                        daq.stopTask(analogueTask);
+                        daq.stopTask(digitalTask);
+                    } else {
+                        ramp = stimParameters.isRampUp();
+                    }
 
+                    // Calculate sleep time in milliseconds from frequency.
+                    Thread.sleep(1000 / stimParameters.getSpikeFrequency());
                 }
                 double zero = 0D;
                 daq.DAQmxWriteAnalogScalarF64(analogueTask, 1, 10, zero, 0);
                 daq.stopTask(analogueTask);
 
-                // Calculate sleep time in milliseconds from frequency.
-                Thread.sleep(1000 / stimParameters.getSpikeFrequency());
+
             }
         } catch (NiDaqException e) {
             e.printStackTrace();

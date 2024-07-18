@@ -111,8 +111,9 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
         });
 
         pnl_txtFields.add(cb_rampup);
-        pnl_txtFields.add(new JLabel("Frequency"));
-        pnl_txtFields.add(tf_stimFrequency, "wrap");
+        pnl_txtFields.add(new JLabel("Frequency:"));
+        pnl_txtFields.add(tf_stimFrequency);
+        pnl_txtFields.add(new JLabel("(Hz)"), "wrap");
 
         JPanel pnl_stimButtons = new JPanel();
         pnl_stimButtons.setBorder(lineBorder);
