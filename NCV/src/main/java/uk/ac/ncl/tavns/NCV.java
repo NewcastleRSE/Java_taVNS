@@ -111,4 +111,7 @@ public class NCV extends JFrame {
         ncv.setVisible(true);
     }
 
+    public ButtonControlsPanel getButtonControlsPanel() {
+        return this.buttonControlsPanel;
+    }
 }

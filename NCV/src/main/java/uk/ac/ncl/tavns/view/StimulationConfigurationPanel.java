@@ -4,11 +4,13 @@ import kirkwood.nidaq.access.NiDaqException;
 import net.miginfocom.swing.MigLayout;
 import uk.ac.ncl.tavns.controller.StimParameters;
 import uk.ac.ncl.tavns.controller.StimProtocols;
+import uk.ac.ncl.tavns.controller.Utilities;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Properties;
 
 public class StimulationConfigurationPanel extends JPanel implements ActionListener {
     /**
@@ -23,14 +25,12 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
      * Should we use a ramp up?
      */
     private JCheckBox cb_rampup = new JCheckBox("Ramp up", true); // if true do ramp up
-    // How long should the rampup take?
-//    private SteelCheckBox cb_rise = new SteelCheckBox(); // if true stim on voltage rise
-    private ButtonGroup stimButtonGroup = new ButtonGroup();
     private JRadioButton rb_insp = new JRadioButton("Inspiratory Gated", true);
     private JRadioButton rb_exp = new JRadioButton("Expiratory Gated", true);
     private JRadioButton rb_cont = new JRadioButton("Continuous", true);
+    private ButtonGroup stimButtonGroup = new ButtonGroup();
+
     private JTextField tf_numberOfSpikes = new JTextField("3", 5); // number of stims in the rampup
-//    private JTextField tf_maxDuration = new JTextField("3", 5); //
     private JTextField tf_stimValue = new JTextField("0.1", 5); // voltage to stimulate at
     /**
      * Time period of stim
@@ -47,6 +47,9 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
     private JPanel pnl_buttons = new JPanel();
     private StimParameters stimParameters = new StimParameters();
     private JLabel lbl_stimAmp = new JLabel("10.0mA");
+    private JLabel lbl_protocol = new JLabel("Protocol: ");
+    JComboBox<String> protocol_list = new JComboBox<>(Utilities.getPropertiesFilesFromUserDirectory());
+
 
     /**
      * This panel contains the text fields for capturing the parameters for stimulation protocols. It also
@@ -75,8 +78,21 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
         JLabel lbl_participantID = new JLabel("Participant ID");
         pnl_txtFields.add(lbl_participantID);
         lbl_participantID.setToolTipText("Add a unique ID for the participant.");
-        pnl_txtFields.add(tf_participantID, "wrap");
+        pnl_txtFields.add(tf_participantID);
         tf_participantID.setToolTipText("Add a unique ID for the participant.");
+
+        pnl_txtFields.add(lbl_protocol);
+        pnl_txtFields.add(protocol_list);
+        protocol_list.addActionListener(this);
+        JButton saveAs = new JButton("Save as");
+        saveAs.setToolTipText("Save the current settings as a new protocol.");
+        JButton replace = new JButton("Replace");
+        replace.setToolTipText("Replace the currently selected protocol with the new values");
+        pnl_txtFields.add(saveAs);
+        pnl_txtFields.add(replace, "wrap");
+        saveAs.addActionListener(this);
+        replace.addActionListener(this);
+
         JLabel lbl_startThreshold = new JLabel("Stim threshold");
         pnl_txtFields.add(lbl_startThreshold);
         lbl_startThreshold.setToolTipText("The voltage threshold at which to start and stop stimulation.");
@@ -111,9 +127,11 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
         });
 
         pnl_txtFields.add(cb_rampup);
-        pnl_txtFields.add(new JLabel("Frequency:"));
-        pnl_txtFields.add(tf_stimFrequency);
-        pnl_txtFields.add(new JLabel("(Hz)"), "wrap");
+        JPanel frequency = new JPanel();
+        frequency.add(new JLabel("Frequency:"));
+        frequency.add(tf_stimFrequency);
+        frequency.add(new JLabel("(Hz)"));
+        pnl_txtFields.add(frequency, "span 3, wrap");
 
         JPanel pnl_stimButtons = new JPanel();
         pnl_stimButtons.setBorder(lineBorder);
@@ -124,17 +142,6 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
         pnl_stimButtons.add(rb_insp);
         pnl_stimButtons.add(rb_exp);
         pnl_stimButtons.add(rb_cont);
-
-//        JPanel smallBox = new JPanel();
-//        smallBox.setBorder(lineBorder);
-//        JLabel lbl_rise = new JLabel("expiratory-gated <=> inspiratory-gated");
-//        lbl_rise.setToolTipText("Slide to the left to select expiratory-gated stimulation and to the right for inspirator-gate stimulation");
-//        cb_rise.setText("");
-//        cb_rise.setToolTipText("Slide to the left to select expiratory-gated stimulation and to the right for inspirator-gate stimulation");
-//        smallBox.add(lbl_rise, "wrap");
-//        smallBox.add(cb_rise);
-//        pnl_txtFields.add(smallBox, "span");
-
 
         pnl_buttons.add(startStim);
         add(pnl_txtFields, "wrap");
@@ -161,6 +168,11 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
     }
     @Override
     public void actionPerformed(ActionEvent e) {
+        if (e.getActionCommand().equals("comboBoxChanged")) {
+            String filename = protocol_list.getSelectedItem().toString();
+            Properties protocol = Utilities.loadProtocol(filename);
+
+        }
         if (e.getActionCommand().equals("Start stimulation")) {
             startStim.setText("Stop stimulation");
             startStim.setBackground(new Color(1, 106, 180));
@@ -185,6 +197,28 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
             startStim.setBackground(Color.ORANGE);
             startStim.setForeground(Color.BLACK);
             stimProtocols.thresholdStimStop();
+        }
+        if (e.getActionCommand().equals("Save as")) {
+            String protocolName = JOptionPane.showInputDialog("Enter a name to save the current protocol as.");
+            if (protocolName != null && !protocolName.isEmpty()) {
+                if (Utilities.saveProtocol(protocolName, tf_startThreshold.getText(), tf_numberOfSpikes.getText(),
+                        tf_stimValue.getText(), cb_rampup.isSelected(), tf_stimFrequency.getText(), getStimType(),
+                        false)) {
+                    protocol_list.addItem(protocolName);
+                    JOptionPane.showMessageDialog(null, "File saved successfully",
+                            "Success", JOptionPane.INFORMATION_MESSAGE);
+                } else
+                    JOptionPane.showMessageDialog(null, "The file already exists", "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        if (e.getActionCommand().equals("Replace")) {
+            if (Utilities.saveProtocol(protocol_list.getSelectedItem().toString(), tf_startThreshold.getText(),
+                    tf_numberOfSpikes.getText(), tf_stimValue.getText(), cb_rampup.isSelected(),
+                    tf_stimFrequency.getText(), getStimType(), true)) {
+                JOptionPane.showMessageDialog(null, "File saved successfully",
+                        "Success", JOptionPane.INFORMATION_MESSAGE);
+            }
         }
 
     }
@@ -216,11 +250,8 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
         if (stimParameters.getDigitalTask() == null) stimParameters.setDigitalTask("");
         stimParameters.setStimValue(Double.parseDouble(tf_stimValue.getText()));
         stimParameters.setStimThreshold(Double.parseDouble(tf_startThreshold.getText()));
-        int stimValue = 0;
-        if (rb_insp.isSelected()) stimValue = 1;
-        if (rb_exp.isSelected()) stimValue = 2;
-        stimParameters.setStim(stimValue);
-//        stimParameters.setStim(cb_rise.isSelected());
+
+        stimParameters.setStim(getStimType());
         stimParameters.setRampUp(cb_rampup.isSelected());
         stimParameters.setNumberOfSpikes(Long.parseLong(tf_numberOfSpikes.getText()));
         stimParameters.setSpikeFrequency(Long.parseLong(tf_stimFrequency.getText()));
@@ -229,5 +260,12 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
 
     public JTextField getTf_participantID() {
         return tf_participantID;
+    }
+
+    private int getStimType() {
+        int stimType = 0;
+        if (rb_insp.isSelected()) stimType = 1;
+        if (rb_exp.isSelected()) stimType = 2;
+        return stimType;
     }
 }

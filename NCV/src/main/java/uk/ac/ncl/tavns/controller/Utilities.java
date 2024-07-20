@@ -6,11 +6,11 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Properties;
+import java.util.*;
 
 public class Utilities {
     private static final Logger logger = LoggerFactory.getLogger(Utilities.class);
@@ -69,7 +69,7 @@ public class Utilities {
      * @param properties
      */
     private static void defaultProperties(Properties properties) {
-        System.out.println("Create properties file");
+        logger.debug("Create properties file");
         properties.setProperty("plot_range_minimum", "0");
         properties.setProperty("plot_range_maximum", "1");
         properties.setProperty("samples_per_channel", "1");
@@ -136,4 +136,71 @@ public class Utilities {
         return rangemin + ((val - min) * (rangemax - rangemin) / (max - min));
     }
 
+    /**
+     * Retrieve a list of filenames, that end with .protocol, from the user's config directory
+     * @return
+     */
+    public static String[] getPropertiesFilesFromUserDirectory() {
+        List<File> propertiesFiles = new ArrayList<>();
+        String userHomeDirectory = System.getProperty("user.home") + "/.Java_taVNS/";
+        File userDir = new File(userHomeDirectory);
+
+        if (userDir.exists() && userDir.isDirectory()) {
+            File[] files = userDir.listFiles((dir, name) -> name.toLowerCase().endsWith(".protocol"));
+            if (files != null) {
+                propertiesFiles.addAll(Arrays.asList(files));
+            }
+        }
+
+        String[] propertiesFilesArray = new String[propertiesFiles.size()];
+        for (int i = 0; i < propertiesFiles.size(); i++) {
+            propertiesFilesArray[i] = propertiesFiles.get(i).getName().replace(".protocol", "");
+        }
+
+        return propertiesFilesArray;
+    }
+
+    /**
+     * If the file saved without a problem return true. If the file exists return false.
+     * @param protocolName
+     * @param threshold
+     * @param stims
+     * @param peak
+     * @param ramp
+     * @param frequency
+     * @param stimType
+     * @return
+     */
+    public static boolean saveProtocol(String protocolName, String threshold, String stims, String peak, boolean ramp,
+                                    String frequency, int stimType, boolean replace) {
+        Properties protocols = new Properties();
+        protocols.setProperty("threshold", threshold);
+        protocols.setProperty("stims", stims);
+        protocols.setProperty("peak", peak);
+        protocols.setProperty("ramp", (ramp)?"true":"false");
+        protocols.setProperty("frequency", frequency);
+        protocols.setProperty("stimType", String.valueOf(stimType));
+        String configDirectory = System.getProperty("user.home").concat("/.Java_taVNS/");
+        String propertiesFile = configDirectory.concat("/" + protocolName + ".protocol");
+        Path path = Paths.get(propertiesFile);
+        if (!Files.exists(path) || replace) {
+            File f = new File(propertiesFile);
+            // If the file doesn't exist, create it
+            try {
+                FileOutputStream out = new FileOutputStream(propertiesFile);
+                protocols.store(out, "");
+                logger.debug("Properties saved as " + protocolName);
+                out.close();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static Properties loadProtocol(String protocolName) {
+
+    }
 }
