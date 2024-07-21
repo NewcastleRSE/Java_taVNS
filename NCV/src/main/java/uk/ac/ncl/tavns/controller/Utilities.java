@@ -22,7 +22,6 @@ public class Utilities {
     public static void savePropertyFile(Properties properties) {
         String configDirectory = System.getProperty("user.home").concat("/.Java_taVNS/");
         String propertiesFile = configDirectory.concat("/system.properties");
-        File f = new File(propertiesFile);
         // If the file doesn't exist, create it
         try {
             FileOutputStream out = new FileOutputStream(propertiesFile);
@@ -201,6 +200,39 @@ public class Utilities {
     }
 
     public static Properties loadProtocol(String protocolName) {
+        Properties properties = new Properties();
+        String configDirectory = System.getProperty("user.home").concat("/.Java_taVNS/");
+        String propertiesFile = configDirectory.concat("/" + protocolName + ".protocol");
+        try {
+            File f = new File(propertiesFile);
+            // If the file doesn't exist, create it
+            Files.createDirectories(Paths.get(configDirectory));
 
-    }
+            if (!(f.exists())) {
+                OutputStream out = new FileOutputStream(f);
+                out.close();
+            }
+            InputStream is = new FileInputStream(f);
+            properties.load(is);
+            if (properties.isEmpty()) {
+                defaultProtocol(properties);
+                FileOutputStream out = new FileOutputStream(propertiesFile);
+                properties.store(out, "");
+                out.close();
+            }
+            is.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return properties;
+   }
+
+    private static void defaultProtocol(Properties properties) {
+        logger.debug("Create default protocol file");
+        properties.setProperty("stimType", "1");
+        properties.setProperty("stims", "3");
+        properties.setProperty("ramp", "true");
+        properties.setProperty("threshold", "-0.6");
+        properties.setProperty("peak", "0.1");
+        properties.setProperty("frequency", "5");   }
 }

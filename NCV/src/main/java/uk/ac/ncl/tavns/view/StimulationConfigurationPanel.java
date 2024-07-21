@@ -2,6 +2,8 @@ package uk.ac.ncl.tavns.view;
 
 import kirkwood.nidaq.access.NiDaqException;
 import net.miginfocom.swing.MigLayout;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import uk.ac.ncl.tavns.controller.StimParameters;
 import uk.ac.ncl.tavns.controller.StimProtocols;
 import uk.ac.ncl.tavns.controller.Utilities;
@@ -13,29 +15,35 @@ import java.awt.event.*;
 import java.util.Properties;
 
 public class StimulationConfigurationPanel extends JPanel implements ActionListener {
+    private static final Logger logger = LoggerFactory.getLogger(StimulationConfigurationPanel.class);
+    Properties protocols = Utilities.loadProtocol("default");
+    /**
+     * ComboBox containing list of protocol files
+     */
+    JComboBox<String> protocol_list = new JComboBox<>(Utilities.getPropertiesFilesFromUserDirectory());
     /**
      * An id for the participant to be appended to the beginning of the filename
      */
     private JTextField tf_participantID = new JTextField(15);
     /**
-     Threshold for starting stimulation
+     * Threshold for starting stimulation
      **/
-    private JTextField tf_startThreshold = new JTextField("-0.6",5); // threshold at which to start stim
+    private JTextField tf_startThreshold = new JTextField(protocols.getProperty("threshold"),5); // threshold at which to start stim
     /**
      * Should we use a ramp up?
      */
-    private JCheckBox cb_rampup = new JCheckBox("Ramp up", true); // if true do ramp up
-    private JRadioButton rb_insp = new JRadioButton("Inspiratory Gated", true);
-    private JRadioButton rb_exp = new JRadioButton("Expiratory Gated", true);
-    private JRadioButton rb_cont = new JRadioButton("Continuous", true);
+    private JCheckBox cb_rampup = new JCheckBox("Ramp up", protocols.getProperty("ramp").equals("true")); // if true do ramp up
+    private JRadioButton rb_insp = new JRadioButton("Inspiratory Gated", protocols.getProperty("stimType").equals("1"));
+    private JRadioButton rb_exp = new JRadioButton("Expiratory Gated", protocols.getProperty("stimType").equals("2"));
+    private JRadioButton rb_cont = new JRadioButton("Continuous", protocols.getProperty("stimType").equals("0"));
     private ButtonGroup stimButtonGroup = new ButtonGroup();
 
-    private JTextField tf_numberOfSpikes = new JTextField("3", 5); // number of stims in the rampup
-    private JTextField tf_stimValue = new JTextField("0.1", 5); // voltage to stimulate at
+    private JTextField tf_numberOfSpikes = new JTextField(protocols.getProperty("stims"), 5); // number of stims in the rampup
+    private JTextField tf_stimValue = new JTextField(protocols.getProperty("peak"), 5); // voltage to stimulate at
     /**
      * Time period of stim
      */
-    private JTextField tf_stimFrequency = new JTextField("15", 5);
+    private JTextField tf_stimFrequency = new JTextField(protocols.getProperty("frequency"), 5);
     private JButton startStim = new JButton("Start stimulation"); // start stimulating
     private String outputDevice;
     private String analogueOutputChannel;
@@ -46,9 +54,8 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
     private JPanel pnl_txtFields = new JPanel();
     private JPanel pnl_buttons = new JPanel();
     private StimParameters stimParameters = new StimParameters();
-    private JLabel lbl_stimAmp = new JLabel("10.0mA");
+    private JLabel lbl_stimAmp = new JLabel(Float.parseFloat(tf_stimValue.getText()) * 100 + "mA");
     private JLabel lbl_protocol = new JLabel("Protocol: ");
-    JComboBox<String> protocol_list = new JComboBox<>(Utilities.getPropertiesFilesFromUserDirectory());
 
 
     /**
@@ -138,7 +145,6 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
         stimButtonGroup.add(rb_insp);
         stimButtonGroup.add(rb_exp);
         stimButtonGroup.add(rb_cont);
-        rb_insp.setSelected(true);
         pnl_stimButtons.add(rb_insp);
         pnl_stimButtons.add(rb_exp);
         pnl_stimButtons.add(rb_cont);
@@ -171,7 +177,18 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
         if (e.getActionCommand().equals("comboBoxChanged")) {
             String filename = protocol_list.getSelectedItem().toString();
             Properties protocol = Utilities.loadProtocol(filename);
-
+            tf_startThreshold.setText(Float.toString(Float.parseFloat(protocol.getProperty("threshold"))));
+            tf_numberOfSpikes.setText(Float.toString(Float.parseFloat(protocol.getProperty("stims"))));
+            tf_stimValue.setText(Float.toString(Float.parseFloat(protocol.getProperty("peak"))));
+            boolean ramp = protocol.getProperty("ramp").equals("true");
+            cb_rampup.setSelected(ramp);
+            tf_stimFrequency.setText(Float.toString(Float.parseFloat(protocol.getProperty("frequency"))));
+            int stimType = Integer.parseInt(protocol.getProperty("stimType"));
+            switch (stimType) {
+                case 0: rb_cont.setSelected(true);break;
+                case 1: rb_insp.setSelected(true);break;
+                case 2: rb_exp.setSelected(true);break;
+            }
         }
         if (e.getActionCommand().equals("Start stimulation")) {
             startStim.setText("Stop stimulation");
