@@ -82,6 +82,11 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
         pnl_txtFields.setLayout(new MigLayout("", "[][][][]",""));
         startStim.setBackground(Color.ORANGE);
         startStim.setForeground(Color.BLACK);
+
+        JLabel sectionTitle = new JLabel("Stimulation Protocol");
+        sectionTitle.setFont(new Font("Tahoma", Font.BOLD, 16));
+        add(sectionTitle, "wrap");
+
         JLabel lbl_participantID = new JLabel("Participant ID");
         pnl_txtFields.add(lbl_participantID);
         lbl_participantID.setToolTipText("Add a unique ID for the participant.");
