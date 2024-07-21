@@ -105,7 +105,7 @@ public class NCV extends JFrame {
      */
     public static void main(String[] args) {
         logger.debug("Application start");
-        final NCV ncv = new NCV("NIDAQ Channel Visualiser");
+        final NCV ncv = new NCV("NIDAQ Channel Visualiser - Version 0.4");
         ncv.pack();
         RefineryUtilities.centerFrameOnScreen(ncv);
         ncv.setVisible(true);
