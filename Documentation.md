@@ -11,6 +11,12 @@ somewhere where you will find it again.
 From GitHub download the latest release of the software. In a browser navigate to
 https://github.com/NewcastleRSE/Java_taVNS. Under **Releases** click on the release
 marked as **Latest**. Right-click the .jar file and "Save as" into the 
-**Java_taVNS** directory.
+**Java_taVNS** directory. If you know what you are doing you can call this 
+directory whatever you want but for this documentation we will stick to 
+**Java_taVNS**.
+
+
+
+
 
 

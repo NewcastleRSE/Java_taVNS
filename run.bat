@@ -1,0 +1,1 @@
+javaw -cp NCV-Release-0.4.jar uk.ac.ncl.tavns.NCV
