@@ -4,6 +4,7 @@ import org.jfree.data.time.TimeSeries;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.swing.*;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -234,5 +235,17 @@ public class Utilities {
         properties.setProperty("ramp", "true");
         properties.setProperty("threshold", "-0.6");
         properties.setProperty("peak", "0.1");
-        properties.setProperty("frequency", "5");   }
+        properties.setProperty("frequency", "5");
+    }
+
+    public static int getIndexOfItem(JComboBox<String> comboBox, String item) {
+        int itemCount = comboBox.getItemCount();
+        for (int i = 0; i < itemCount; i++) {
+            if (item.equals(comboBox.getItemAt(i))) {
+                return i;
+            }
+        }
+        // Return -1 if the item is not found
+        return -1;
+    }
 }

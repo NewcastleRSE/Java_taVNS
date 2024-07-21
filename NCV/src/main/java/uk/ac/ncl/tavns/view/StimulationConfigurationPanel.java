@@ -160,7 +160,8 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
         add(pnl_buttons);
 
         startStim.addActionListener(this);
-
+        int defaultIndex = Utilities.getIndexOfItem(protocol_list, "default");
+        protocol_list.setSelectedIndex(defaultIndex);
 
     }
 
@@ -229,6 +230,7 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
                     protocol_list.addItem(protocolName);
                     JOptionPane.showMessageDialog(null, "File saved successfully",
                             "Success", JOptionPane.INFORMATION_MESSAGE);
+                    protocol_list.setSelectedIndex(protocol_list.getItemCount() - 1);
                 } else
                     JOptionPane.showMessageDialog(null, "The file already exists", "Error",
                         JOptionPane.ERROR_MESSAGE);
@@ -245,6 +247,12 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
 
     }
 
+    /**
+     * Concatename two arrays of type double
+     * @param array1
+     * @param array2
+     * @return a new double array containing both arrays
+     */
     public static double[] concatenateArrays(double[] array1, double[] array2) {
         // Determine the length of the concatenated array
         int totalLength = array1.length + array2.length;
