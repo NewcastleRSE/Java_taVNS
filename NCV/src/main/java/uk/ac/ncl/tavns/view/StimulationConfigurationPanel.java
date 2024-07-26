@@ -12,11 +12,15 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.*;
+import java.text.NumberFormat;
 import java.util.Properties;
 
 public class StimulationConfigurationPanel extends JPanel implements ActionListener {
     private static final Logger logger = LoggerFactory.getLogger(StimulationConfigurationPanel.class);
     Properties protocols = Utilities.loadProtocol("default");
+    NumberFormat integerFormat = NumberFormat.getIntegerInstance();
+    NumberFormat decimalFormat = NumberFormat.getNumberInstance();
+
     /**
      * ComboBox containing list of protocol files
      */
@@ -38,12 +42,14 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
     private JRadioButton rb_cont = new JRadioButton("Continuous", protocols.getProperty("stimType").equals("0"));
     private ButtonGroup stimButtonGroup = new ButtonGroup();
 
-    private JTextField tf_numberOfSpikes = new JTextField(protocols.getProperty("stims"), 5); // number of stims in the rampup
-    private JTextField tf_stimValue = new JTextField(protocols.getProperty("peak"), 5); // voltage to stimulate at
+
+
+    private JFormattedTextField  tf_numberOfSpikes = new JFormattedTextField(integerFormat);// number of stims in the rampup
+    private JFormattedTextField  tf_stimValue = new JFormattedTextField(decimalFormat); // voltage to stimulate at
     /**
      * Time period of stim
      */
-    private JTextField tf_stimFrequency = new JTextField(protocols.getProperty("frequency"), 5);
+    private JFormattedTextField tf_stimFrequency = new JFormattedTextField(integerFormat);
     private JButton startStim = new JButton("Start stimulation"); // start stimulating
     private String outputDevice;
     private String analogueOutputChannel;
@@ -54,7 +60,7 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
     private JPanel pnl_txtFields = new JPanel();
     private JPanel pnl_buttons = new JPanel();
     private StimParameters stimParameters = new StimParameters();
-    private JLabel lbl_stimAmp = new JLabel(Float.parseFloat(tf_stimValue.getText()) * 100 + "mA");
+    private JLabel lbl_stimAmp;
     private JLabel lbl_protocol = new JLabel("Protocol: ");
 
 
@@ -68,6 +74,12 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
     public StimulationConfigurationPanel(PanelCollection panelCollection, String outputDevice,
                                          String analogueOutputChannel, String digitalOutputChannel) {
         super();
+        this.tf_numberOfSpikes.setValue(Integer.parseInt(protocols.getProperty("stims")));
+        this.tf_numberOfSpikes.setColumns(5);
+        this.tf_stimValue.setValue(Float.parseFloat(protocols.getProperty("peak")));
+        this.tf_stimValue.setColumns(5);
+        this.tf_stimFrequency.setColumns(5);
+        lbl_stimAmp = new JLabel(Float.parseFloat(tf_stimValue.getText()) * 100 + "mA");
         this.panelCollection = panelCollection;
         this.outputDevice = outputDevice;
         this.analogueOutputChannel = analogueOutputChannel;
@@ -184,11 +196,11 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
             String filename = protocol_list.getSelectedItem().toString();
             Properties protocol = Utilities.loadProtocol(filename);
             tf_startThreshold.setText(Float.toString(Float.parseFloat(protocol.getProperty("threshold"))));
-            tf_numberOfSpikes.setText(Float.toString(Float.parseFloat(protocol.getProperty("stims"))));
+            tf_numberOfSpikes.setText(String.valueOf(Math.round(Float.parseFloat(protocol.getProperty("stims")))));
             tf_stimValue.setText(Float.toString(Float.parseFloat(protocol.getProperty("peak"))));
             boolean ramp = protocol.getProperty("ramp").equals("true");
             cb_rampup.setSelected(ramp);
-            tf_stimFrequency.setText(Float.toString(Float.parseFloat(protocol.getProperty("frequency"))));
+            tf_stimFrequency.setText(String.valueOf(Math.round(Float.parseFloat(protocol.getProperty("frequency")))));
             int stimType = Integer.parseInt(protocol.getProperty("stimType"));
             switch (stimType) {
                 case 0: rb_cont.setSelected(true);break;
@@ -285,6 +297,7 @@ public class StimulationConfigurationPanel extends JPanel implements ActionListe
         stimParameters.setRampUp(cb_rampup.isSelected());
         stimParameters.setNumberOfSpikes(Long.parseLong(tf_numberOfSpikes.getText()));
         stimParameters.setSpikeFrequency(Long.parseLong(tf_stimFrequency.getText()));
+
 
     }
 
