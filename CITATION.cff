@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Steyn"
+  given-names: "Jannetta Sophia"
+  oricd: "https://orcid.org/0000-0002-0231-9897"
+title: "Java taVNS"
+version: 0.4.1
+doi: 10.5281/zenodo.15271852
+date-released: 2024-07-26
+url: https://github.com/NewcastleRSE/Java_taVNS
