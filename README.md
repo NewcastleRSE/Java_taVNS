@@ -36,6 +36,7 @@ Newcastle University
 
 ## Built With (Hardware)
 - NI USB-6229
+- NI USB-6009
 - DigiStim Digitime DSR8
 - AD Instruments
 
@@ -56,11 +57,6 @@ Newcastle University
 
 ### Installation
 
-Install the DS8R package:
-```
-# Install from GitHub
-pip install -e git+https://github.com/CCS-Lab/DS8R_python#egg=ds8r
-```
 
 
 ### Running Locally
