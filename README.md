@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15271853.svg)](https://doi.org/10.5281/zenodo.15271853)
+
 # taVNS CloseNIT Pilot Project
 (transcutaneous auricular Vagus Nerve Stimulation)
 
