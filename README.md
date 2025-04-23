@@ -85,26 +85,6 @@ Deploying to the production system. Examples of this would include cloud, HPC or
 
 Any links to production environment, video demos and screenshots.
 
-## Roadmap
-
-- [x] Initial Research
-- [ ] Minimum viable product <-- You are Here
-- [ ] Alpha Release
-- [ ] Feature-Complete Release
-
-## Contributing
-
-### Main Branch
-Protected and can only be pushed to via pull requests. Should be considered stable and a representation of production code.
-
-### Dev Branch
-Should be considered fragile, code should compile and run but features may be prone to errors.
-
-### Feature Branches
-A branch per feature being worked on.
-
-https://nvie.com/posts/a-successful-git-branching-model/
-
 ## Program Structure
 
 ```mermaid
@@ -114,6 +94,7 @@ https://nvie.com/posts/a-successful-git-branching-model/
 ```
 
 ## License
+-GNU GENERAL PUBLIC LICENSE, Version 3, 29 June 2007
 
 ## Citation
 
