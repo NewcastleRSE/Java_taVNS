@@ -5,6 +5,11 @@
 
 [https://github.com/NewcastleRSE/Java_taVNS](https://github.com/NewcastleRSE/Java_taVNS)
 
+This software was developed to capture data from a breathing belt via a National Instruments DAQ and, based on the breathing cycle, deliver stimulation to trigger a digital stimulating device. The software was used and tested on the following devices:                                        
+- NI USB-6229
+- NI USB-6009
+- DigiStim Digitime DSR8
+
 ## About
 
 Co-morbid depression is common in people with heart failure (HF) and leads to worse health
